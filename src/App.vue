@@ -1,19 +1,31 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div id="app">
+    <!--<LoadingPage v-if="showSplashScreen && !hideSplashScreen" />-->
+    <router-view></router-view>
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
 
+//import LoadingPage from './components/LoadingPage.vue';
 export default {
-  name: 'App',
   components: {
-    HelloWorld
-  }
-}
+   // LoadingPage,
+  },
+  data() {
+    return {
+      showSplashScreen: true,
+      hideSplashScreen: false,
+    };
+  },
+  mounted() {
+    // Simulez une attente de quelques secondes avant de masquer le splash screen
+    setTimeout(() => {
+      this.hideSplashScreen  = true;
+    }, 3000);
+  },
+};
 </script>
-
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -21,6 +33,9 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  left: 0;
+  right: 0;
+  margin: 0;
+  /* margin-top: 60px; */
 }
 </style>
