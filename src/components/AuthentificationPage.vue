@@ -4,7 +4,11 @@
             <div class="overlay"></div>
             <img class="img1" src="../assets/signin_image2.jpg" alt="image page de connexion" />
             <div class="text-overlay">
-                <p class="text1">FLYSOFT ENGINEERING,<br><i>Meilleur fournisseur de service technologique</i></p>
+                
+                    <p class="text1">CollabZone,<br>
+                     <i>Connectez-vous pour démarrer votre projet avec succès !</i></p>
+               
+
                 <div class="footerImage">
                     <p class="p1">Cameroun,Yaoundé</p>
                     <p class="p2">+237 693 32 53 31</p>
@@ -49,7 +53,7 @@
                         <p>Avez vous déja un Compte?<router-link to="/CreateAccount">Inscription</router-link></p>
                     </div>
                     <div class="privacy">
-                        <p><router-link to="/Privacy">Politique de Confidentialité</router-link></p>
+                        <p>En continuant vous agréer la <router-link to="/Privacy">Politique de Confidentialité</router-link><br> et les <router-link to="/Privacy"> Conditions d'utilisations </router-link> </p>
                     </div>
                 </form>
             </div>
@@ -106,13 +110,13 @@ p {
 .container {
     text-align: left;
     /* width: 100%; */
-    height: 100vh;
+    height: 98vh;
     display: flex;
+    width: 100%;
     overflow-y: auto;
-    height: 90vh;
-    margin-left: 10px;
+    /* margin-left: 10px;
     margin-right: 10px;
-    margin-top: 1px;
+    margin-top: 1px; */
 
 }
 
@@ -196,6 +200,7 @@ input {
     border-radius: 12px;
     padding-left: 20px;
     width: 90%;
+    font-size: 25px; 
 }
 
 label {
@@ -240,12 +245,13 @@ span {
 }
 
 .text-overlay i {
-    font-size: 24px;
-    padding-left: 40px;
+    font-size: 20px;
+    
 }
 
 .text1 {
-    padding-right: 8%;
+     text-align: left;
+     padding-left: 10px;
 }
 
 .footerImage {
@@ -285,13 +291,13 @@ span {
 }
 
 .navigation p {
-    font-size: 24px;
+    font-size: 22px;
 }
 .privacy{
     text-align: center;
     padding-top: 0;
 }
 .privacy p{
-    font-size: 22px;
+    font-size: 18px;
 }
 </style>

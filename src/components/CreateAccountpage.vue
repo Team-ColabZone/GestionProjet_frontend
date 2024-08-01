@@ -4,8 +4,10 @@
             <div class="overlay"></div>
             <img class="img1" src="../assets/signin_image4.jpg" alt="image page d'inscription" />
             <div class="text-overlay">
-                <p class="text1">PM FLYSOFT ENGINEERING,<br><i>Un systeme de gestion de projet intuitif offrant une
-                        meilleur experience utilisateur</i></p>
+                <p class="text1">CollabZone,<br>
+                     <i>Créez votre compte maintenant et commencez à gérer vos projets de manière professionnelle !</i>
+                </p>
+               
                 <div class="footerImage">
                     <p class="p1">Cameroun,Yaoundé</p>
                     <p class="p2">+237 693 32 53 31</p>
@@ -64,7 +66,7 @@
                         <p>Avez vous déja un Compte?<router-link to="/auth">Connexion</router-link></p>
                     </div>
                     <div class="privacy">
-                        <p><router-link to="/Privacy">Politique de Confidentialité</router-link></p>
+                        <p>En continuant vous agréer la <router-link to="/Privacy">Politique de Confidentialité</router-link><br> et les <router-link to="/Privacy"> Conditions d'utilisations </router-link> </p>
                     </div>
                 </form>
             </div>
@@ -147,7 +149,7 @@ p {
     padding: 0; */
     text-align: left;
     width: 100%;
-    height: 100vh;
+    height: 98vh;
     display: flex;
     overflow-y: auto;
     font-family: Monda;
@@ -191,7 +193,7 @@ body {
 }
 
 .input-field {
-    padding-bottom: 20px;
+    padding-bottom: 25px;
 }
 
 .signup1,
@@ -235,6 +237,7 @@ input {
     border-radius: 12px;
     padding-left: 20px;
     width: 90%;
+    font-size: 25px; 
 }
 
 label {
@@ -264,7 +267,7 @@ span {
 }
 
 .inp {
-    padding-bottom: 3px;
+    padding-bottom: 8px;
 }
 
 .text-overlay {
@@ -281,12 +284,14 @@ span {
 }
 
 .text-overlay i {
-    font-size: 20px;
-    padding-left: 12%;
+    font-size: 19px;
+   
+    text-align: left;
 }
 
 .text1 {
-    padding-left: 5%;
+    padding-left: 18%;
+    text-align: left;
 }
 
 .footerImage {
@@ -315,13 +320,13 @@ span {
 }
 
 .navigation p {
-    font-size: 24px;
+    font-size: 22px;
 }
 .privacy{
     text-align: center;
     padding-top: 0%;
 }
 .privacy p{
-    font-size: 22px;
+    font-size: 18px;
 }
 </style>
