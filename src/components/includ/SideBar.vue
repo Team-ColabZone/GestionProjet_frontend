@@ -10,39 +10,34 @@
             <ul>
                 <li>
                     <router-link to="/acceuilPage" class="butt" style="display: flex;text-decoration: none;">
-                        <i class="fas fa-home"></i>
+                        <i class="fas fa-pie-chart"></i>
                         <h3>Dashboard</h3>
+                        <i class="fas fa-chevron-up fleche"></i>
 
                     </router-link>
                 </li>
                 <li>
                     <router-link to="/acceuilPage2" class="butt" style="display: flex;text-decoration: none;">
-                        <i class="fas fa-bullhorn"></i>
+                        <i class="fas fa-clock"></i>
                         <h3> Backlogs</h3>
-
+                        <i class="fas fa-arrow-right fleche" style="color: #C0C0C0;"></i>
                     </router-link>
                 </li>
                 <li>
                     <router-link to="/acceuilPage3" class="butt" style="display: flex;text-decoration: none;">
-                        <i class="fas fa-file-alt"></i>
-                        <h3>Tache</h3>
-
+                        <i class="fas fa-tasks"></i>
+                        <h3>Tâches </h3>
+                        <i class="fas fa-arrow-right fleche" style="color: #C0C0C0;" ></i>
                     </router-link>
                 </li>
                 <li>
-                    <router-link to="/acceuilPage4" class="butt" style="display: flex;text-decoration: none;">
-                        <i class="fas fa-star"></i>
-                        <h3>Membre d'equipe</h3>
-
+                    <router-link to="/acceuilPage4" class="butt member" style="display: flex;text-decoration: none;">
+                        <i class="fas fa-users"></i>
+                        <h3>Membres</h3>
+                        <i class="fas fa-arrow-right fleche"></i>
                     </router-link>
                 </li>
-                <li>
-                    <router-link to="/acceuilPage5" class="butt" style="display: flex;text-decoration: none;">
-                        <i class="fas fa-envelope"></i>
-                        <h3>Projets</h3>
-
-                    </router-link>
-                </li>
+               
                 
             </ul>
         </nav>
@@ -54,9 +49,9 @@
 
 
 .side_barre {
-    width: 15%;
-    background-color: #C0C0C0;
-    height: 100vh;
+    width: 18%;
+    background-color:  #FFFFFF;
+    height: 95vh;
     margin: 0px;
 }
 
@@ -64,6 +59,7 @@
     color: #000000 !important;
     margin: 0 10px;
     font-size: 24px;
+    margin-top: 0px;
 }
 
 .side_barre h3 {
@@ -72,6 +68,11 @@
     text-align: left;
     margin: 0 10px;
     font-family: Monda;
+}
+.fleche{
+    text-align: right;
+    /* margin-left: 15%; */
+    padding-left: 120px;
 }
 
 
@@ -96,4 +97,7 @@ li:hover {
     padding: 8px 1px;
 
 }
+/* .member{
+    width: 100%;
+} */
 </style>
