@@ -4,10 +4,11 @@
             <div class="overlay"></div>
             <img class="img1" src="../assets/signin_image2.jpg" alt="image page de connexion" />
             <div class="text-overlay">
-                
-                    <p class="text1">CollabZone,<br>
-                     <i>Connectez-vous pour démarrer votre projet avec succès !</i></p>
-               
+
+                <p class="text1">CollabZone,<br>
+                    <i>Connectez-vous pour démarrer votre projet avec succès !</i>
+                </p>
+
 
                 <div class="footerImage">
                     <p class="p1">Cameroun,Yaoundé</p>
@@ -53,7 +54,9 @@
                         <p>Avez vous déja un Compte?<router-link to="/CreateAccount">Inscription</router-link></p>
                     </div>
                     <div class="privacy">
-                        <p>En continuant vous agréer la <router-link to="/Privacy">Politique de Confidentialité</router-link><br> et les <router-link to="/Privacy"> Conditions d'utilisations </router-link> </p>
+                        <p>En continuant vous agréer la <router-link to="/Privacy">Politique de
+                                Confidentialité</router-link><br> et les <router-link to="/Privacy"> Conditions
+                                d'utilisations </router-link> </p>
                     </div>
                 </form>
             </div>
@@ -77,16 +80,37 @@ export default {
     methods: {
         async login() {
             try {
+                // Make a POST request to the /auth/login endpoint on the local server (http://localhost:3001)
                 const response = await axios.post('http://localhost:3001/auth/login', {
                     email: this.email,
                     password: this.password
                 });
-                const token = response.data.access_token;
-                localStorage.setItem('token', token); // Stocker le token dans le localStorage
-                this.$router.push('/Home'); // Rediriger vers la page d'accueil
+                const userData = response.data;
+                localStorage.setItem('userId', userData.user_id);
+                localStorage.setItem('token', userData.access_token);
+                this.$router.push('/acceuilPage');
+                console.log(userData);
+                this.getUserInfo();
+
             } catch (error) {
                 this.errorMessage = 'Échec de la connexion : ' + error.response.data.message;
                 alert('Echec de la connexion');
+            }
+        },
+        async getUserInfo() {
+            try {
+                const token = localStorage.getItem('token');
+
+                const response = await axios.get('http://localhost:3001/users', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const userInfo = response.data;
+                console.log(userInfo);
+
+            } catch (error) {
+                console.error('Erreur lors de la récupération des informations de l\'utilisateur :', error);
             }
         }
     }
@@ -200,7 +224,7 @@ input {
     border-radius: 12px;
     padding-left: 20px;
     width: 90%;
-    font-size: 25px; 
+    font-size: 25px;
 }
 
 label {
@@ -246,12 +270,12 @@ span {
 
 .text-overlay i {
     font-size: 20px;
-    
+
 }
 
 .text1 {
-     text-align: left;
-     padding-left: 10px;
+    text-align: left;
+    padding-left: 10px;
 }
 
 .footerImage {
@@ -293,11 +317,13 @@ span {
 .navigation p {
     font-size: 22px;
 }
-.privacy{
+
+.privacy {
     text-align: center;
     padding-top: 0;
 }
-.privacy p{
+
+.privacy p {
     font-size: 18px;
 }
 </style>

@@ -2,6 +2,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import './assets/tailwind.css'
 import '@fortawesome/fontawesome-free/css/all.css';
+import * as lucideIcons from 'lucide-vue-next';
 
 import { createRouter, createWebHistory } from 'vue-router';
 import CreateAccount from '@/components/CreateAccountpage.vue';
@@ -40,5 +41,8 @@ const router = createRouter({
   
   const app = createApp(App);
   
+  Object.entries(lucideIcons).forEach(([name, component]) => {
+    app.component(name, component);
+    });
   app.use(router);
   app.mount('#app');

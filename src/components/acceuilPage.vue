@@ -1,253 +1,334 @@
+<script setup>
+import { MessageSquare, BellRing, SquarePlus, ListTodo, Users, Gauge, ArrowRight, ChevronUp, FolderGit2, X } from 'lucide-vue-next';
+</script>
+
+
 <template>
-    <div class="container">
-        <div class="side_barre">
-            <nav class="headt">
-                <div class="logoflysoft">
-                    <img class="logo" src="../assets/logoflysoft.png" alt="logo Entreprise" style="margin-left: 2%;" />
-                    <!-- <p class="text">Systeme de gestion de projet de <br> FLYSOFT ENGINEERING</p> -->
-                </div>
+    <div class="pre_container">
+        <nav class="pre_container1">
+            <div class="logoflysoft">
+                <img class="logo" src="../assets/logoflysoft.png" alt="logo Entreprise"
+                    style="margin-left: 2%;width: 60px; height: 60px; " />
+                <!-- <p class="text">Systeme de gestion de projet de <br> FLYSOFT ENGINEERING</p> -->
+            </div>
+            <div class="user">
                 <div class="message">
-                    <button @click="showMessagePage">
-                        <i class="fa fa-power-off"></i>
+                    <button class="icon" @click="showMessagePage">
+                        <MessageSquare style="cursor: pointer" />
                     </button>
                 </div>
                 <div class="notification">
-                    <button @click="showNotificationPage">
-                        <i class="fa fa-bell"></i>
+                    <button class="icon" @click="showNotificationPage">
+                        <BellRing style="cursor: pointer" />
                     </button>
                 </div>
-                <div class="profil">
+                <div class="profil" style="border-radius: 50%; background-color: white;">
                     <button @click="showProfilPage">
-                        <img class="logo" src="../assets/logoflysoft.png" alt="logo Entreprise" style="margin-right: 2%;" />
+                        <img class="logo" src="../assets/logoflysoft.png" alt="logo Entreprise"
+                            style="margin-right: 2%; width: 30px; height: 30px;" />
                     </button>
                 </div>
-                <!-- <h2 style="margin-right: 2%; color: #007A5E;">{{ username }} <button @click="logout"><i
-                            class="fa fa-power-off" aria-hidden="true"></i></button></h2> -->
-            </nav>
-            <hr style="width: 100%;color: #D9D9D9; size: 1px;">
+            </div>
+        </nav>
+    </div>
+    <div class="container">
+        <div class="side_barre">
+
             <nav style="width: 100%;">
-                <center>
-                    <!-- <img style="width: 100px; margin-top: 20px;" src="@/assets/flysoft.png" alt="" /> -->
-                </center>
-
-
-                <ul style="margin-top: 90px;">
+                <ul style="margin-top: 40px;">
                     <li>
                         <button class="butt" :class="{ selected: currentPage === 'home' }"
                             style="display: flex;text-decoration: none;" @click="showPage('home')">
-                            <i :style="{ color: currentPage === 'home' ? '#202020c9' : 'white' }"
-                                class="fas fa-pie-chart"></i>
-                            <h3 :style="{ color: currentPage === 'home' ? '#202020c9' : 'white' }">Dashboard</h3>
+                            <Gauge />
 
+                            <h3 :style="{ color: currentPage === 'home' ? '#202020c9' : 'white' }">Dashboard</h3>
+                            <button @click="toggleProjectList"
+                                style="background-color: transparent; border: none; cursor: pointer">
+                                <ChevronUp
+                                    :class="{ 'chevron-up': !isProjectListVisible, 'chevron-down': isProjectListVisible }"
+                                    style="color: #000000; width: 24px; height: 24; margin-left: 95px" />
+                            </button>
                         </button>
                     </li>
+
+                    <div :class="{ 'project-list': true, 'visible': isProjectListVisible }" style="width: 292px;background-color: white;  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.3); 
+                    padding: 7px; border:1px solid #D9D9D9; border-radius: 8px; margin-left: 6%; ">
+                        <!-- <h2>Projets</h2> -->
+                        <div v-for="project in projects" :key="project.id" @click="selectProject(project.id)"
+                            class="project-item" style="border-bottom: 1px solid #D9D9D9; cursor: pointer;">
+                            <p class="project-item"
+                                style="text-align: left;color: black; font-size: 13px; background-color: #F1F2F3;border-radius: 7px;padding-left: 8px;">
+                                {{ project.projectname }}<br>
+                                {{ project.description }}</p>
+                        </div>
+                        <div class="creer">
+                            <div class="addProject" style="text-align: left; ">
+                                <button class="addProjectbtn" @click="showModal1"
+                                    style="background-color: transparent; border: none; cursor: pointer;display: flex;">
+                                    <h3 style="width: 100%;font-size: 14px;">Créer un nouveau Projet</h3>
+                                    <SquarePlus style="padding-left: 60px;width: 30px; height: 30px;" />
+                                </button>
+                            </div>
+                            <div class="newprojectinvited" style="text-align: left; ">
+                                <button class="addProjectbtn" @click="ShowInvitation()"
+                                    style="background-color: transparent; border: none; cursor: pointer;display: flex;">
+                                    <h3 style="width: 100%;font-size: 14px;">Nouveau projet invité</h3>
+                                    <FolderGit2 style="padding-left: 75px;width: 35px; height: 35px;" />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                     <li>
                         <button class="butt" :class="{ selected: currentPage === 'backlogs' }"
                             style="display: flex;text-decoration: none;" @click="showPage('backlogs')">
-                            <i :style="{ color: currentPage === 'backlogs' ? '#202020c9' : 'white' }"
-                            class="fas fa-clock"></i>
+                            <SquarePlus />
+
                             <h3 :style="{ color: currentPage === 'backlogs' ? '#202020c9' : 'white' }">
                                 Backlogs</h3>
-
+                            <ArrowRight class="fleche" />
                         </button>
                     </li>
                     <li>
                         <button class="butt" :class="{ selected: currentPage === 'tasks' }"
                             style="display: flex;text-decoration: none;" @click="showPage('tasks')">
-                            <i :style="{ color: currentPage === 'tasks' ? '#202020c9' : 'white' }"
-                                class="fas fa-tasks"></i>
+                            <ListTodo />
                             <h3 :style="{ color: currentPage === 'tasks' ? '#202020c9' : 'white' }">Tâches</h3>
-
+                            <ArrowRight class="fleche" />
                         </button>
                     </li>
                     <li>
                         <button class="butt" :class="{ selected: currentPage === 'team' }"
                             style="display: flex;text-decoration: none;" @click="showPage('team')">
-                            <i :style="{ color: currentPage === 'team' ? '#202020c9' : 'white' }"
-                                class="fas fa-users"></i>
-                            <h3 :style="{ color: currentPage === 'team' ? '#202020c9' : 'white' }">Membres
-                            </h3>
-
+                            <Users />
+                            <h3 :style="{ color: currentPage === 'team' ? '#202020c9' : 'white' }">Membres</h3>
+                            <ArrowRight class="fleche" />
                         </button>
                     </li>
 
                 </ul>
             </nav>
         </div>
-        <div class="extra">
-           
-            <div style="margin-top: -14px;" class="page" v-if="currentPage === 'home'">
-                <div class="entete" style="border-radius: 8px; border-color: #D9D9D9;border:1px;">
-                    <i class="fas fa-pie-chart"></i>
-                    <p class="title_entete" style="font-size: 14px;padding-bottom: 25px;">Dashboard</p>
-                </div>
-                <div class="cont" >
-                    <div class="s_menu">
-                        <div class="contex" style="background-color: #F0F1FF;border-radius: 8px;">
-                            <div class="nbre_icons">
-                                <h1>01</h1>
-                                <!-- <h1>{{ teamMemberCount }}</h1> -->
-                                <i class="fas fa-users"></i>
-                            </div>
-                            <h3>Nombre de membre</h3>
-                        </div>
-                        <div class="contex" style="background-color: #FFE8EF;border-radius: 8px;">
-                            <div class="nbre_icons">
+        <!-- <div class="extra"> -->
 
-                                <h1>20%</h1>
-                                <i class="fas fa-users"></i>
-                            </div>
-                            <!-- <h1>{{ affectationCount }}%</h1> -->
-                            <h3>Pourcentage de réalisation</h3>
-                        </div>
-                        <div class="contex" style="background-color: #EAFBEA;border-radius: 8px;">
-                            <div class="nbre_icons">
+        <div style="margin-top: -14px;" class="" v-if="currentPage === 'home'">
 
-                                <h1>30%</h1>
-                                <i class="fas fa-users"></i>
-                                <!-- <h1>{{ stageCount }}</h1> -->
-                                <h3>Taux de tache journaliere</h3>
-                            </div>
-                        </div>
-                        <div class="contex" style="background-color: #FDF2E1;border-radius: 8px;">
-                            <div class="nbre_icons">
+            <dashboardPage />
+        </div>
 
-                                <h1>01</h1>
-                                <!-- <h1>{{ taskCount }}</h1> -->
-                                <i class="fas fa-users"></i>
-                            </div>
-                            <h3>Nombre de membres performant</h3>
-                        </div>
-                        <div class="contex" style="background-color: #EDF6FF;border-radius: 8px;">
-                            <div class="nbre_icons">
-
-                                <h1>04</h1>
-                                <!-- <h1>{{ taskCount }}</h1> -->
-                                <i class="fas fa-users"></i>
-                            </div>
-                            <h3>Nombre de tache</h3>
-                        </div>
-                        <div class="contex" style="background-color: #FAFFE6;border-radius: 8px;">
-                            <div class="nbre_icons">
-
-                            <h1>30%</h1>
-                            <!-- <h1>{{ taskCount }}</h1> -->
-                            <i class="fas fa-users"></i>
-                             </div>
-                            <h3>Taux de reactivité</h3>
-
-                        </div>
-                    </div>
-                </div>
-                <dashboardPage />
-            </div>
-
-            <div style="display: flex; justify-content: space-between; width: 100%; display: block;" class="page notif"
-                v-if="currentPage === 'backlogs'">
-                <!-- <div v-if="loading" class="loading-indicator">
+        <div style="display: flex; justify-content: space-between; width: 100%; display: block;" class="page notif"
+            v-if="currentPage === 'backlogs'">
+            <!-- <div v-if="loading" class="loading-indicator">
 
                 </div> -->
-                <backlogsPage />
-            </div>
+            <backlogsPage />
+        </div>
 
-            <div class="page" v-if="currentPage === 'tasks'">
-                <tasksPage />
-            </div>
-            <div class="page" v-if="currentPage === 'team'">
-                <teamMemberPage />
-            </div>
-            
-
-           
-                    
-            <div v-if="modalVisible" class="modals">
-                <div class="details animate__animated animate__fadeInDown">
-                    <div class="close" @click="hideModal">
-                        <i class="fa fa-window-close"></i>
-                    </div>
-            
-                   
+        <div class="page" v-if="currentPage === 'tasks'">
+            <tasksPage />
+        </div>
+        <div class="page" v-if="currentPage === 'team'">
+            <teamMemberPage />
+        </div>
+        <div class="modals" v-if="modalVisible">
+            <div class="details animate__animated animate__fadeInDown">
+                <div class="close" @click="hideModal">
+                    <X style="color: #000000; font-size: 24px;" />
                 </div>
+                <h1 style="color: #000000; text-align: center">Ajouter un projet</h1>
+                <form @submit.prevent="createNewProject">
+                    <div class="inp-field">
+                        <h2 for="projectname">Nom du projet :</h2>
+                        <input type="text" id="projectname" v-model="projectname" required>
+                    </div>
+                    <div class="inp-field">
+                        <h2 for="description">Description :</h2>
+                        <textarea name="description" id="description" v-model="description" cols="30"
+                            rows="3"></textarea>
+                    </div>
+                    <div class="inp-field">
+                        <h2 for="projectType" style="text-align: left;">Type de projet :</h2>
+                        <input type="text" id="projectType" v-model="projectType" required>
+                    </div>
+                    <div class="inp-field">
+                        <h2 for="start_date" style="text-align: left;">Date de début :</h2>
+                        <input type="date" id="start_date" v-model="start_date" required>
+                    </div>
+                    <div class="inp-field">
+                        <h2 for="end_date" style="text-align: left;">Date de fin :</h2>
+                        <input type="date" id="end_date" v-model="end_date" required>
+                    </div>
+                    <div class="inp-field">
+                        <h2 for="budget" style="text-align: left;">Budget Estimatif :</h2>
+                        <input type="text" id="budget" v-model="budget">
+                    </div>
+                    <button class="sub_butt" type="submit">Enregistrer le projet</button>
+                </form>
             </div>
         </div>
     </div>
 </template>
 
 <script>
- import dashboardPage from './dashboardPage.vue';
- import backlogsPage from './backlogsPage.vue';
- import tasksPage from './tasksPage.vue';
+import dashboardPage from './dashboardPage.vue';
+import backlogsPage from './backlogsPage.vue';
+import tasksPage from './tasksPage.vue';
 import teamMemberPage from './teamMemberPage.vue';
 import axios from 'axios';
 
-
-
 export default {
-
     components: {
         dashboardPage,
         backlogsPage,
         tasksPage,
         teamMemberPage,
-        
     },
     data() {
         return {
-           
+            modalVisible: false,
             showMessagePage: false,
-            showNotificationPage:false,
+            showNotificationPage: false,
             currentPage: 'home',
             selectedButton: 'button4',
-            teamMemberCount: '',
-            taskCount: '',
-            // personnels: [],
-            // username: '',
-            // nom_prenom: '',
-            // loading: false,
-            // message: '',
-            // selectedAffectations: [],
-
+            teamMemberCount: 1,
+            taskCount: 0,
+            pendingTasksCount: 0,
+            inProgressTasksCount: 0,
+            completedTasksCount: 0,
+            projects: [
+                { id: 1, projectname: 'Projet A', description: 'Description du Projet A' },
+                { id: 2, projectname: 'Projet B', description: 'Description du Projet B' },
+            ], // Liste des projets
+            selectedProjectId: '', // ID du projet sélectionné
+            userId: '',
+            projectId: '',
+            userData: null,
+            isProjectListVisible: false,
         };
     },
     mounted() {
-        this.username = localStorage.getItem('username');
-        this.fetchteamMemberCount()
-        this.fetchtaskCount()
-        
+        if (this.isConnected()) {
+            this.userId = localStorage.getItem('userId');
+            this.fetchUserData();
+        } else {
+            this.errorMessage = 'Utilisateur non connecté';
+            this.$router.push('/auth'); // Rediriger vers la page de connexion
+        }
+        this.fetchProjects();
+        this.projectId = localStorage.getItem('projectId');
+        this.fetchTeamMemberCount();
+        this.fetchPendingTasksCount();
+        this.fetchInProgressTasksCount();
+        this.fetchCompletedTasksCount();
+        this.fetchTotalTasksCount();
     },
     methods: {
-        logout() {
-            localStorage.removeItem('token');
-            localStorage.removeItem('username');
-            this.$router.push("/")
+        hideModal() {
+            this.modalVisible = false;
         },
-       
+        showModal1() {
+            this.modalVisible = true;
+        },
+        isConnected() {
+            return localStorage.getItem('token') !== null;
+        },
+
         selectButton(button) {
             this.selectedButton = button;
         },
         showPage(page) {
             this.currentPage = page;
         },
-       
-        async fetchteamMemberCount() {
+        async createNewProject() {
             try {
-                const response = await axios.get('http://localhost:3001/team-count')
-                this.teamMemberCount = response.data.count;
-                console.log(this.teamMemberCount);
+                const response = await axios.post('http://localhost:3001/projects', {
+                    projectname: this.projectname,
+                    description: this.description,
+                    projectType: this.projectType,
+                    start_date: this.start_date,
+                    end_date: this.end_date,
+                    budget: this.budget
+
+                });
+                this.success = true;
+                this.successMessage = response.data.message;
             } catch (error) {
-                console.error('Erreur lors de la récupération du nombre de personnels :', error)
+                this.error = true;
+                this.errorMessage = error.response.data.message;
             }
         },
-        async fetchtaskCount() {
+        async fetchUserData() {
             try {
-                const response = await axios.get('http://localhost:3001/task-count')
-                this.taskCount = response.data.count;
+                const response = await axios.get(`http://localhost:3001/users/${this.userId}`);
+                this.userData = response.data;
+            } catch (error) {
+                this.errorMessage = 'Erreur lors de la récupération des données utilisateur : ' + error.response.data.message;
+            }
+        },
+
+        async fetchProjects() {
+            try {
+                const response = await axios.get('http://localhost:3001/projects/user/:userId');
+                this.projects = response.data;
+                console.log(this.userId)
+            } catch (error) {
+                this.errorMessage = 'Erreur lors de la récupération des projets : ' + error.response.data.message;
+            }
+        },
+        toggleProjectList() {
+            this.isProjectListVisible = !this.isProjectListVisible;
+        },
+        selectProject(projectId) {
+            this.selectedProjectId = projectId;
+            localStorage.setItem('projectId', projectId); // Stocker l'ID du projet dans le localStorage
+            this.$router.push('/accueilPage'); // Rediriger vers la page des détails du projet
+        },
+
+        async fetchTeamMemberCount() {
+            try {
+                const response = await axios.get(`http://localhost:3001/team-members/${this.projectId}/team/count`);
+                this.teamMemberCount = response.data;
+                console.log(this.teamMemberCount);
+                console.log(this.projectId)
+            } catch (error) {
+                console.error('Erreur lors de la récupération du nombre de personnels :', error);
+            }
+        },
+        async fetchPendingTasksCount() {
+            try {
+                const response = await axios.get(`http://localhost:3001/tasks/${this.projectId}/pending`);
+                this.pendingTasksCount = response.data.length;
+                console.log(this.pendingTasksCount);
+            } catch (error) {
+                console.error('Erreur lors de la récupération des tâches en attente :', error);
+            }
+        },
+        async fetchInProgressTasksCount() {
+            try {
+                const response = await axios.get(`http://localhost:3001/tasks/${this.projectId}/in-progress`);
+                this.inProgressTasksCount = response.data.length;
+                console.log(this.inProgressTasksCount);
+            } catch (error) {
+                console.error('Erreur lors de la récupération des tâches en cours :', error);
+            }
+        },
+        async fetchCompletedTasksCount() {
+            try {
+                const response = await axios.get(`http://localhost:3001/tasks/${this.projectId}/completed`);
+                this.completedTasksCount = response.data.length;
+                console.log(this.completedTasksCount);
+            } catch (error) {
+                console.error('Erreur lors de la récupération des tâches terminées :', error);
+            }
+        },
+        async fetchTotalTasksCount() {
+            try {
+                const response = await axios.get(`http://localhost:3001/tasks/${this.projectId}/tasks/count`);
+                this.taskCount = response.data;
                 console.log(this.taskCount);
             } catch (error) {
-                console.error('Erreur lors de la récupération du nombre de affectation :', error)
+                console.error('Erreur lors de la récupération du nombre total de tâches :', error);
             }
         },
-       
     }
 };
 </script>
@@ -255,79 +336,8 @@ export default {
 <style scoped>
 @import url(https://fonts.googleapis.com/css2?family=Monda:wght@100;200;300;400;500;600;700&display=swap);
 
-.list_detail label {
-    width: 30% !important;
-    text-align: right;
-}
-
-.list_detail {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    margin-top: 1.5%;
-}
-
-.detail_perso h3 {
-    width: 67% !important;
-    margin: 0 !important;
-    padding: 0 !important;
-}
-
-.detail_perso {
-    width: 100%;
-}
-
-.modals {
-    background-color: rgba(0, 0, 0, 0.5);
-    position: absolute;
-    width: 100%;
-    top: 0%;
-    height: 100vh;
-    /* 
-    margin: 0 13%; */
-}
-
-.close {
-    text-align: end;
-}
-
-.close i {
-    color: rgba(255, 0, 0, 0.945);
-    font-size: 25px;
-}
-
-.details {
-    background-color: white;
-    width: 40%;
-    margin: 10% 23%;
-    padding: 25px 25px;
-    border-radius: 5px;
-}
-
-.actions {
-    width: 50%;
-    margin: auto;
-    margin-top: 10%;
-    justify-content: space-between;
-    display: flex;
-}
-
-.actions .action {
-    width: 47%;
-    font-size: large;
-    font-weight: 700;
-    padding: 10px 0;
-    border: none;
-    color: white;
-    border-radius: 5px;
-}
-
-.action:nth-child(1) {
-    background-color: #007A5E;
-}
-
-.action:nth-child(2) {
-    background-color: rgba(255, 0, 0, 0.815);
+.logoflysoft {
+    margin-left: 20px;
 }
 
 body {
@@ -338,109 +348,59 @@ body {
     font-family: Monda;
 }
 
-.personnel_list {
-    width: 95%;
-    margin: auto;
-    margin-top: 30px;
-}
 
-.personnel_list .tete {
-    border: 1px solid #007A5E;
-    width: 96%;
-    display: flex;
-    justify-content: space-between;
-    padding: 10px 2%;
-    border-radius: 5px;
-}
 
-.danger {
-    color: rgb(247, 13, 13) !important;
-}
-
-.personnel_list .titre1 {
-    font-size: 25px;
-    font-weight: bold;
-    color: #007A5E;
-    text-decoration: none;
-}
-
-.personnel_list .outil {
-    width: 30%;
-    margin: auto;
-    margin-left: 50%;
-    display: flex;
-    justify-content: space-between;
-}
-
-.personnel_list .option {
-    font-size: 19px;
-    color: #007A5E;
-    text-decoration: none;
-}
-
-.intitule {
-    width: 100%;
-    display: flex;
-    margin-top: 20px;
-}
-
-.objets {
-    margin-top: 10px;
-    width: 100%;
-    display: flex;
-}
-
-.objets .attr {
-    font-size: 16px;
-    width: 20%;
-    font-weight: 200;
-}
-
-.attr {
-    font-size: 20px;
-    font-weight: bold;
-    width: 25%;
-}
-
-.stat {
-    font-style: italic;
-    color: #007A5E;
-}
-
-.stat2 {
-    font-style: italic;
-    color: rgb(243, 21, 21);
-}
-
-.intitule .attr {
-    font-size: 20px;
-    font-weight: bold;
-    width: 20%;
-}
 
 .s_menu {
-    width: 95%;
+    width: 99%;
     margin: auto;
     display: flex;
     justify-content: space-between;
+}
+
+.icon {
+    background-color: transparent;
+    border: none;
+    margin-top: 15px;
 }
 
 .s_menu .contex {
-    width: 23%;
+    width: 240px;
     height: 150px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-    border-radius: 5px;
+    /* box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); */
+    border-radius: 8px;
     text-align: center;
-    background-color: rgb(0, 122, 94);
-    color: white;
+    /* background-color: rgb(0, 122, 94); */
+    color: #000000;
+    padding-left: 1%;
+    padding-right: 1%;
 }
-.contex h1{
+
+.s_menu .contex .nbre_icons {
+    display: flex;
+    justify-content: space-between;
+    flex: 1;
+}
+
+.s_menu .contex .nbre_icons .icon-lucide {
+    font-size: 50px;
+    padding-top: 10%;
+    padding-right: 8%;
+}
+
+.contex h1 {
     font-weight: bold;
-    font-size: 35px
+    font-size: 38px;
+    padding-left: 8%;
 }
-h4 {
-    color: #202020;
-    font-size: 13px;
+
+
+.contex h3 {
+    font-size: 14px;
+    text-align: left;
+    padding-left: 8%;
+    padding-bottom: 10%;
+
 }
 
 .container {
@@ -449,41 +409,161 @@ h4 {
     display: flex;
     overflow-y: auto;
     font-family: Monda;
-    background-color: rgba(0, 0, 0, 0.05);
+    /* background-color: rgba(0, 0, 0, 0.05); */
+    background-color: white;
 }
 
-label {
-    width: 30%;
+/* .pre_container {
+    width: 100%;
+    height: 5vh;
+} */
+
+.pre_container1 {
+    display: flex;
+    flex: 1;
+    justify-content: space-between;
+    border-bottom: 1px solid #D9D9D9;
 }
 
-.span {
+.profil {
+    border-radius: 50% !important;
+    border: 1px solid rgb(255, 123, 0);
+    width: 60px;
+    height: 60px;
+}
+
+.profil button {
+    background-color: transparent;
+    border: none;
+    width: 100%;
+}
+
+.icon-lucide {
+    width: 60px;
+    height: 60px;
+    color: #202020;
+    stroke-width: 1px;
+
+}
+
+.fleche {
+    margin-left: 100px;
+    color: #000000;
+    stroke-width: 2px;
+}
+
+.search-barre {
+    height: 45px;
+    width: 730px;
+    border: 1px solid #D9D9D9;
+    border-radius: 8px;
+    padding-left: 50px;
+    /* Espace pour l'icône */
+    box-sizing: border-box;
+    font-size: 18px;
+}
+
+.search-zone {
+    display: flex;
+    justify-content: flex-start;
+    padding-left: 0.5%;
+    padding-bottom: 20px;
+
+}
+
+.search-form {
+    display: flex;
+
+}
+
+.search-barrediv {
+
+    display: flex;
+    position: relative;
+
+}
+
+.icon-search {
+    position: absolute;
+    left: 10px;
+    padding-top: 1%;
+
+}
+
+
+.search-butt {
+    margin-left: 10px;
+}
+
+.searchbtn {
+    /* padding: 5px 10px; */
+    background-color: #000000;
+    color: white;
     font-weight: bold;
+    /* Texte en gras */
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    height: 45px;
+    width: 200px;
+    font-size: 12px;
 }
 
-.ext {
+.searchbtn:hover {
+    background-color: #0056b3;
+}
+
+.addProjectbtn:hover {
+    background-color: #F0F1FF !important;
+}
+
+.project-item:hover {
+    background-color: #FFE8EF !important;
+}
+
+.chevron-up {
+    transition: transform 0.3s;
+    transform: rotate(0deg);
+}
+
+.chevron-down {
+    transform: rotate(180deg);
+    transition: transform 0.3s;
+}
+
+.project-list {
+    display: none;
+}
+
+.project-list.visible {
+    display: block;
+}
+
+/* .ext {
     background-color: white;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
     margin-left: 2%;
     padding: 10px 20px !important;
     display: flex;
-}
+} */
 
 .side_barre {
-    width: 15%;
-    background-color: #007A5E;
-    box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.3);
+    width: 18%;
+    background-color: white;
+    box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.1);
     height: 100vh;
+
 
 }
 
 .side_barre i {
-    color: white !important;
+    color: black !important;
     margin: 0 10px;
     font-size: 20px;
 }
 
 .side_barre h3 {
-    color: white !important;
+    color: black !important;
     width: 100px;
     text-align: left;
     margin: 0 10px;
@@ -501,16 +581,127 @@ label {
 .page {
     background-color: transparent;
     width: 100%;
+    /* margin-right: 5%; */
 }
 
-h3 {
+.entete {
+    border: 2px solid #D9D9D9;
+    border-radius: 8px;
+    width: 99%;
+    height: 62px;
+    margin: auto;
+    margin-top: 1%;
+    margin-bottom: 20px;
+    display: flex;
+
+
+}
+
+.modals {
+    background-color: rgba(0, 0, 0, 0.5);
+    position: absolute;
+    width: 100%;
+    top: 0%;
+    left: 0%;
+    height: 100vh;
+    /* 
+    margin: 0 13%; */
+}
+
+.close {
+    text-align: end;
+}
+
+.close i {
+    color: rgba(255, 0, 0, 0.945);
+    font-size: 25px;
+}
+
+.details {
+    background-color: white;
+    width: 40%;
+    margin: auto;
+    margin-top: 20px;
+    padding: 25px 25px;
+    border-radius: 8px;
+}
+
+form {
+    width: 100%;
+    padding: 10px;
+}
+
+form .inp-field {
+    display: block;
+    width: 100%;
+    /* margin-bottom: 10px; */
+}
+
+form .inp-field h2 {
+    width: 100%;
+    font-size: large;
+    font-weight: 600;
+    padding-left: 10px;
+    margin-bottom: 3px!important;
+    text-align: left !important;
+}
+
+form .inp-field input,
+form .inp-field textarea {
+    width: 94%;
+    font-size: large;
+    border: 1px solid #D9D9D9;
+    border-radius: 8px;
+    padding-left: 20px;
+    padding-right: 20px;
+    /* width: 90%; */
+}
+
+form .inp-field input {
+    height: 45px;
+}
+
+.sub_butt {
+    font-size: large;
+    font-weight: bold;
+    color: white;
+    width: 50%;
+    background-color: #000000;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 0;
+    margin-top: 30px;
+    margin-left: 48%;
+}
+
+.user {
+    display: flex;
+    justify-content: space-between;
+    width: 8%;
+}
+
+.entete p {
+    font-size: 16px;
+    color: #000000;
+    padding-left: 15px;
+    font-weight: bold;
+    padding-top: 4px;
+}
+
+.entete .ico-dash {
+    padding-left: 1%;
+    padding-top: 1%;
+    padding-bottom: 3%;
+}
+
+/* h3 {
     color: #202020;
-}
+} */
 
-p {
+/* p {
     color: rgba(0, 0, 0, 0.2);
     font-size: 12px;
-}
+} */
 
 /*Scroll bar css*/
 .container::-webkit-scrollbar {
@@ -573,7 +764,7 @@ ul {
     margin-right: 10px;
 }
 
-.dMois li:hover {
+/* .dMois li:hover {
     background: transparent !important;
 
 }
@@ -582,7 +773,7 @@ ul {
     transition: all 0.3s;
     border-bottom: 1px solid rgba(0, 0, 0, 0.2);
 
-}
+} */
 
 li:hover {
     cursor: pointer;
@@ -671,8 +862,8 @@ li:hover {
 
 .selected {
     border: 1px solid white;
-    background-color: #0B9777;
-    border-radius: 10px;
+    background-color: #D9D9D9;
+    border-radius: 8px;
     font-weight: bold !important;
     transition: all 0.3s;
     /* Ajoutez ici vos styles personnalisés pour le bouton sélectionné */
@@ -683,14 +874,14 @@ li:hover {
     padding-bottom: 20px;
 }
 
-.cont1 {
+/* .cont1 {
     width: 100%;
     display: block;
     flex-wrap: nowrap;
     background-color: #202020;
     overflow: hidden;
-}
-
+} */
+/* 
 .cont2 {
     width: 100%;
     background-color: white;
@@ -718,12 +909,12 @@ li:hover {
     background-color: #007A5E;
     color: white;
     font-size: 18px;
-}
+} */
 
 form div {
     width: 80%;
-    display: flex;
-    justify-content: space-between;
+    /* display: flex;
+    justify-content: space-between; */
     margin-top: 20px;
 }
 

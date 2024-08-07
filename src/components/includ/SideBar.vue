@@ -1,3 +1,9 @@
+<script setup>
+import {  SquarePlus, ListTodo, Users, Gauge } from 'lucide-vue-next';
+</script>
+
+
+
 <template>
     <div class="side_barre">
 
@@ -10,7 +16,7 @@
             <ul>
                 <li>
                     <router-link to="/acceuilPage" class="butt" style="display: flex;text-decoration: none;">
-                        <i class="fas fa-pie-chart"></i>
+                        <Gauge />
                         <h3>Dashboard</h3>
                         <i class="fas fa-chevron-up fleche"></i>
 
@@ -18,21 +24,21 @@
                 </li>
                 <li>
                     <router-link to="/acceuilPage2" class="butt" style="display: flex;text-decoration: none;">
-                        <i class="fas fa-clock"></i>
+                        <SquarePlus />
                         <h3> Backlogs</h3>
                         <i class="fas fa-arrow-right fleche" style="color: #C0C0C0;"></i>
                     </router-link>
                 </li>
                 <li>
                     <router-link to="/acceuilPage3" class="butt" style="display: flex;text-decoration: none;">
-                        <i class="fas fa-tasks"></i>
+                        <ListTodo />
                         <h3>Tâches </h3>
                         <i class="fas fa-arrow-right fleche" style="color: #C0C0C0;" ></i>
                     </router-link>
                 </li>
                 <li>
                     <router-link to="/acceuilPage4" class="butt member" style="display: flex;text-decoration: none;">
-                        <i class="fas fa-users"></i>
+                        <Users />
                         <h3>Membres</h3>
                         <i class="fas fa-arrow-right fleche"></i>
                     </router-link>

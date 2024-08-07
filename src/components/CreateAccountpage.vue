@@ -193,7 +193,7 @@ body {
 }
 
 .input-field {
-    padding-bottom: 25px;
+    padding-bottom: 20px;
 }
 
 .signup1,
@@ -241,8 +241,8 @@ input {
 }
 
 label {
-    font-weight: 700;
-    font-size: 22px;
+    font-weight: 500;
+    font-size: 20px;
     color: #202020;
 }
 
@@ -316,7 +316,7 @@ span {
 
 .navigation {
     text-align: center;
-    padding-top: 0.5%;
+   
 }
 
 .navigation p {
@@ -324,7 +324,7 @@ span {
 }
 .privacy{
     text-align: center;
-    padding-top: 0%;
+    
 }
 .privacy p{
     font-size: 18px;
