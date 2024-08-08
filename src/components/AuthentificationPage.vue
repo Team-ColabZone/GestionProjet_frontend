@@ -86,7 +86,7 @@ export default {
                     password: this.password
                 });
                 const userData = response.data;
-                localStorage.setItem('userId', userData.user_id);
+                localStorage.setItem('userId', userData.user_id);  // Assurez-vous que 'user_id' est correct
                 localStorage.setItem('token', userData.access_token);
                 this.$router.push('/acceuilPage');
                 console.log(userData);

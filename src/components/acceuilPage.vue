@@ -157,10 +157,10 @@ import { MessageSquare, BellRing, SquarePlus, ListTodo, Users, Gauge, ArrowRight
                         <h2 for="end_date" style="text-align: left;">Date de fin :</h2>
                         <input type="date" id="end_date" v-model="end_date" required>
                     </div>
-                    <div class="inp-field">
+                    <!-- <div class="inp-field">
                         <h2 for="budget" style="text-align: left;">Budget Estimatif :</h2>
                         <input type="text" id="budget" v-model="budget">
-                    </div>
+                    </div> -->
                     <button class="sub_butt" type="submit">Enregistrer le projet</button>
                 </form>
             </div>
@@ -194,9 +194,13 @@ export default {
             pendingTasksCount: 0,
             inProgressTasksCount: 0,
             completedTasksCount: 0,
+            projectname: '',
+            description: '',
+            projectType: '',
+            start_date: '',
+            end_date: '',
+            // budget: '',
             projects: [
-                { id: 1, projectname: 'Projet A', description: 'Description du Projet A' },
-                { id: 2, projectname: 'Projet B', description: 'Description du Projet B' },
             ], // Liste des projets
             selectedProjectId: '', // ID du projet sélectionné
             userId: '',
@@ -214,6 +218,7 @@ export default {
             this.$router.push('/auth'); // Rediriger vers la page de connexion
         }
         this.fetchProjects();
+        this.userId = localStorage.getItem('userId');
         this.projectId = localStorage.getItem('projectId');
         this.fetchTeamMemberCount();
         this.fetchPendingTasksCount();
@@ -240,25 +245,42 @@ export default {
         },
         async createNewProject() {
             try {
+                const token = localStorage.getItem('token');
                 const response = await axios.post('http://localhost:3001/projects', {
                     projectname: this.projectname,
                     description: this.description,
                     projectType: this.projectType,
-                    start_date: this.start_date,
-                    end_date: this.end_date,
-                    budget: this.budget
-
+                    start_date: new Date(this.start_date), // Conversion en objet Date
+                    end_date: new Date(this.end_date), // Conversion en objet Date
+                    // budget: this.budget,
+                    userId: this.userId // Assure-toi d'inclure l'ID de l'utilisateur
+                }, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
                 });
                 this.success = true;
                 this.successMessage = response.data.message;
+                // Réinitialiser les champs du formulaire
+                this.projectname = '';
+                this.description = '';
+                this.projectType = '';
+                this.start_date = '';
+                this.end_date = '';
+                // this.budget = '';
             } catch (error) {
                 this.error = true;
-                this.errorMessage = error.response.data.message;
+                this.errorMessage = error.response ? error.response.data.message : error.message;
             }
         },
         async fetchUserData() {
             try {
-                const response = await axios.get(`http://localhost:3001/users/${this.userId}`);
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`http://localhost:3001/users/${this.userId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 this.userData = response.data;
             } catch (error) {
                 this.errorMessage = 'Erreur lors de la récupération des données utilisateur : ' + error.response.data.message;
@@ -267,13 +289,19 @@ export default {
 
         async fetchProjects() {
             try {
-                const response = await axios.get('http://localhost:3001/projects/user/:userId');
+                const token = localStorage.getItem('token'); // ou une autre méthode pour récupérer le token
+                const response = await axios.get(`http://localhost:3001/projects/user/${this.userId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 this.projects = response.data;
-                console.log(this.userId)
+                console.log(this.userId);
             } catch (error) {
-                this.errorMessage = 'Erreur lors de la récupération des projets : ' + error.response.data.message;
+                this.errorMessage = 'Erreur lors de la récupération des projets : ' + (error.response ? error.response.data.message : error.message);
             }
         },
+
         toggleProjectList() {
             this.isProjectListVisible = !this.isProjectListVisible;
         },
@@ -642,7 +670,7 @@ form .inp-field h2 {
     font-size: large;
     font-weight: 600;
     padding-left: 10px;
-    margin-bottom: 3px!important;
+    margin-bottom: 3px !important;
     text-align: left !important;
 }
 
