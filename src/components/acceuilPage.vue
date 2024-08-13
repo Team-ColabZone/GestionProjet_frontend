@@ -4,36 +4,36 @@ import { MessageSquare, BellRing, SquarePlus, ListTodo, Users, Gauge, ArrowRight
 
 
 <template>
-    <div class="pre_container">
-        <nav class="pre_container1">
-            <div class="logoflysoft">
-                <img class="logo" src="../assets/images/logoflysoft.png" alt="logo Entreprise"
-                    style="margin-left: 2%;width: 60px; height: 60px; " />
-                <!-- <p class="text">Systeme de gestion de projet de <br> FLYSOFT ENGINEERING</p> -->
-            </div>
-            <div class="user">
-                <div class="message">
-                    <button class="icon" @click="showMessagePage">
-                        <MessageSquare style="cursor: pointer" />
-                    </button>
-                </div>
-                <div class="notification">
-                    <button class="icon" @click="showNotificationPage">
-                        <BellRing style="cursor: pointer" />
-                    </button>
-                </div>
-                <div class="profil" style="border-radius: 50%; background-color: white;">
-                    <button @click="showProfilPage">
-                        <img class="logo" src="../assets/images/logoflysoft.png" alt="logo Entreprise"
-                            style="margin-right: 2%; width: 30px; height: 30px;" />
-                    </button>
-                </div>
-            </div>
-        </nav>
+    <div class="page">
+
     </div>
+    <nav class="pre_container1">
+        <div class="logoflysoft">
+            <img class="logo" src="../assets/images/logoflysoft.png" alt="logo Entreprise"
+                style="margin-left: 2%;width: 60px; height: 60px; " />
+        </div>
+        <div class="user">
+            <div class="message">
+                <button class="icon" @click="showMessagePage">
+                    <MessageSquare style="cursor: pointer" />
+                </button>
+            </div>
+            <div class="notification">
+                <button class="icon" @click="showNotificationPage">
+                    <BellRing style="cursor: pointer" />
+                </button>
+            </div>
+            <div class="profil" style="border-radius: 50%; background-color: white;">
+                <button @click="showProfilPage">
+                    <img class="logo" src="../assets/images/logoflysoft.png" alt="logo Entreprise"
+                        style="margin-right: 2%; width: 30px; height: 30px;" />
+                </button>
+            </div>
+        </div>
+    </nav>
+
     <div class="container">
         <div class="side_barre">
-
             <nav style="width: 100%;">
                 <ul style="margin-top: 40px;">
                     <li>
@@ -53,7 +53,6 @@ import { MessageSquare, BellRing, SquarePlus, ListTodo, Users, Gauge, ArrowRight
 
                     <div :class="{ 'project-list': true, 'visible': isProjectListVisible }" style="width: 292px;background-color: white;  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.3); 
                     padding: 7px; border:1px solid #D9D9D9; border-radius: 8px; margin-left: 6%; ">
-                        <!-- <h2>Projets</h2> -->
                         <div v-for="project in projects" :key="project.id" @click="selectProject(project.id)"
                             class="project-item" style="border-bottom: 1px solid #D9D9D9; cursor: pointer;">
                             <p class="project-item"
@@ -108,18 +107,13 @@ import { MessageSquare, BellRing, SquarePlus, ListTodo, Users, Gauge, ArrowRight
                 </ul>
             </nav>
         </div>
-        <!-- <div class="extra"> -->
 
         <div style="margin-top: -14px;" class="" v-if="currentPage === 'home'">
-
             <dashboardPage />
         </div>
 
         <div style="display: flex; justify-content: space-between; width: 100%; display: block;" class="page notif"
             v-if="currentPage === 'backlogs'">
-            <!-- <div v-if="loading" class="loading-indicator">
-
-                </div> -->
             <backlogsPage />
         </div>
 
@@ -157,10 +151,6 @@ import { MessageSquare, BellRing, SquarePlus, ListTodo, Users, Gauge, ArrowRight
                         <h2 for="end_date" style="text-align: left;">Date de fin :</h2>
                         <input type="date" id="end_date" v-model="end_date" required>
                     </div>
-                    <!-- <div class="inp-field">
-                        <h2 for="budget" style="text-align: left;">Budget Estimatif :</h2>
-                        <input type="text" id="budget" v-model="budget">
-                    </div> -->
                     <button class="sub_butt" type="submit">Enregistrer le projet</button>
                 </form>
             </div>
@@ -441,11 +431,6 @@ body {
     /* background-color: rgba(0, 0, 0, 0.05); */
     background-color: white;
 }
-
-/* .pre_container {
-    width: 100%;
-    height: 5vh;
-} */
 
 .pre_container1 {
     display: flex;

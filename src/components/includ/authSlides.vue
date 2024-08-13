@@ -3,7 +3,7 @@
         <div class="slider-container">
             <img v-for="(image, index) in images" :key="index" :src="require(`@/assets/images/${image}`)"
                 :alt="`Slide ${index + 1}`" v-show="index === currentSlide"
-                style="width: 100%;height: 100%;border-radius: 12px;object-fit: cover;">
+                style="width: 100%; border-radius: 12px;">
         </div>
 
         <div class="overlay">
@@ -28,9 +28,9 @@ export default {
         return {
             images: [
                 'signin_image2.jpg',
-                // 'signin_image3.jpg',
-                // 'signin_image4.jpg',
-                // 'signup_image.jpg'
+                'signin_image3.jpg',
+                'signin_image4.jpg',
+                'signup_image.jpg'
             ],
             currentSlide: 0
         };
@@ -54,10 +54,10 @@ export default {
 </script>
 
 <style>
+
 .left-block {
-    /* margin-right: 40px; */
     width: 65%;
-    margin: 10px 0px 10px 10px;
+    height: 96vh;
     position: relative;
     border-radius: 12px;
     /* border: 1px solid red; */
@@ -66,8 +66,7 @@ export default {
 .slider-container {
     display: flex;
     height: 100%;
-    /* border: 1px solid red; */
-    /* border-radius: 12px; */
+    width: 100%;
 }
 
 .overlay {
@@ -108,7 +107,13 @@ export default {
 }
 
 .footerImage p {
-    font-size: 20px;
+    font-size: 1.2rem;
     font-weight: bold;
+}
+
+@media only screen and (max-width:800px){
+.left-block{
+    display:none;
+}
 }
 </style>
