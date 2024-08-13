@@ -1,5 +1,5 @@
 const config = {
-    apiBaseUrl: 'http://192.168.100.80:3001' || 'http://localhost',
+    apiBaseUrl: 'https://colabzone-4c5861dbcf03.herokuapp.com' || 'http://localhost',
 };
 
 export default config;

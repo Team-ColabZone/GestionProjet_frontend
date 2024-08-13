@@ -33,5 +33,15 @@ body{
   height: 100%;
   margin: 0;
   padding: 0;
+  /* border: 1px solid rgb(137, 130, 238); */
+
 }
+
+/* #app{
+  border: 1px solid violet;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+} */
 </style>

@@ -93,6 +93,7 @@ import { ListTodo, Search, Filter } from 'lucide-vue-next';
 
 <script>
 import axios from 'axios';
+import config from "../config";
 
 export default {
     components: {
@@ -141,7 +142,7 @@ export default {
         },
         async fetchUserData() {
             try {
-                const response = await axios.get(`http://localhost:3001/users/${this.userId}`);
+                const response = await axios.get(`${config.apiBaseUrl}/users/${this.userId}`);
                 this.userData = response.data;
             } catch (error) {
                 this.errorMessage = 'Erreur lors de la récupération des données utilisateur : ' + error.response.data.message;
@@ -150,7 +151,7 @@ export default {
 
         async fetchProjects() {
             try {
-                const response = await axios.get('http://localhost:3001/projects/user/:userId');
+                const response = await axios.get(`${config.apiBaseUrl}/projects/user/:userId`);
                 this.projects = response.data;
                 console.log(this.userId)
             } catch (error) {
@@ -169,7 +170,7 @@ export default {
 
         async fetchPendingTasksCount() {
             try {
-                const response = await axios.get(`http://localhost:3001/tasks/${this.projectId}/pending`);
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/pending`);
                 this.pendingTasksCount = response.data.length;
                 console.log(this.pendingTasksCount);
             } catch (error) {
@@ -178,7 +179,7 @@ export default {
         },
         async fetchInProgressTasksCount() {
             try {
-                const response = await axios.get(`http://localhost:3001/tasks/${this.projectId}/in-progress`);
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/in-progress`);
                 this.inProgressTasksCount = response.data.length;
                 console.log(this.inProgressTasksCount);
             } catch (error) {
@@ -187,7 +188,7 @@ export default {
         },
         async fetchCompletedTasksCount() {
             try {
-                const response = await axios.get(`http://localhost:3001/tasks/${this.projectId}/completed`);
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/completed`);
                 this.completedTasksCount = response.data.length;
                 console.log(this.completedTasksCount);
             } catch (error) {
@@ -196,7 +197,7 @@ export default {
         },
         async fetchTotalTasksCount() {
             try {
-                const response = await axios.get(`http://localhost:3001/tasks/${this.projectId}/tasks/count`);
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/tasks/count`);
                 this.taskCount = response.data;
                 console.log(this.taskCount);
             } catch (error) {

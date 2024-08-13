@@ -2,40 +2,38 @@
     <div class="container monda-font animate__animated ">
         <authSlides />
 
-        <div class="signup_section">
-            <div class="formElement">
-                <div class="top">
-                    <div class="logoflysoft">
-                        <img class="logo" src="../assets/images/logoflysoft.png" alt="logo Entreprise" />
-                        <!-- <p class="text">Systeme de gestion de projet de <br> FLYSOFT ENGINEERING</p> -->
-                    </div>
+        <div class="formElement">
+            <div class="top">
+                <div class="logoflysoft">
+                    <img class="logo" src="../assets/images/logoflysoft.png" alt="logo Entreprise" />
+                    <!-- <p class="text">Systeme de gestion de projet de <br> FLYSOFT ENGINEERING</p> -->
                 </div>
-                
-                <!-- registration form -->
-                <form @submit.prevent="createAccount">
-                    <div>
-                        <h1 class="monda-font">Inscription</h1>
-                    </div>
+            </div>
 
+            <!-- registration form -->
+            <form @submit.prevent="createAccount">
+                <span style="color: black; font-size: 1.5rem; font-weight: bold;text-align: left;">Inscription</span>
+
+                <div class="input_block">
                     <div class="input-field">
                         <label for="firstname">Nom</label>
                         <input type="text" id="firstname" v-model="firstname" :class="inputClass(errors.firstname)"
                             @blur="validateFirstName" placeholder="Veuillez entrer votre nom" required>
-                        <span v-if="errors.firstname" class="error-message">{{ errors.firstname }}</span>
+                        <!-- <span v-if="errors.firstname" class="error-message">{{ errors.firstname }}</span> -->
                     </div>
 
                     <div class="input-field">
                         <label for="lastname">Prénom</label>
                         <input type="text" id="lastname" v-model="lastname" :class="inputClass(errors.lastname)"
                             @blur="validateLastName" placeholder="Veuillez entrer votre prénom" required>
-                        <span v-if="errors.lastname" class="error-message">{{ errors.lastname }}</span>
+                        <!-- <span v-if="errors.lastname" class="error-message">{{ errors.lastname }}</span> -->
                     </div>
 
                     <div class="input-field">
                         <label for="email">Email</label>
                         <input type="email" id="email" v-model="email" :class="inputClass(errors.email)"
                             @blur="validateEmail" placeholder="Veuillez entrer votre email" required>
-                        <span v-if="errors.email" class="error-message">{{ errors.email }}</span>
+                        <!-- <span v-if="errors.email" class="error-message">{{ errors.email }}</span> -->
                     </div>
 
                     <div class="input-field">
@@ -43,40 +41,37 @@
                         <input type="text" id="phonenumber" v-model="phonenumber"
                             :class="inputClass(errors.phonenumber)" @blur="validatePhoneNumber"
                             placeholder="Veuillez entrer contact" required>
-                        <span v-if="errors.phonenumber" class="error-message">{{ errors.phonenumber }}</span>
+                        <!-- <span v-if="errors.phonenumber" class="error-message">{{ errors.phonenumber }}</span> -->
                     </div>
                     <div class="input-field">
                         <label for="password">Mot de passe</label>
                         <input type="password" id="password" v-model="password" :class="inputClass(errors.password)"
                             @blur="validatePassword" placeholder="Veuillez entrer un mot de passe" required>
-                        <span v-if="errors.password" class="error-message">{{ errors.password }}</span>
-                    </div>
-
-                    <button class="btn" type="submit">
-                        <span>S'incrire</span>
-                    </button>
-
-                </form>
-
-                <div class="bottom">
-                    <div class="navigation">
-                        <p>Avez vous déja un Compte?
-                            <router-link to="/auth">Connexion</router-link>
-                        </p>
-                    </div>
-                    <div class="privacy">
-                        <p>En continuant vous agréer la
-                            <router-link to="/Privacy">Politique de Confidentialité</router-link><br>
-                            et les
-                            <router-link to="/Privacy"> Conditions d'utilisations </router-link>
-                        </p>
+                        <!-- <span v-if="errors.password" class="error-message">{{ errors.password }}</span> -->
                     </div>
                 </div>
-            </div>
 
+                <button class="btn" type="submit">
+                    S'incrire
+                </button>
+
+            </form>
+
+            <div class="bottom">
+                <span class="navigation">Avez vous déja un Compte?
+                    <router-link to="/auth" style="text-decoration: none; color: blue;">Connexion</router-link>
+                </span><br>
+                <span class="privacy">En continuant vous agréer la
+                    <router-link to="/Privacy" style="text-decoration: none; color: blue;">Politique de
+                        Confidentialité</router-link><br>
+                    et les
+                    <router-link to="/Privacy" style="text-decoration: none; color: blue;"> Conditions d'utilisations
+                    </router-link>
+                </span>
+            </div>
         </div>
-        <!-- <div v-if="successMessage" class="success-message">{{ successMessage }}</div>
-        <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div> -->
+        <div v-if="successMessage" class="success-message">{{ successMessage }}</div>
+        <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
     </div>
 </template>
 <script>
@@ -224,29 +219,21 @@ p {
 }
 
 .container {
-    /* margin: 0;
-    padding: 0; */
+    width: 97%;
+    height: 96vh;
+    padding: 1vh 2% 1vh 1%;
     text-align: left;
-    width: 100%;
-    height: 98vh;
     display: flex;
-    overflow-y: auto;
-    font-family: Monda;
-    /* margin-left: 10px;
-    margin-right: 10px; */
-}
-
-.signup_section {
-    margin-left: 30px;
-    width: 35%;
-    height: 100%;
+    justify-content: space-between;
 }
 
 .formElement {
     height: 100%;
+    width: 35%;
+    padding-left: 40px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    gap: 10px;
 }
 
 .logoflysoft {
@@ -265,59 +252,85 @@ form {
     gap: 10px;
 }
 
-h1 {
-    font-size: 3rem;
-    font-weight: bold;
-    color: #202020;
+.input_block {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    /* border: 1px solid teal; */
 }
 
 .input-field {
     display: flex;
     flex-direction: column;
+    gap: 2px;
 }
 
 label {
-    font-size: 1.2rem;
+    font-size: 1rem;
     color: #202020;
 }
 
 input {
-    width: 90%;
     height: 50px;
-    font-size: 1.2rem;
     border: 1px solid #DFDFDF;
     border-radius: 12px;
-    padding-left: 20px;
+    font-size: 1rem;
+}
+
+.input-field span {
+    border: 1px solid teal;
 }
 
 .btn {
-    /* margin-top: 20px; */
     background: #202020;
     border: none;
-    width: 95%;
+    color: #FFFFFF;
+    font-size: 22px;
+    text-align: center;
     border-radius: 12px;
     height: 50px;
 }
 
-span {
-    color: #FFFFFF;
-    font-size: 22px;
+.bottom {
     text-align: center;
+}
+
+span {
+    /* color: #FFFFFF; */
+    font-size: 1.1rem;
+    text-align: center;
+    /* border: 1px solid rgb(0, 4, 255); */
 }
 
 .navigation {
     text-align: center;
 }
 
-.navigation p {
-    font-size: 1.2rem;
-}
-
 .privacy {
     text-align: center;
 }
 
-.privacy p {
-    font-size: 1rem;
+@media only screen and (max-width:800px) {
+    .container {
+        width: 99%;
+        height: auto;
+        padding: 0;
+    }
+
+    .formElement {
+        width: 100%;
+        padding: 0px 3%;
+    }
+}
+@media only screen and (min-height:600px){
+    input {
+        height: 30px;
+        border-radius: 12px;
+        font-size: .9rem;
+    }
+
+    span {
+        font-size: .9rem;
+    }
 }
 </style>
