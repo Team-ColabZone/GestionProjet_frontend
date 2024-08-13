@@ -7,28 +7,30 @@ import { ListTodo, Search, Filter } from 'lucide-vue-next';
     <div class="backlogs-container">
         <div class="entete">
             <ListTodo class="ico-dash" />
-            <p class="title_entete">Tâches</p>
+
+            <p class="title_entete">
+                Tâches
+            </p>
         </div>
 
         <div class="search-zone" style="display: flex; justify-content: space-between;">
-
             <form action="" class="search-form">
                 <div class="search-barrediv">
                     <Search class="icon-search" />
                     <input type="search" id="search-input" class="search-barre" placeholder="Rechercher...">
-
                 </div>
+
                 <div class="search-butt">
                     <input type="submit" value="Rechercher" class="searchbtn">
                 </div>
             </form>
+
             <div class="filter" style="margin-right: 0.5%; margin-top: 0.5%;">
-                <button @click="showFilter()"
-                    style="width: 200px; height: 50px; background-color: #000000; display: flex; border: none; border-radius: 8px; cursor: pointer; "
-                    class="filterchbtn">
-                    <Filter
-                        style="color: white; stroke-width: 1.5; width: 24px; height: 24px; padding-left: 20px; padding-top: 10px; padding-right: 15px;" />
-                    <p style="color: white; font-weight: bold;">Voir les filtres</p>
+                <button class="filterchbtn" @click="showFilter()" style="width: 200px; height: 50px; background-color: #000000; display: flex; border: none; border-radius: 8px; cursor: pointer; " >
+                    <Filter style="color: white; stroke-width: 1.5; width: 24px; height: 24px; padding-left: 20px; padding-top: 10px; padding-right: 15px;" />
+                    <p style="color: white; font-weight: bold;">
+                        Voir les filtres
+                    </p>
                 </button>
             </div>
         </div>
@@ -37,51 +39,56 @@ import { ListTodo, Search, Filter } from 'lucide-vue-next';
             <div class="tile-body" style="display: flex; justify-content: space-between; margin: 15px; padding-left: 10px;">
                 <div class="list1" style="display: flex; align-items: center; ">
                     <div style="border-radius: 50%; background-color: #FFD1A6; width: 24px; height: 24px;"></div>
-                    <p style="font-size: 14px; font-weight: bold; padding-left: 10px; padding-right: 10px;">EN ATTENTE</p>
-                    <div
-                        style="border-radius: 8px; background-color: #D9D9D9; width: 30px; height: 24px; display: flex; align-items: center; justify-content: center;">
-                        <p style="color: #000000; font-size: 12px; margin: 0;">{{ pendingTasksCount }}</p>
+
+                    <p style="font-size: 14px; font-weight: bold; padding-left: 10px; padding-right: 10px;">
+                        EN ATTENTE
+                    </p>
+
+                    <div style="border-radius: 8px; background-color: #D9D9D9; width: 30px; height: 24px; display: flex; align-items: center; justify-content: center;">
+                        <p style="color: #000000; font-size: 12px; margin: 0;">
+                            {{ pendingTasksCount }}
+                        </p>
                     </div>
                 </div>
 
                 <div class="list2" style="display: flex; align-items: center; padding-right: 1%;">
                     <div style="border-radius: 50%; background-color: #86FD92; width: 24px; height: 24px;"></div>
-                    <p style="font-size: 14px; font-weight: bold; padding-left: 10px; padding-right: 10px;">EN COURS</p>
-                    <div
-                        style="border-radius: 8px; background-color: #D9D9D9; width: 30px; height: 24px; display: flex; align-items: center; justify-content: center;">
-                        <p style="color: #000000; font-size: 12px; margin: 0;">{{ pendingTasksCount }}</p>
+
+                    <p style="font-size: 14px; font-weight: bold; padding-left: 10px; padding-right: 10px;">
+                        EN COURS
+                    </p>
+
+                    <div style="border-radius: 8px; background-color: #D9D9D9; width: 30px; height: 24px; display: flex; align-items: center; justify-content: center;">
+                        <p style="color: #000000; font-size: 12px; margin: 0;">
+                            {{ pendingTasksCount }}
+                        </p>
                     </div>
                 </div>
 
                 <div class="list3" style="display: flex; align-items: center; padding-right: 15%;">
                     <div style="border-radius: 50%; background-color: #B3E2FC; width: 24px; height: 24px;"></div>
-                    <p style="font-size: 14px; font-weight: bold; padding-left: 10px; padding-right: 10px;">TERMINÉE</p>
-                    <div
-                        style="border-radius: 8px; background-color: #D9D9D9; width: 30px; height: 24px; display: flex; align-items: center; justify-content: center;">
-                        <p style="color: #000000; font-size: 12px; margin: 0;">{{ pendingTasksCount }}</p>
+
+                    <p style="font-size: 14px; font-weight: bold; padding-left: 10px; padding-right: 10px;">
+                        TERMINÉE
+                    </p>
+
+                    <div style="border-radius: 8px; background-color: #D9D9D9; width: 30px; height: 24px; display: flex; align-items: center; justify-content: center;">
+                        <p style="color: #000000; font-size: 12px; margin: 0;">
+                            {{ pendingTasksCount }}
+                        </p>
                     </div>
                 </div>
             </div>
+
             <div class="cadre" style="display: flex; justify-content: space-between;">
+                <div class="pending-task" style="border: 1px solid #D9D9D9; width: 510px; border-radius: 8px; margin-left: 0.5%;height: 710px;"></div>
 
-                <div class="pending-task"
-                    style="border: 1px solid #D9D9D9; width: 510px; border-radius: 8px; margin-left: 0.5%;height: 710px;">
-                </div>
-                <div class="inprogress-task"
-                    style="border: 1px solid #D9D9D9; width: 510px; border-radius: 8px; margin-left: 0.5%;height: 710px;">
-                </div>
-                <div class="completed-task"
-                    style="border: 1px solid #D9D9D9; width: 510px; border-radius: 8px; margin-left: 0.5%;height: 710px;">
-                </div>
+                <div class="inprogress-task" style="border: 1px solid #D9D9D9; width: 510px; border-radius: 8px; margin-left: 0.5%;height: 710px;"></div>
+
+                <div class="completed-task" style="border: 1px solid #D9D9D9; width: 510px; border-radius: 8px; margin-left: 0.5%;height: 710px;"></div>
             </div>
-
-
         </div>
-
-
     </div>
-
-
 </template>
 
 <script>
@@ -202,19 +209,6 @@ export default {
 
 <style scoped>
 @import url(https://fonts.googleapis.com/css2?family=Monda:wght@100;200;300;400;500;600;700&display=swap);
-
-/* .logoflysoft {
-    margin-left: 20px;
-}
-
-body {
-    width: 100%;
-    padding: 0;
-    margin: 0;
-    background-color: rgba(0, 0, 0, 0.05);
-    font-family: Monda;
-} */
-
 body {
     width: 100%;
     padding: 0;
@@ -226,9 +220,99 @@ body {
 .backlogs-container {
     width: 99%;
     margin: auto;
+}
 
+.entete {
+    border: 2px solid #D9D9D9;
+    border-radius: 8px;
+    width: 99%;
+    height: 62px;
+    margin: auto;
+    margin-top: 4px;
+    margin-bottom: 20px;
+    display: flex;
+}
+
+.entete .ico-dash {
+    padding-left: 1%;
+    padding-top: 1%;
+    padding-bottom: 3%;
+}
+
+.entete p {
+    font-size: 16px;
+    color: #000000;
+    padding-left: 15px;
+    font-weight: bold;
+    padding-top: 4px;
+}
+
+.search-zone {
+    display: flex;
+    justify-content: flex-start;
+    padding-left: 0.5%;
+    padding-bottom: 20px;
+}
+
+.search-barre {
+    height: 45px;
+    width: 730px;
+    border: 1px solid #D9D9D9;
+    border-radius: 8px;
+    padding-left: 50px;
+    /* Espace pour l'icône */
+    box-sizing: border-box;
+    font-size: 18px;
+}
+
+.search-form {
+    display: flex;
 
 }
+
+.search-barrediv {
+
+    display: flex;
+    position: relative;
+
+}
+
+.icon-search {
+    position: absolute;
+    left: 10px;
+    padding-top: 1%;
+
+}
+
+
+.search-butt {
+    margin-left: 10px;
+}
+
+.searchbtn {
+    /* padding: 5px 10px; */
+    background-color: #000000;
+    color: white;
+    font-weight: bold;
+    /* Texte en gras */
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    height: 45px;
+    width: 200px;
+    font-size: 13px;
+}
+
+.searchbtn:hover {
+    background-color: #0056b3;
+}
+
+
+
+
+
+
+
 
 .s_menu {
     width: 99%;
@@ -302,66 +386,7 @@ body {
 
 }
 
-.search-barre {
-    height: 45px;
-    width: 730px;
-    border: 1px solid #D9D9D9;
-    border-radius: 8px;
-    padding-left: 50px;
-    /* Espace pour l'icône */
-    box-sizing: border-box;
-    font-size: 18px;
-}
 
-.search-zone {
-    display: flex;
-    justify-content: flex-start;
-    padding-left: 0.5%;
-    padding-bottom: 20px;
-
-}
-
-.search-form {
-    display: flex;
-
-}
-
-.search-barrediv {
-
-    display: flex;
-    position: relative;
-
-}
-
-.icon-search {
-    position: absolute;
-    left: 10px;
-    padding-top: 1%;
-
-}
-
-
-.search-butt {
-    margin-left: 10px;
-}
-
-.searchbtn {
-    /* padding: 5px 10px; */
-    background-color: #000000;
-    color: white;
-    font-weight: bold;
-    /* Texte en gras */
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    height: 45px;
-    width: 200px;
-    font-size: 13px;
-}
-
-.searchbtn:hover {
-    background-color: #0056b3;
-}
 
 .filterchbtn:hover {
     background-color: #0056b3 !important;
@@ -403,37 +428,12 @@ body {
     /* margin-right: 5%; */
 }
 
-.entete {
-    border: 2px solid #D9D9D9;
-    border-radius: 8px;
-    width: 99%;
-    height: 62px;
-    margin: auto;
-    margin-top: 4px;
-    margin-bottom: 20px;
-    display: flex;
 
-
-}
 
 .user {
     display: flex;
     justify-content: space-between;
     width: 8%;
-}
-
-.entete p {
-    font-size: 16px;
-    color: #000000;
-    padding-left: 15px;
-    font-weight: bold;
-    padding-top: 4px;
-}
-
-.entete .ico-dash {
-    padding-left: 1%;
-    padding-top: 1%;
-    padding-bottom: 3%;
 }
 
 /* h3 {

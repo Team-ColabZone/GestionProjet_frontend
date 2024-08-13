@@ -1,76 +1,78 @@
 <template>
-    <div class="container monda-font animate__animated animate__fadeInDown">
-        <div class="signup1">
-            <div class="overlay"></div>
-            <img class="img1" src="../assets/signin_image4.jpg" alt="image page d'inscription" />
-            <div class="text-overlay">
-                <p class="text1">CollabZone,<br>
-                     <i>Créez votre compte maintenant et commencez à gérer vos projets de manière professionnelle !</i>
-                </p>
-               
-                <div class="footerImage">
-                    <p class="p1">Cameroun,Yaoundé</p>
-                    <p class="p2">+237 693 32 53 31</p>
-                    <p class="p3">www.flysoft-eng.com</p>
-                </div>
-            </div>
-        </div>
-        <div class="signup2">
+    <div class="container monda-font animate__animated ">
+        <authSlides />
+
+        <div class="signup_section">
             <div class="formElement">
-                <div class="logoflysoft">
-                    <img class="logo" src="../assets/logoflysoft.png" alt="logo Entreprise" />
-                    <!-- <p class="text">Systeme de gestion de projet de <br> FLYSOFT ENGINEERING</p> -->
+                <div class="top">
+                    <div class="logoflysoft">
+                        <img class="logo" src="../assets/images/logoflysoft.png" alt="logo Entreprise" />
+                        <!-- <p class="text">Systeme de gestion de projet de <br> FLYSOFT ENGINEERING</p> -->
+                    </div>
                 </div>
-                <div class="title">
-                    <h1 class="monda-font">Inscription</h1>
-                </div>
-                <!-- <div class="form"> -->
+                
+                <!-- registration form -->
                 <form @submit.prevent="createAccount">
-
-                    <div class="input-field">
-                        <div class="inp"> <label for="lastname">Nom</label></div>
-                        <input class="input" type="text" id="lastname" v-model="lastname" required
-                            placeholder="Veuillez entrer votre nom">
+                    <div>
+                        <h1 class="monda-font">Inscription</h1>
                     </div>
 
                     <div class="input-field">
-                        <div class="inp"> <label for="firstname">Prénom</label></div>
-                        <input class="input" type="text" id="firstname" v-model="firstname" required
-                            placeholder="Veuillez entrer votre prénom">
+                        <label for="firstname">Nom</label>
+                        <input type="text" id="firstname" v-model="firstname" :class="inputClass(errors.firstname)"
+                            @blur="validateFirstName" placeholder="Veuillez entrer votre nom" required>
+                        <span v-if="errors.firstname" class="error-message">{{ errors.firstname }}</span>
                     </div>
 
                     <div class="input-field">
-                        <div class="inp"> <label for="email">Email</label></div>
-                        <input class="input" type="email" id="email" v-model="email" required
-                            placeholder="Veuillez entrer votre email">
+                        <label for="lastname">Prénom</label>
+                        <input type="text" id="lastname" v-model="lastname" :class="inputClass(errors.lastname)"
+                            @blur="validateLastName" placeholder="Veuillez entrer votre prénom" required>
+                        <span v-if="errors.lastname" class="error-message">{{ errors.lastname }}</span>
                     </div>
 
                     <div class="input-field">
-                        <div class="inp"> <label for="phonenumber">Téléphone</label></div>
-                        <input class="input" type="text" id="phonenumber" v-model="phonenumber" required
-                            placeholder="Veuillez entrer contact">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" v-model="email" :class="inputClass(errors.email)"
+                            @blur="validateEmail" placeholder="Veuillez entrer votre email" required>
+                        <span v-if="errors.email" class="error-message">{{ errors.email }}</span>
+                    </div>
+
+                    <div class="input-field">
+                        <label for="phonenumber">Téléphone</label>
+                        <input type="text" id="phonenumber" v-model="phonenumber"
+                            :class="inputClass(errors.phonenumber)" @blur="validatePhoneNumber"
+                            placeholder="Veuillez entrer contact" required>
+                        <span v-if="errors.phonenumber" class="error-message">{{ errors.phonenumber }}</span>
                     </div>
                     <div class="input-field">
-                        <div class="inp"> <label for="password">Mot de passe</label></div>
-                        <input class="input" type="password" id="password" v-model="password" required
-                            placeholder="Veuillez entrer un mot de passe">
+                        <label for="password">Mot de passe</label>
+                        <input type="password" id="password" v-model="password" :class="inputClass(errors.password)"
+                            @blur="validatePassword" placeholder="Veuillez entrer un mot de passe" required>
+                        <span v-if="errors.password" class="error-message">{{ errors.password }}</span>
                     </div>
 
+                    <button class="btn" type="submit">
+                        <span>S'incrire</span>
+                    </button>
 
-                    <div class="btn1">
-                        <button class="btn" type="submit">
-                            <span>S'incrire</span>
-                        </button>
-                    </div>
+                </form>
+
+                <div class="bottom">
                     <div class="navigation">
-                        <p>Avez vous déja un Compte?<router-link to="/auth">Connexion</router-link></p>
+                        <p>Avez vous déja un Compte?
+                            <router-link to="/auth">Connexion</router-link>
+                        </p>
                     </div>
                     <div class="privacy">
-                        <p>En continuant vous agréer la <router-link to="/Privacy">Politique de Confidentialité</router-link><br> et les <router-link to="/Privacy"> Conditions d'utilisations </router-link> </p>
+                        <p>En continuant vous agréer la
+                            <router-link to="/Privacy">Politique de Confidentialité</router-link><br>
+                            et les
+                            <router-link to="/Privacy"> Conditions d'utilisations </router-link>
+                        </p>
                     </div>
-                </form>
+                </div>
             </div>
-            <!-- </div> -->
 
         </div>
         <!-- <div v-if="successMessage" class="success-message">{{ successMessage }}</div>
@@ -78,41 +80,109 @@
     </div>
 </template>
 <script>
+import authSlides from "@/components/includ/authSlides.vue";
+import config from '../config';
 import axios from 'axios';
 
 export default {
+    components: {
+        authSlides
+    },
     data() {
         return {
-            lastname: '',
             firstname: '',
+            lastname: '',
             email: '',
             phonenumber: '',
             password: '',
-            successMessage: '',
-            errorMessage: ''
+            errors: {
+                firstname: null,
+                lastname: null,
+                email: null,
+                phonenumber: null,
+                password: null,
+            },
+            // successMessage: '',
+            // errorMessage: ''
         };
     },
+
     methods: {
+        inputClass(error) {
+            if (error === null) {
+                return ''; // No class applied initially
+            } else if (error === '') {
+                return 'input-success'; // Green border for valid input
+            } else {
+                return 'input-error'; // Red border for invalid input
+            }
+        },
+        validateFirstName() {
+            const nameRegex = /^[a-zA-Z\s]{3,}$/;
+            if (!this.firstname.match(nameRegex)) {
+                this.errors.firstname = "Le nom ne doit contenir que des lettres.";
+            } else {
+                this.errors.firstname = '';
+            }
+        },
+        validateLastName() {
+            const nameRegex = /^[a-zA-Z\s]{3,}$/;
+            if (!this.lastname.match(nameRegex)) {
+                this.errors.lastname = "Le prénom ne doit contenir que des lettres.";
+            } else {
+                this.errors.lastname = '';
+            }
+        },
+        validateEmail() {
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|org|net|edu|gov|mil|co|io|ai|in|uk|ca|us)$/;
+            if (!this.email.match(emailRegex)) {
+                this.errors.email = "Veuillez entrer une adresse e-mail valide.";
+            } else {
+                this.errors.email = '';
+            }
+        },
+        validatePhoneNumber() {
+            const phoneRegex = /^\d{8,15}$/;
+            if (!this.phonenumber.match(phoneRegex)) {
+                this.errors.phonenumber = "Le numéro de téléphone doit contenir 10 chiffres.";
+            } else {
+                this.errors.phonenumber = '';
+            }
+        },
+        validatePassword() {
+            const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+            if (!this.password.match(passwordRegex)) {
+                this.errors.password = "Le mot de passe doit contenir au moins 8 caractères, dont une lettre et un chiffre.";
+            } else {
+                this.errors.password = '';
+            }
+        },
         async createAccount() {
-            try {
-                await axios.post('http://localhost:3001/users', {
-                    lastname: this.lastname,
-                    firstname: this.firstname,
-                    email: this.email,
-                    phonenumber: this.phonenumber,
-                    password: this.password
-                });
-                this.successMessage = 'Inscription réussie !';
-                alert('Compte crée avec Success');
-                this.resetForm();
-            } catch (error) {
-                this.errorMessage = 'Échec de l\'inscription : ' + error.response.data.message;
-                alert('Echec lors de la création du compte')
+            this.validateFirstName();
+            this.validateLastName();
+            this.validateEmail();
+            this.validatePhoneNumber();
+            this.validatePassword();
+
+            if (Object.values(this.errors).every((error) => error === '')) {
+                try {
+                    const response = await axios.post(`${config.apiBaseUrl}/users`, {
+                        firstname: this.firstname,
+                        lastname: this.lastname,
+                        email: this.email,
+                        phonenumber: this.phonenumber,
+                        password: this.password,
+                    });
+                    console.log('Account created:', response.data);
+                    this.$router.push('/auth');
+                } catch (error) {
+                    console.error('Error creating account:', error);
+                }
             }
         },
         resetForm() {
-            this.lastname = '';
             this.firstname = '';
+            this.lastname = '';
             this.email = '';
             this.phonenumber = '';
             this.password = '';
@@ -124,24 +194,33 @@ export default {
 </script>
 
 <style scoped>
-/* * {
-margin: 0;
-padding: 0;
-box-sizing: border-box;
-} */
-h1 {
-    font-size: 50px;
-    font-weight: bold;
-    color: #202020;
-}
-
-.title {
-    padding-bottom: 20px;
+body {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    font-family: Monda;
 }
 
 p {
     padding-bottom: 10px;
     padding-top: 0px;
+}
+
+.input-error {
+    border: 1px solid red;
+}
+
+.input-success {
+    border: 1px solid green;
+}
+
+.error-message {
+    color: red;
+    font-size: 12px;
+}
+
+.monda-font {
+    font-family: 'Monda', sans-serif;
 }
 
 .container {
@@ -155,26 +234,24 @@ p {
     font-family: Monda;
     /* margin-left: 10px;
     margin-right: 10px; */
-
 }
 
-
-body {
-    width: 100%;
-    padding: 0;
-    margin: 0;
-    font-family: Monda;
-}
-
-.img1 {
-    border-radius: 12px;
-    width: 100%;
+.signup_section {
+    margin-left: 30px;
+    width: 35%;
     height: 100%;
-    object-fit: cover;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: -1;
+}
+
+.formElement {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.logoflysoft {
+    text-align: right;
+    padding-right: 10%;
 }
 
 .logo {
@@ -182,82 +259,44 @@ body {
     height: 80px;
 }
 
-.overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to top, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
-    z-index: 1;
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+h1 {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #202020;
 }
 
 .input-field {
-    padding-bottom: 20px;
+    display: flex;
+    flex-direction: column;
 }
 
-.signup1,
-.signup2 {
-    /* flex: 1; */
-    position: relative;
-}
-
-.signup1 {
-    margin-right: 40px;
-    width: 65%;
-   
-
-}
-
-.signup2 {
-    margin-left: 30px;
-    width: 30%;
-    
-
+label {
+    font-size: 1.2rem;
+    color: #202020;
 }
 
 input {
     width: 90%;
     height: 50px;
-}
-
-.logoflysoft {
-    padding-bottom: 0px;
-    text-align: right;
-    padding-right: 10%;
-}
-
-.monda-font {
-    font-family: 'Monda', sans-serif;
-}
-
-.input {
-    height: 50px;
+    font-size: 1.2rem;
     border: 1px solid #DFDFDF;
     border-radius: 12px;
     padding-left: 20px;
-    width: 90%;
-    font-size: 25px; 
 }
-
-label {
-    font-weight: 500;
-    font-size: 20px;
-    color: #202020;
-}
-
 
 .btn {
-    margin-top: 20px;
+    /* margin-top: 20px; */
     background: #202020;
     border: none;
     width: 95%;
     border-radius: 12px;
     height: 50px;
-}
-
-.btn1 {
-    padding-top: 1%;
 }
 
 span {
@@ -266,67 +305,19 @@ span {
     text-align: center;
 }
 
-.inp {
-    padding-bottom: 8px;
-}
-
-.text-overlay {
-    position: absolute;
-    bottom: 40px;
-    left: 28%;
-    right: 2%;
-    transform: translateX(-50%);
-    color: white;
-    font-size: 40px;
-    font-weight: bold;
-    text-align: center;
-    z-index: 2;
-}
-
-.text-overlay i {
-    font-size: 19px;
-   
-    text-align: left;
-}
-
-.text1 {
-    padding-left: 18%;
-    text-align: left;
-}
-
-.footerImage {
-    display: flex;
-    justify-content: space-between;
-    background-color: rgba(255, 255, 255, 0.2);
-    height: 70px;
-    width: 120% !important;
-    border-radius: 15px;
-    padding-left: 40px;
-    padding-right: 40px;
-    bottom: 2%;
-    margin-left: 18% !important;
-    margin-bottom: 1%;
-}
-
-.footerImage p {
-    color: #ffffff;
-    font-size: 20px;
-    font-weight: bold;
-}
-
 .navigation {
     text-align: center;
-   
 }
 
 .navigation p {
-    font-size: 22px;
+    font-size: 1.2rem;
 }
-.privacy{
+
+.privacy {
     text-align: center;
-    
 }
-.privacy p{
-    font-size: 18px;
+
+.privacy p {
+    font-size: 1rem;
 }
 </style>

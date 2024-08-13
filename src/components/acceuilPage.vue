@@ -7,7 +7,7 @@ import { MessageSquare, BellRing, SquarePlus, ListTodo, Users, Gauge, ArrowRight
     <div class="pre_container">
         <nav class="pre_container1">
             <div class="logoflysoft">
-                <img class="logo" src="../assets/logoflysoft.png" alt="logo Entreprise"
+                <img class="logo" src="../assets/images/logoflysoft.png" alt="logo Entreprise"
                     style="margin-left: 2%;width: 60px; height: 60px; " />
                 <!-- <p class="text">Systeme de gestion de projet de <br> FLYSOFT ENGINEERING</p> -->
             </div>
@@ -24,7 +24,7 @@ import { MessageSquare, BellRing, SquarePlus, ListTodo, Users, Gauge, ArrowRight
                 </div>
                 <div class="profil" style="border-radius: 50%; background-color: white;">
                     <button @click="showProfilPage">
-                        <img class="logo" src="../assets/logoflysoft.png" alt="logo Entreprise"
+                        <img class="logo" src="../assets/images/logoflysoft.png" alt="logo Entreprise"
                             style="margin-right: 2%; width: 30px; height: 30px;" />
                     </button>
                 </div>
@@ -173,6 +173,7 @@ import dashboardPage from './dashboardPage.vue';
 import backlogsPage from './backlogsPage.vue';
 import tasksPage from './tasksPage.vue';
 import teamMemberPage from './teamMemberPage.vue';
+import config from "../config";
 import axios from 'axios';
 
 export default {
@@ -246,7 +247,7 @@ export default {
         async createNewProject() {
             try {
                 const token = localStorage.getItem('token');
-                const response = await axios.post('http://localhost:3001/projects', {
+                const response = await axios.post(`${config.apiBaseUrl}/projects`, {
                     projectname: this.projectname,
                     description: this.description,
                     projectType: this.projectType,
@@ -276,7 +277,7 @@ export default {
         async fetchUserData() {
             try {
                 const token = localStorage.getItem('token');
-                const response = await axios.get(`http://localhost:3001/users/${this.userId}`, {
+                const response = await axios.get(`${config.apiBaseUrl}/users/${this.userId}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -290,7 +291,7 @@ export default {
         async fetchProjects() {
             try {
                 const token = localStorage.getItem('token'); // ou une autre méthode pour récupérer le token
-                const response = await axios.get(`http://localhost:3001/projects/user/${this.userId}`, {
+                const response = await axios.get(`${config.apiBaseUrl}/projects/user/${this.userId}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -313,7 +314,7 @@ export default {
 
         async fetchTeamMemberCount() {
             try {
-                const response = await axios.get(`http://localhost:3001/team-members/${this.projectId}/team/count`);
+                const response = await axios.get(`${config.apiBaseUrl}/team-members/${this.projectId}/team/count`);
                 this.teamMemberCount = response.data;
                 console.log(this.teamMemberCount);
                 console.log(this.projectId)
@@ -323,7 +324,7 @@ export default {
         },
         async fetchPendingTasksCount() {
             try {
-                const response = await axios.get(`http://localhost:3001/tasks/${this.projectId}/pending`);
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/pending`);
                 this.pendingTasksCount = response.data.length;
                 console.log(this.pendingTasksCount);
             } catch (error) {
@@ -332,7 +333,7 @@ export default {
         },
         async fetchInProgressTasksCount() {
             try {
-                const response = await axios.get(`http://localhost:3001/tasks/${this.projectId}/in-progress`);
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/in-progress`);
                 this.inProgressTasksCount = response.data.length;
                 console.log(this.inProgressTasksCount);
             } catch (error) {
@@ -341,7 +342,7 @@ export default {
         },
         async fetchCompletedTasksCount() {
             try {
-                const response = await axios.get(`http://localhost:3001/tasks/${this.projectId}/completed`);
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/completed`);
                 this.completedTasksCount = response.data.length;
                 console.log(this.completedTasksCount);
             } catch (error) {
@@ -350,7 +351,7 @@ export default {
         },
         async fetchTotalTasksCount() {
             try {
-                const response = await axios.get(`http://localhost:3001/tasks/${this.projectId}/tasks/count`);
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/tasks/count`);
                 this.taskCount = response.data;
                 console.log(this.taskCount);
             } catch (error) {

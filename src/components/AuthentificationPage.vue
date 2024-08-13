@@ -1,64 +1,54 @@
 <template>
-    <div class="container monda-font animate__animated animate__fadeInDown">
-        <div class="signup1">
-            <div class="overlay"></div>
-            <img class="img1" src="../assets/signin_image2.jpg" alt="image page de connexion" />
-            <div class="text-overlay">
-
-                <p class="text1">CollabZone,<br>
-                    <i>Connectez-vous pour démarrer votre projet avec succès !</i>
-                </p>
-
-
-                <div class="footerImage">
-                    <p class="p1">Cameroun,Yaoundé</p>
-                    <p class="p2">+237 693 32 53 31</p>
-                    <p class="p3">www.flysoft-eng.com</p>
-                </div>
-            </div>
-        </div>
-        <div class="signup2">
+    <div class="container monda-font animate__animated ">
+        <authSlides/>
+        
+        <div class="login_section">
             <div class="formElement">
-                <div class="logoflysoft">
-                    <img class="logo" src="../assets/logoflysoft.png" alt="logo Entreprise" />
-                    <!-- <p class="text">Systeme de gestion de projet de <br> FLYSOFT ENGINEERING</p> -->
+                <div class="top">
+                    <div class="logoflysoft">
+                        <img class="logo" src="../assets/images/logoflysoft.png" alt="logo Entreprise" />
+                        <!-- <p class="text">Systeme de gestion de projet de <br> FLYSOFT ENGINEERING</p> -->
+                    </div>
                 </div>
-                <div>
-                    <h1 class="monda-font">Connexion</h1>
-                </div>
-                <!-- <div class="form"> -->
+
+                <!-- Login form -->
                 <form @submit.prevent="login">
+                    <div>
+                        <h1 class="monda-font">Connexion</h1>
+                    </div>
 
                     <div class="input-field">
-                        <div class="inp"> <label for="email">Identifiant de connexion</label></div>
-                        <input class="input" type="email" id="email" v-model="email" required
-                            placeholder="Veuillez entrer votre identifiant">
+                        <label for="email">Identifiant de connexion</label>
+                        <input class="input" type="email" id="email" v-model="email" placeholder="Veuillez entrer votre E-mail" required>
                     </div>
 
                     <div class="input-field passf">
-                        <div class="inp"> <label for="password">Mot de passe</label></div>
-                        <input class="input" type="password" id="password" v-model="password" required
-                            placeholder="Veuillez entrer un mot de passe">
+                        <label for="password">Mot de passe</label>
+                        <input class="input" type="password" id="password" v-model="password" placeholder="Veuillez entrer un mot de passe" required>
                     </div>
                     <div class="forgotpassword">
-                        <p><router-link to="/Forgotpassword">Mot de passe oublié?</router-link></p>
+                        <router-link to="/Forgotpassword">Mot de passe oublié?</router-link>
                     </div>
 
+                    <button class="btn" type="submit">
+                        <span>Se connecter</span>
+                    </button>
+                </form>
 
-                    <div class="btn1">
-                        <button class="btn" type="submit">
-                            <span>Se connecter</span>
-                        </button>
-                    </div>
+                <div class="bottom">
                     <div class="navigation">
-                        <p>Avez vous déja un Compte?<router-link to="/CreateAccount">Inscription</router-link></p>
+                        <p>Pas de compte ?
+                            <router-link to="/CreateAccount">Inscription</router-link>
+                        </p>
                     </div>
                     <div class="privacy">
-                        <p>En continuant vous agréer la <router-link to="/Privacy">Politique de
-                                Confidentialité</router-link><br> et les <router-link to="/Privacy"> Conditions
-                                d'utilisations </router-link> </p>
+                        <p>En continuant vous agréer la
+                            <router-link to="/Privacy">Politique de Confidentialité</router-link><br>
+                            et les
+                            <router-link to="/Privacy"> Conditions d'utilisations </router-link>
+                        </p>
                     </div>
-                </form>
+                </div>
             </div>
             <!-- </div> -->
 
@@ -67,21 +57,27 @@
 </template>
 
 <script>
+import authSlides from "@/components/includ/authSlides.vue";
+import config from '../config';
 import axios from 'axios';
 
 export default {
+    components:{
+        authSlides
+    },
     data() {
         return {
             email: '',
             password: '',
-            errorMessage: ''
+            errorMessage: '',
         };
     },
+
     methods: {
         async login() {
             try {
                 // Make a POST request to the /auth/login endpoint on the local server (http://localhost:3001)
-                const response = await axios.post('http://localhost:3001/auth/login', {
+                const response = await axios.post(`${config.apiBaseUrl}/auth/login`, {
                     email: this.email,
                     password: this.password
                 });
@@ -101,7 +97,7 @@ export default {
             try {
                 const token = localStorage.getItem('token');
 
-                const response = await axios.get('http://localhost:3001/users', {
+                const response = await axios.get(`${config.apiBaseUrl}/users`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -118,30 +114,8 @@ export default {
 </script>
 
 <style scoped>
-h1 {
-    font-size: 50px;
-    font-weight: bold;
-    color: #202020;
-    padding-bottom: 70px;
-    padding-top: 10px;
-}
-
-p {
-    padding-bottom: 10px;
-    padding-top: 0px;
-}
-
-.container {
-    text-align: left;
-    /* width: 100%; */
-    height: 98vh;
-    display: flex;
-    width: 100%;
-    overflow-y: auto;
-    /* margin-left: 10px;
-    margin-right: 10px;
-    margin-top: 1px; */
-
+.monda-font {
+    font-family: 'Monda', sans-serif;
 }
 
 body {
@@ -151,30 +125,41 @@ body {
     font-family: Monda;
 }
 
-.img1 {
-    border-radius: 12px;
+.container {
     width: 100%;
+    height: 99.8vh;
+    text-align: left;
+    display: flex;
+}
+
+
+/* .left-block, .login_section { */
+/* flex: 1; */
+/* position: relative;
+} */
+
+.login_section {
+    margin-left: 30px;
+    width: 35%;
     height: 100%;
-    object-fit: cover;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: -1;
+    /* display: none; */
+}
+
+.formElement {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.logoflysoft {
+    text-align: right;
+    padding-right: 10%;
 }
 
 .logo {
-    width: 84px;
-    height: 80px;
-}
-
-.overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to top, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
-    z-index: 1;
+    width: auto;
+    height: auto;
 }
 
 .input-field {
@@ -185,118 +170,19 @@ body {
     padding-bottom: 10px;
 }
 
-.signup1,
-.signup2 {
-    /* flex: 1; */
-    position: relative;
-}
-
-.signup1 {
-    margin-right: 40px;
-    width: 65%;
-
-}
-
-.signup2 {
-    margin-left: 30px;
-    width: 30%;
-
-}
-
-input {
-    width: 90%;
-    height: 50px;
-}
-
-.logoflysoft {
-    padding-bottom: 0px;
-    text-align: right;
-    padding-right: 10%;
-}
-
-.monda-font {
-    font-family: 'Monda', sans-serif;
+label {
+    font-size: 1.2rem;
+    padding-bottom: 8px;
+    color: #202020;
 }
 
 .input {
+    width: 90%;
     height: 50px;
     border: 1px solid #DFDFDF;
     border-radius: 12px;
     padding-left: 20px;
-    width: 90%;
-    font-size: 25px;
-}
-
-label {
-    font-weight: 700;
-    font-size: 24px;
-    color: #202020;
-}
-
-.btn {
-    margin-top: 20px;
-    background: #202020;
-    border: none;
-    width: 95%;
-    border-radius: 12px;
-    height: 50px;
-}
-
-.btn1 {
-    padding-top: 4%;
-}
-
-span {
-    color: #FFFFFF;
-    font-size: 22px;
-    text-align: center;
-}
-
-.inp {
-    padding-bottom: 8px;
-}
-
-.text-overlay {
-    position: absolute;
-    bottom: 40px;
-    left: 28%;
-    transform: translateX(-50%);
-    color: white;
-    font-size: 40px;
-    font-weight: bold;
-    text-align: center;
-    z-index: 2;
-}
-
-.text-overlay i {
-    font-size: 20px;
-
-}
-
-.text1 {
-    text-align: left;
-    padding-left: 10px;
-}
-
-.footerImage {
-    display: flex;
-    justify-content: space-between;
-    background-color: rgba(255, 255, 255, 0.2);
-    height: 70px;
-    width: 200% !important;
-    border-radius: 15px;
-    padding-left: 40px;
-    padding-right: 40px;
-    bottom: 2%;
-    margin-left: 0% !important;
-    margin-right: 12%;
-    margin-bottom: 1%;
-}
-
-.footerImage p {
-    color: #ffffff;
-    font-size: 20px;
-    font-weight: bold;
+    font-size: 1.2rem;
 }
 
 .forgotpassword {
@@ -309,13 +195,26 @@ span {
     /* color: blue; */
 }
 
+.btn {
+    background: #202020;
+    border: none;
+    width: 95%;
+    border-radius: 12px;
+    height: 50px;
+}
+
+span {
+    color: #FFFFFF;
+    font-size: 22px;
+    text-align: center;
+}
+
 .navigation {
     text-align: center;
-    padding-top: 2%;
 }
 
 .navigation p {
-    font-size: 22px;
+    font-size: 1.2rem;
 }
 
 .privacy {
@@ -324,6 +223,6 @@ span {
 }
 
 .privacy p {
-    font-size: 18px;
+    font-size: 1rem;
 }
 </style>
