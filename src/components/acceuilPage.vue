@@ -123,6 +123,7 @@ import { MessageSquare, BellRing, SquarePlus, ListTodo, Users, Gauge, ArrowRight
         <div class="page" v-if="currentPage === 'team'">
             <teamMemberPage />
         </div>
+        
         <div class="modals" v-if="modalVisible">
             <div class="details animate__animated animate__fadeInDown">
                 <div class="close" @click="hideModal">

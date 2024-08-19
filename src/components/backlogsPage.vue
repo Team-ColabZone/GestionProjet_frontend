@@ -101,13 +101,8 @@ import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs, ChevronUp } fro
                         <p>Date Actuelle</p>
                     </div>
                 </div>
-
             </div>
-
-
         </div>
-
-
     </div>
 </template>
 

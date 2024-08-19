@@ -1,10 +1,571 @@
 <template>
-    <div class="container monda-font animate__animated animate__fadeInDown">
-        <div class="container">
-            <h1>
-                Bienvenue sur cette plateforme de Gestion de project
-                Elle est encore encours de developpement!!!!
-            </h1>
+    <div
+        class="container1 flex flex-col gap-0 w-full h-full m-0 p-0  bg-white monda-font animate__animated animate__fadeInDown">
+        <div class="flex justify-between items-center w-full px-4 border-b border-gray-200 ">
+            <img src="../assets/images/logoflysoft.png" alt="logo Entreprise" class="w-14 h-14">
+
+            <div class="flex gap-2">
+                <button class="cursor-pointer border-none bg-transparent">
+                    <MessageSquare class="w-4 h-4" />
+                </button>
+
+                <button class="cursor-pointer border-none bg-transparent">
+                    <BellRing class="w-4 h-4" />
+                </button>
+
+                <button @click="showProfilPage"
+                    class="rounded-full w-12 h-12 bg-white border-none p-px shadow-2xl">
+                    <img class=" border boreder-black w-full h-full rounded-full " src="../assets/images/logoflysoft.png" alt="logo Entreprise" />
+                </button>
+            </div>
+        </div>
+
+        <div class=" flex gap-1  ">
+            <nav class=" w-1/6 bg-white shadow-lg h-full">
+                <ul class=" w-full p-3 flex flex-col h-full gap-5" >
+                    <li class="w-full">
+                        <button class="flex justify-between items-center w-full rounded"
+                            :class="{ 'bg-gray-300': currentPage === 'dashboard' }" @click="showPage('dashboard')">
+                            <div class="flex items-center gap-1">
+                                <Gauge class="h-4" />
+                                <h3
+                                    :class="{ 'text-black': currentPage === 'dashboard', 'text-gray-500': currentPage !== 'dashboard' }">
+                                    Dashboard</h3>
+                            </div>
+
+                            <button @click="toggleProjectList" class="w-1/5 bg-transparent border-none cursor-pointer ">
+                                <ChevronUp
+                                    :class="{ 'chevron-down': !isProjectListVisible, 'chevron-up': isProjectListVisible }"
+                                    class="text-black w-full h-4 transition-transform border border-blue-500" />
+                            </button>
+                        </button>
+
+                        <div :class="{ 'block': isProjectListVisible, 'hidden': !isProjectListVisible }" class=" w-full bg-white shadow-sm border border-gray-300 rounded-lg">
+
+                            <div v-for="project in projects" :key="project.id" @click="selectProject(project.id)"
+                                class="project-item" style="border-bottom: 1px solid #D9D9D9; cursor: pointer;">
+
+                                <p class="project-item"
+                                    style="text-align: left;color: black; font-size: 13px; background-color: #F1F2F3;border-radius: 7px;padding-left: 8px;">
+                                    {{ project.projectname }}
+                                    <br>
+                                    {{ project.description }}
+                                </p>
+                            </div>
+
+                            <div class="flex flex-col gap-1 " >
+                                <div class="addProject">
+                                    <button class="addProjectbtn" @click="showModal1"
+                                        style=" width: 100%; background-color: transparent; border: none; cursor: pointer;display: flex; justify-content: space-between; align-items: center">
+
+                                        <span class="text-xs">Créer un nouveau Projet</span>
+
+                                        <SquarePlus class="w-4 h-4" />
+                                    </button>
+                                </div>
+
+                                <div class="newprojectinvited" style="text-align: left; ">
+                                    <button class="addProjectbtn" @click="ShowInvitation()"
+                                        style="width: 100%; background-color: transparent; border: none; cursor: pointer;display: flex; justify-content: space-between;">
+
+                                        <span class="text-xs">Nouveau projet invité</span>
+
+                                        <FolderGit2 class="w-4 h-4" />
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="w-full">
+                        <button class=" flex justify-between items-center w-full rounded-lg "
+                            :class="{ 'bg-gray-300': currentPage === 'backlogs' }" @click="showPage('backlogs')">
+                            <div class="flex items-center gap-1">
+                                <SquarePlus class="h-5" />
+                                <h3
+                                    :class="{ 'text-black': currentPage === 'backlogs', 'text-gray-500': currentPage !== 'backlogs' }">
+                                    Backlogs</h3>
+                            </div>
+                            <ArrowRight class=" w-1/5 h-4 border border-blue-500" />
+                        </button>
+                    </li>
+
+                    <li class="w-full">
+                        <button class=" flex justify-between items-center w-full rounded-lg " :class="{ 'bg-gray-300': currentPage === 'tasks' }"
+                            @click="showPage('tasks')">
+                            <div class="flex items-center gap-1">
+                                <ListTodo class="h4" />
+
+                                <h3 :class="{ 'text-black': currentPage === 'tasks', 'text-gray-500': currentPage !== 'tasks'}" >Tâches</h3>
+                            </div>
+
+                            <ArrowRight class=" w-1/5 h-4" />
+                        </button>
+                    </li>
+
+                    <li class="w-full">
+                        <button class="flex justify-between items-center w-full rounded-lg" :class="{ 'bg-gray-300': currentPage === 'team' }"
+                            @click="showPage('team')">
+                            <div class="flex items-center gap-1">
+                                <Users class="h4" />
+
+                                <h3 :class="{ 'text-black': currentPage === 'team', 'text-gray-500': currentPage !== 'team'}" >Membres</h3>
+                            </div>
+
+                            <ArrowRight class=" w-1/5 h-4" />
+                        </button>
+                    </li>
+
+                    <!-- Entreprise -->
+                    <li width="w-full" >
+                        <button class="flex justify-between items-center w-full rounded-lg" :class="{'bg-gray-300': currentPage === 'enterprise'}"
+                            @click="showPage('enterprise')">
+                            <div class="flex items-center gap-1" >
+                                <Users class="h4" />
+
+                                <h3 :class="{ 'text-black': currentPage === 'team', 'text-gray-500': currentPage !== 'enterprise'}" >Entreprise</h3>
+                            </div>
+
+                            <ArrowRight class=" w-1/5 h-4" />
+                        </button>
+                    </li>
+
+                </ul>
+            </nav>
+
+            <div class="w-5/6 bg-white shadow-md ">
+                <div class="page" v-if="currentPage === 'dashboard'">
+                    <dashboardPage />
+                </div>
+
+                <div
+                    class="page" v-if="currentPage === 'backlogs'">
+                    <backlogsPage />
+                </div>
+
+                <div class="page" v-if="currentPage === 'tasks'">
+                    <tasksPage />
+                </div>
+
+                <div class="page" v-if="currentPage === 'team'">
+                    <teamMemberPage />
+                </div>
+
+                <div class="page" v-if="currentPage === 'enterprise'">
+                    <enterprisePage />
+                </div>
+
+                <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50" v-if="modalVisible">
+                    <div
+                        class="bg-white p-8 rounded-lg shadow-lg animate__animated animate__fadeInDown w-full max-w-3xl">
+                        <div class="flex justify-end">
+                            <button @click="hideModal">
+                                <X class="text-gray-600 text-2xl" />
+                            </button>
+                        </div>
+
+                        <h1 class="text-center text-2xl text-gray-800 mb-6">Ajouter un projet</h1>
+
+                        <form @submit.prevent="createNewProject" class="flex flex-wrap">
+                            <div class="w-full md:w-1/2 pr-2">
+                                <div class="mb-4">
+                                    <label for="projectname" class="block text-gray-700 text-sm font-bold mb-2">Nom du
+                                        projet :</label>
+                                    <input type="text" id="projectname" v-model="projectname" required
+                                        class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300">
+                                </div>
+
+                                <div class="mb-4">
+                                    <label for="description"
+                                        class="block text-gray-700 text-sm font-bold mb-2">Description :</label>
+                                    <textarea id="description" v-model="description" cols="30" rows="3"
+                                        class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300"></textarea>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label for="projectType" class="block text-gray-700 text-sm font-bold mb-2">Type de
+                                        projet :</label>
+                                    <input type="text" id="projectType" v-model="projectType" required
+                                        class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300">
+                                </div>
+
+                                <div class="flex space-x-2">
+                                    <div class="mb-4 w-1/2">
+                                        <label for="start_date" class="block text-gray-700 text-sm font-bold mb-2">Date
+                                            de début :</label>
+                                        <input type="date" id="start_date" v-model="start_date" required
+                                            class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300">
+                                    </div>
+                                    <div class="mb-4 w-1/2">
+                                        <label for="end_date" class="block text-gray-700 text-sm font-bold mb-2">Date de
+                                            fin :</label>
+                                        <input type="date" id="end_date" v-model="end_date" required
+                                            class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300">
+                                    </div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label for="projectPrivacyPolicy"
+                                        class="block text-gray-700 text-sm font-bold mb-2">politique de confidentialite
+                                        :</label>
+                                    <textarea id="projectPrivacyPolicy" v-model="projectPrivacyPolicy"
+                                        cols="30" rows="3"
+                                        class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="w-full md:w-1/2 pl-2">
+                                <!-- <div class="mb-4">
+                                    <label for="image" class="block text-gray-700 text-sm font-bold mb-2">Project Logo
+                                        :</label>
+                                    <input type="file" id="image" accept="image/*" @change="onFileSelected"
+                                        class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300"
+                                        placeholder="Ajouter un logo">
+                                    <img v-if="selectedImage" :src="selectedImageURL" alt="Aperçu de l'image"
+                                        class="mt-2 rounded">
+                                </div> -->
+
+                                <div class="mb-4">
+                                    <label for="budget" class="block text-gray-700 text-sm font-bold mb-2">Budget
+                                        Estimatif :</label>
+                                    <input type="text" id="budget" v-model="budget" required
+                                        class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300">
+                                </div>
+
+                                <div class="mb-4">
+                                    <label for="downloadUrlLink" class="block text-gray-700 text-sm font-bold mb-2">Lien
+                                        github du projet :</label>
+                                    <input type="text" id="downloadUrlLink" v-model="downloadUrlLink" required
+                                        class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300">
+                                </div>
+
+                            </div>
+
+                            <div class="flex justify-end w-full " >
+                                <button
+                                    class="w-2/5 bg-blue-500 text-white p-3 rounded hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300"
+                                    type="submit">
+                                    Enregistrer le projet
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
 </template>
+
+<script>
+import dashboardPage from './dashboardPage.vue';
+import backlogsPage from './backlogsPage.vue';
+import tasksPage from './tasksPage.vue';
+import teamMemberPage from './teamMemberPage.vue';
+import enterprisePage from "./EnterprisePage.vue";
+import config from "../config";
+import axios from 'axios';
+
+export default {
+    components: {
+        dashboardPage,
+        backlogsPage,
+        tasksPage,
+        teamMemberPage,
+        enterprisePage,
+    },
+    data() {
+        return {
+            modalVisible: false,
+            showMessagePage: false,
+            showNotificationPage: false,
+            currentPage: 'dashboard',
+            selectedButton: 'button4',
+            teamMemberCount: 1,
+            taskCount: 0,
+            pendingTasksCount: 0,
+            inProgressTasksCount: 0,
+            completedTasksCount: 0,
+
+            projectname: '',
+            description: '',
+            projectType: '',
+            start_date: '',
+            end_date: '',
+            projectPrivacyPolicy: '',
+            budget: '',
+            downloadUrlLink: '',
+            selectedImage: null,
+            selectedImageURL: '',
+            success: false,
+            successMessage: '',
+            error: false,
+            errorMessage: '',
+
+            userId: '',
+            projects: [
+            ], // Liste des projets
+            selectedProjectId: '', // ID du projet sélectionné
+            projectId: '',
+            userData: null,
+            isProjectListVisible: false,
+        };
+    },
+    mounted() {
+        if (this.isConnected()) {
+            this.userId = localStorage.getItem('userId');
+            this.fetchUserData();
+        } else {
+            this.errorMessage = 'Utilisateur non connecté';
+            this.$router.push('/auth'); // Rediriger vers la page de connexion
+        }
+        this.fetchProjects();
+        this.userId = localStorage.getItem('userId');
+        this.projectId = localStorage.getItem('projectId');
+        this.fetchTeamMemberCount();
+        this.fetchPendingTasksCount();
+        this.fetchInProgressTasksCount();
+        this.fetchCompletedTasksCount();
+        this.fetchTotalTasksCount();
+    },
+    methods: {
+        hideModal() {
+            this.modalVisible = false;
+        },
+        showModal1() {
+            this.modalVisible = true;
+        },
+        isConnected() {
+            return localStorage.getItem('token') !== null;
+        },
+
+        selectButton(button) {
+            this.selectedButton = button;
+        },
+        showPage(page) {
+            this.currentPage = page;
+        },
+
+        async createNewProject() {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await axios.post(`${config.apiBaseUrl}/projects`, {
+                    projectname: this.projectname,
+                    description: this.description,
+                    start_date: new Date(this.start_date), // Conversion en objet Date
+                    end_date: new Date(this.end_date), // Conversion en objet Date
+                    budget: this.budget,
+                    projectType: this.projectType,
+                    projectPrivacyPolicy: this.projectPrivacyPolicy,
+                    downloadUrlLink: this.downloadUrlLink,
+                    userId: this.userId // Assure-toi d'inclure l'ID de l'utilisateur
+                }, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                this.success = true;
+                this.successMessage = response.data.message;
+                // Réinitialiser les champs du formulaire
+                this.projectname = '';
+                this.description = '';
+                this.projectType = '';
+                this.projectPrivacyPolicy='';
+                this.downloadUrlLink= '';
+                this.start_date = '';
+                this.end_date = '';
+                // this.budget = '';
+            } catch (error) {
+                this.error = true;
+                this.errorMessage = error.response ? error.response.data.message : error.message;
+            }
+        },
+
+        // async createNewProject() {
+        //     try {
+        //         const token = localStorage.getItem('token');
+
+        //         const formData = new FormData();
+                
+        //         formData.append('projectname', this.projectname);
+        //         formData.append('description', this.description);
+        //         formData.append('start_date', new Date(this.start_date).toISOString());
+        //         formData.append('end_date', new Date(this.end_date).toISOString());
+        //         formData.append('budget', this.budget);
+        //         formData.append('projectType', this.projectType);
+        //         formData.append('projectPrivacyPolicy', this.projectPrivacyPolicy);
+        //         formData.append('downloadUrlLink', this.downloadUrlLink);
+        //         formData.append('userId', this.userId);
+
+        //         if (this.selectedImage) {
+        //             formData.append('projectlogo', this.selectedImage);
+        //         }
+
+
+        //         console.log('projectname', this.projectname);
+        //         console.log('description', this.description);
+        //         console.log('projectType', this.projectType);
+                
+        //         console.log('start_date', new Date(this.start_date).toISOString());
+        //         console.log('end_date', new Date(this.end_date).toISOString());
+        //         console.log('projectPrivacyPolicy', this.projectPrivacyPolicy);
+        //         console.log('budget', this.budget);
+        //         console.log('downloadUrlLink', this.downloadUrlLink);
+        //         console.log('userId', this.userId);
+        //         console.log('projectlogo', this.selectedImage);
+                
+
+        //         Send the request
+        //         const response = await axios.post(`${config.apiBaseUrl}/projects`, formData, {
+        //             headers: {
+        //                 'Authorization': `Bearer ${token}`
+        //             }
+        //         },);
+
+        //         Handle success
+        //         this.success = true;
+        //         this.successMessage = response.data.message;
+
+        //         Clear the form after submission
+        //         this.projectname = '';
+        //         this.description = '';
+        //         this.projectType = '';
+        //         this.start_date = '';
+        //         this.end_date = '';
+        //         this.projectPrivacyPolicy = '';
+        //         this.budget = '';
+        //         this.downloadUrlLink = '';
+        //         this.selectedImage = null;
+        //         this.selectedImageURL = '';
+
+        //         Hide the modal
+        //         this.hideModal();
+
+        //     } catch (error) {
+        //         this.error = true;
+        //         this.errorMessage = error.response ? error.response.data.message : error.message;
+        //     }
+        // },
+
+        // onFileSelected(event) {
+        //     const file = event.target.files[0];
+        //     if (file) {
+        //         this.selectedImage = file;
+        //         this.selectedImageURL = URL.createObjectURL(file);
+        //     }
+        // },
+
+        // beforeDestroy() {
+        //     if (this.selectedImageURL) {
+        //         URL.revokeObjectURL(this.selectedImageURL);
+        //     }
+        // },
+
+        async fetchUserData() {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`${config.apiBaseUrl}/users/${this.userId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                this.userData = response.data;
+            } catch (error) {
+                this.errorMessage = 'Erreur lors de la récupération des données utilisateur : ' + error.response.data.message;
+            }
+        },
+
+        async fetchProjects() {
+            try {
+                const token = localStorage.getItem('token'); // ou une autre méthode pour récupérer le token
+                const response = await axios.get(`${config.apiBaseUrl}/projects/user/${this.userId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                this.projects = response.data;
+                console.log(this.userId);
+            } catch (error) {
+                this.errorMessage = 'Erreur lors de la récupération des projets : ' + (error.response ? error.response.data.message : error.message);
+            }
+        },
+
+        toggleProjectList() {
+            this.isProjectListVisible = !this.isProjectListVisible;
+        },
+
+        selectProject(projectId) {
+            this.selectedProjectId = projectId;
+            localStorage.setItem('projectId', projectId); // Stocker l'ID du projet dans le localStorage
+            this.$router.push('/accueilPage'); // Rediriger vers la page des détails du projet
+        },
+
+        async fetchTeamMemberCount() {
+            try {
+                const response = await axios.get(`${config.apiBaseUrl}/team-members/${this.projectId}/team/count`);
+                this.teamMemberCount = response.data;
+                console.log(this.teamMemberCount);
+                console.log(this.projectId)
+            } catch (error) {
+                console.error('Erreur lors de la récupération du nombre de personnels :', error);
+            }
+        },
+        async fetchPendingTasksCount() {
+            try {
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/pending`);
+                this.pendingTasksCount = response.data.length;
+                console.log(this.pendingTasksCount);
+            } catch (error) {
+                console.error('Erreur lors de la récupération des tâches en attente :', error);
+            }
+        },
+        async fetchInProgressTasksCount() {
+            try {
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/in-progress`);
+                this.inProgressTasksCount = response.data.length;
+                console.log(this.inProgressTasksCount);
+            } catch (error) {
+                console.error('Erreur lors de la récupération des tâches en cours :', error);
+            }
+        },
+        async fetchCompletedTasksCount() {
+            try {
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/completed`);
+                this.completedTasksCount = response.data.length;
+                console.log(this.completedTasksCount);
+            } catch (error) {
+                console.error('Erreur lors de la récupération des tâches terminées :', error);
+            }
+        },
+        async fetchTotalTasksCount() {
+            try {
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/tasks/count`);
+                this.taskCount = response.data;
+                console.log(this.taskCount);
+            } catch (error) {
+                console.error('Erreur lors de la récupération du nombre total de tâches :', error);
+            }
+        },
+    }
+};
+</script>
+
+<style>
+body {
+    width: 100%;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+.chevron-up {
+    transition: transform 0.3s;
+    transform: rotate(0deg);
+}
+
+.chevron-down {
+    transition: transform 0.3s;
+    transform: rotate(180deg);
+}
+
+</style>

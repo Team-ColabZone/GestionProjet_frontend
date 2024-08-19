@@ -220,7 +220,8 @@ p {
 
 .container {
     width: 97%;
-    height: 96vh;
+    height: 100%;
+    border:1px solid red;
     padding: 1vh 2% 1vh 1%;
     text-align: left;
     display: flex;
@@ -233,6 +234,7 @@ p {
     padding-left: 40px;
     display: flex;
     flex-direction: column;
+    /* justify-content: space-between; */
     gap: 10px;
 }
 
@@ -250,13 +252,13 @@ form {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    /* padding-bottom: 60px; */
 }
 
 .input_block {
     display: flex;
     flex-direction: column;
     gap: 5px;
-    /* border: 1px solid teal; */
 }
 
 .input-field {

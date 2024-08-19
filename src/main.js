@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import './assets/tailwind.css'
+import './index.css'
 import '@fortawesome/fontawesome-free/css/all.css';
 import * as lucideIcons from 'lucide-vue-next';
 
@@ -16,6 +16,7 @@ import dashboardPage from './components/dashboardPage.vue';
 import backlogsPage from './components/backlogsPage.vue';
 import tasksPage from './components/tasksPage.vue';
 import teamMemberPage from './components/teamMemberPage.vue';
+import EnterprisePage from "./components/EnterprisePage.vue";
 
 
 const routes = [
@@ -30,7 +31,8 @@ const routes = [
     { path: '/backlogsPage', component: backlogsPage },
     { path: '/tasksPage', component: tasksPage },
     { path: '/teamMemberPage', component: teamMemberPage },
-]
+    { path: '/enterprisePage', component: EnterprisePage },
+  ]
 
 
 

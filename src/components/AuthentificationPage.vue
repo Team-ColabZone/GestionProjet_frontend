@@ -122,7 +122,7 @@ body {
 
 .container {
     width: 97%;
-    height: 96vh;
+    height: 100%;
     padding: 1vh 2% 1vh 1%;
     text-align: left;
     display: flex;
@@ -131,7 +131,7 @@ body {
 
 .formElement {
     height: 100%;
-    width: 35%;
+    width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;

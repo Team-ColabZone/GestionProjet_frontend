@@ -57,7 +57,7 @@ export default {
 
 .left-block {
     width: 65%;
-    height: 96vh;
+    height: 100%;
     position: relative;
     border-radius: 12px;
     /* border: 1px solid red; */
