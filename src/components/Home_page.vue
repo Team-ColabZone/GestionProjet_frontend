@@ -2,7 +2,7 @@
     <div
         class="container1 flex flex-col gap-0 w-full h-full m-0 p-0  bg-white monda-font animate__animated animate__fadeInDown">
         <div class="flex justify-between items-center w-full px-4 border-b border-gray-200 ">
-            <img src="../assets/images/logoflysoft.png" alt="logo Entreprise" class="w-14 h-14">
+            <img src="../assets/images/logoflysoft.png" alt="logo Entreprise" class="h-11">
 
             <div class="flex gap-2">
                 <button class="cursor-pointer border-none bg-transparent">
@@ -14,7 +14,7 @@
                 </button>
 
                 <button @click="showProfilPage"
-                    class="rounded-full w-12 h-12 bg-white border-none p-px shadow-2xl">
+                    class="rounded-full h-11 bg-white border-none p-px shadow-2xl">
                     <img class=" border boreder-black w-full h-full rounded-full " src="../assets/images/logoflysoft.png" alt="logo Entreprise" />
                 </button>
             </div>
@@ -23,27 +23,27 @@
         <div class=" flex gap-1  ">
             <nav class=" w-1/6 bg-white shadow-lg h-full">
                 <ul class=" w-full p-3 flex flex-col h-full gap-5" >
-                    <li class="w-full">
+                    <li class="w-full flex flex-col gap-2">
                         <button class="flex justify-between items-center w-full rounded"
-                            :class="{ 'bg-gray-300': currentPage === 'dashboard' }" @click="showPage('dashboard')">
-                            <div class="flex items-center gap-1">
+                             @click="showPage('dashboard')">
+                            <div class="flex w-3/5 items-center gap-1" :class="{ 'bg-gray-300 py-1 px-2 rounded-lg': currentPage === 'dashboard' }">
                                 <Gauge class="h-4" />
                                 <h3
                                     :class="{ 'text-black': currentPage === 'dashboard', 'text-gray-500': currentPage !== 'dashboard' }">
                                     Dashboard</h3>
                             </div>
 
-                            <button @click="toggleProjectList" class="w-1/5 bg-transparent border-none cursor-pointer ">
+                            <button @click="toggleProjectList" class="w-1/5 bg-transparent border-none cursor-pointer " :class="{ 'text-black': currentPage === 'dashboard', 'text-gray-500': currentPage !== 'dashboard' }">
                                 <ChevronUp
                                     :class="{ 'chevron-down': !isProjectListVisible, 'chevron-up': isProjectListVisible }"
-                                    class="text-black w-full h-4 transition-transform border border-blue-500" />
+                                    class=" w-full h-4 transition-transform border border-blue-500" />
                             </button>
                         </button>
 
-                        <div :class="{ 'block': isProjectListVisible, 'hidden': !isProjectListVisible }" class=" w-full bg-white shadow-sm border border-gray-300 rounded-lg">
+                        <div :class="{ 'block': isProjectListVisible, 'hidden': !isProjectListVisible }" class="w-full flex flex-col gap-2 p-2 bg-white shadow-sm border border-gray-300 rounded-lg">
 
                             <div v-for="project in projects" :key="project.id" @click="selectProject(project.id)"
-                                class="project-item" style="border-bottom: 1px solid #D9D9D9; cursor: pointer;">
+                                class="project-item py-1" style="border-bottom: 1px solid #D9D9D9; cursor: pointer;">
 
                                 <p class="project-item"
                                     style="text-align: left;color: black; font-size: 13px; background-color: #F1F2F3;border-radius: 7px;padding-left: 8px;">
@@ -78,55 +78,55 @@
                     </li>
 
                     <li class="w-full">
-                        <button class=" flex justify-between items-center w-full rounded-lg "
-                            :class="{ 'bg-gray-300': currentPage === 'backlogs' }" @click="showPage('backlogs')">
-                            <div class="flex items-center gap-1">
+                        <button class=" flex justify-between items-center w-full "  @click="showPage('backlogs')">
+                            <div class="flex w-3/5 items-center gap-1" :class="{ 'bg-gray-300 py-1 px-2 rounded-lg'  : currentPage === 'backlogs' }" >
                                 <SquarePlus class="h-5" />
+
                                 <h3
                                     :class="{ 'text-black': currentPage === 'backlogs', 'text-gray-500': currentPage !== 'backlogs' }">
                                     Backlogs</h3>
                             </div>
-                            <ArrowRight class=" w-1/5 h-4 border border-blue-500" />
+                            <ArrowRight class=" w-1/5 h-4 border border-blue-500" :class="{ 'text-black': currentPage === 'backlogs', 'text-gray-500': currentPage !== 'backlogs' }"/>
                         </button>
                     </li>
 
                     <li class="w-full">
-                        <button class=" flex justify-between items-center w-full rounded-lg " :class="{ 'bg-gray-300': currentPage === 'tasks' }"
+                        <button class=" flex justify-between items-center w-full rounded-lg " 
                             @click="showPage('tasks')">
-                            <div class="flex items-center gap-1">
+                            <div class="flex w-3/5 items-center gap-1" :class="{ 'bg-gray-300 py-1 px-2 rounded-lg': currentPage === 'tasks' }">
                                 <ListTodo class="h4" />
 
                                 <h3 :class="{ 'text-black': currentPage === 'tasks', 'text-gray-500': currentPage !== 'tasks'}" >Tâches</h3>
                             </div>
 
-                            <ArrowRight class=" w-1/5 h-4" />
+                            <ArrowRight class=" w-1/5 h-4" :class="{ 'text-black': currentPage === 'tasks', 'text-gray-500': currentPage !== 'tasks'}"/>
                         </button>
                     </li>
 
                     <li class="w-full">
-                        <button class="flex justify-between items-center w-full rounded-lg" :class="{ 'bg-gray-300': currentPage === 'team' }"
+                        <button class="flex justify-between items-center w-full rounded-lg" 
                             @click="showPage('team')">
-                            <div class="flex items-center gap-1">
+                            <div class="flex w-3/5 items-center gap-1" :class="{ 'bg-gray-300 py-1 px-2 rounded-lg': currentPage === 'team' }">
                                 <Users class="h4" />
 
                                 <h3 :class="{ 'text-black': currentPage === 'team', 'text-gray-500': currentPage !== 'team'}" >Membres</h3>
                             </div>
 
-                            <ArrowRight class=" w-1/5 h-4" />
+                            <ArrowRight class=" w-1/5 h-4" :class="{ 'text-black': currentPage === 'team', 'text-gray-500': currentPage !== 'team'}"/>
                         </button>
                     </li>
 
                     <!-- Entreprise -->
                     <li width="w-full" >
-                        <button class="flex justify-between items-center w-full rounded-lg" :class="{'bg-gray-300': currentPage === 'enterprise'}"
+                        <button class="flex justify-between items-center w-full rounded-lg" 
                             @click="showPage('enterprise')">
-                            <div class="flex items-center gap-1" >
-                                <Users class="h4" />
+                            <div class="flex w-3/5 items-center gap-1" :class="{'bg-gray-300 py-1 px-2 rounded-lg': currentPage === 'enterprise'}">
+                                <Building2 class="h4" />
 
                                 <h3 :class="{ 'text-black': currentPage === 'team', 'text-gray-500': currentPage !== 'enterprise'}" >Entreprise</h3>
                             </div>
 
-                            <ArrowRight class=" w-1/5 h-4" />
+                            <ArrowRight class=" w-1/5 h-4" :class="{ 'text-black': currentPage === 'team', 'text-gray-500': currentPage !== 'enterprise'}"/>
                         </button>
                     </li>
 
@@ -243,7 +243,7 @@
 
                             <div class="flex justify-end w-full " >
                                 <button
-                                    class="w-2/5 bg-blue-500 text-white p-3 rounded hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300"
+                                    class="w-2/5 bg-black text-white p-3 rounded hover:bg-green-600 focus:outline-none focus:ring focus:ring-blue-300"
                                     type="submit">
                                     Enregistrer le projet
                                 </button>
