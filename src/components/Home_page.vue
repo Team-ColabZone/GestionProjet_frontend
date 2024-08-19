@@ -63,6 +63,16 @@
                                         <SquarePlus class="w-4 h-4" />
                                     </button>
                                 </div>
+                                <!--Bouton ajouter pour la creation de projet-->
+                                <div class="addProject">
+                                    <button class="addEntreprisebtn" @click="showModal2"
+                                        style=" width: 100%; background-color: transparent; border: none; cursor: pointer;display: flex; justify-content: space-between; align-items: center">
+
+                                        <span class="text-xs">Créer une nouvelle Entreprise</span>
+
+                                        <Building2  class="w-4 h-4"/> 
+                                    </button>
+                                </div>
 
                                 <div class="newprojectinvited" style="text-align: left; ">
                                     <button class="addProjectbtn" @click="ShowInvitation()"
@@ -252,6 +262,81 @@
                     </div>
                 </div>
 
+                
+                <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50" v-if="modalVisible1">
+                    <div
+                        class="bg-white p-8 rounded-lg shadow-lg animate__animated animate__fadeInDown w-full max-w-3xl">
+                        <div class="flex justify-end">
+                            <button @click="hideModal1">
+                                <X class="text-gray-600 text-2xl" />
+                            </button>
+                        </div>
+
+                        <h1 class="text-center text-2xl text-gray-800 mb-6">Ajouter une Entreprise</h1>
+
+                        <form @submit.prevent="createNewEntreprise" class="flex flex-wrap">
+                            <div class="w-full md:w-1/2 pr-2">
+                                <div class="mb-4">
+                                    <label for="name" class="block text-gray-700 text-sm font-bold mb-2">Nom de l'Entreprise :</label>
+                                    <input type="text" id="name" v-model="name" required
+                                        class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300">
+                                </div>
+
+                                <div class="mb-4">
+                                    <label for="description"
+                                        class="block text-gray-700 text-sm font-bold mb-2">Description :</label>
+                                    <textarea id="description" v-model="description" cols="30" rows="3"
+                                        class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300"></textarea>
+                                </div>
+
+                                
+
+                                <div class="flex space-x-2">
+                                    <div class="mb-4 w-1/2">
+                                        <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email :</label>
+                                        <input type="email" id="start_date" v-model="email" required
+                                            class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300">
+                                    </div>
+                                    <div class="mb-4 w-1/2">
+                                        <label for="phoneNumber" class="block text-gray-700 text-sm font-bold mb-2">Téléphone :</label>
+                                        <input type="text" id="phoneNumber" v-model="phoneNumber" required
+                                            class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="w-full md:w-1/2 pl-2">
+                                <!-- <div class="mb-4">
+                                    <label for="image" class="block text-gray-700 text-sm font-bold mb-2">Logo de l'entreprise
+                                        :</label>
+                                    <input type="file" id="image" accept="image/*" @change="onFileSelected"
+                                        class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300"
+                                        placeholder="Ajouter un logo">
+                                    <img v-if="selectedImage" :src="selectedImageURL" alt="Aperçu de l'image"
+                                        class="mt-2 rounded">
+                                </div> -->
+
+                                <div class="mb-4">
+                                    <label for="pobox" class="block text-gray-700 text-sm font-bold mb-2">Adresse :</label>
+                                    <input type="text" id="pobox" v-model="pobox" required
+                                        class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300">
+                                </div>
+
+
+                            </div>
+
+                            <div class="flex justify-end w-full " >
+                                <button
+                                    class="w-2/5 bg-blue-500 text-white p-3 rounded hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300"
+                                    type="submit">
+                                    Ajouter
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+
             </div>
         </div>
     </div>
@@ -277,6 +362,7 @@ export default {
     data() {
         return {
             modalVisible: false,
+            modalVisible1:false,
             showMessagePage: false,
             showNotificationPage: false,
             currentPage: 'dashboard',
@@ -295,6 +381,11 @@ export default {
             projectPrivacyPolicy: '',
             budget: '',
             downloadUrlLink: '',
+
+            name:'',
+            phoneNumber:'',
+            email:'',
+            pobox:'',
             selectedImage: null,
             selectedImageURL: '',
             success: false,
@@ -332,8 +423,15 @@ export default {
         hideModal() {
             this.modalVisible = false;
         },
+        hideModal1() {
+            this.modalVisible1 = false;
+        },
+
         showModal1() {
             this.modalVisible = true;
+        },
+        showModal2() {
+            this.modalVisible1 = true;
         },
         isConnected() {
             return localStorage.getItem('token') !== null;
@@ -460,6 +558,35 @@ export default {
         //         URL.revokeObjectURL(this.selectedImageURL);
         //     }
         // },
+        async createNewEntreprise() {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await axios.post(`${config.apiBaseUrl}/entreprises`, {
+                    name: this.name,
+                    description: this.description,
+                    email: this.email,
+                    phoneNumber: this.phoneNumber,
+                    pobox: this.pobox,
+                    userId: this.userId // Assure-toi d'inclure l'ID de l'utilisateur
+                }, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                this.success = true;
+                this.successMessage = response.data.message;
+                // Réinitialiser les champs du formulaire
+                this.name = '';
+                this.description = '';
+                this.email = '';
+                this.phoneNumber = '';
+                this.pobox = '';
+                console.log("Entreprise crée avec succes");
+            } catch (error) {
+                this.error = true;
+                this.errorMessage = error.response ? error.response.data.message : error.message;
+            }
+        },
 
         async fetchUserData() {
             try {
