@@ -37,7 +37,7 @@
                                 :class="{ 'text-black': currentPage === 'dashboard', 'text-gray-500': currentPage !== 'dashboard' }">
                                 <ChevronUp
                                     :class="{ 'chevron-down': !isProjectListVisible, 'chevron-up': isProjectListVisible }"
-                                    class=" w-full h-4 transition-transform border border-blue-500" />
+                                    class=" w-full h-4 transition-transform" />
                             </button>
                         </button>
 
@@ -65,6 +65,16 @@
                                         <SquarePlus class="w-4 h-4" />
                                     </button>
                                 </div>
+                                <!--Bouton ajouter pour la creation de projet-->
+                                <div class="addProject">
+                                    <button class="addEntreprisebtn" @click="addEnterprise"
+                                        style=" width: 100%; background-color: transparent; border: none; cursor: pointer;display: flex; justify-content: space-between; align-items: center">
+
+                                        <span class="text-xs">Créer une nouvelle Entreprise</span>
+
+                                        <Building2 class="w-4 h-4" />
+                                    </button>
+                                </div>
 
                                 <div class="newprojectinvited" style="text-align: left; ">
                                     <button class="addProjectbtn" @click="ShowInvitation()"
@@ -89,7 +99,7 @@
                                     :class="{ 'text-black': currentPage === 'backlogs', 'text-gray-500': currentPage !== 'backlogs' }">
                                     Backlogs</h3>
                             </div>
-                            <ArrowRight class=" w-1/5 h-4 border border-blue-500"
+                            <ArrowRight class=" w-1/5 h-4 "
                                 :class="{ 'text-black': currentPage === 'backlogs', 'text-gray-500': currentPage !== 'backlogs' }" />
                         </button>
                     </li>
@@ -257,7 +267,7 @@
 
                             <div class="flex justify-end w-full ">
                                 <button
-                                    class="w-2/5 bg-black text-white p-3 rounded hover:bg-green-600 focus:outline-none focus:ring focus:ring-blue-300"
+                                    class="w-2/5 bg-black text-white p-3 rounded hover:bg-gray-600 focus:outline-none focus:ring focus:ring-blue-300"
                                     type="submit">
                                     Enregistrer le projet
                                 </button>
@@ -266,9 +276,84 @@
                     </div>
                 </div>
 
-                <div class="fixed inset-0 bg-black/50 flex items-start justify-end z-50 pt-12 pr-5" v-if="identity">
+                <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50" v-if="modalVisible1">
                     <div
-                        class="bg-white p-6 gap-5 rounded-lg shadow-lg animate__animated animate__fadeInDown w-full max-w-lg">
+                        class="bg-white p-8 rounded-lg shadow-lg animate__animated animate__fadeInDown w-full max-w-3xl">
+                        <div class="flex justify-end">
+                            <button @click="hideModal1">
+                                <X class="text-gray-600 text-2xl" />
+                            </button>
+                        </div>
+
+                        <h1 class="text-center text-2xl text-gray-800 mb-6">Ajouter une Entreprise</h1>
+                        <form @submit.prevent="createNewEntreprise" class="flex flex-wrap">
+                            <div class="w-full md:w-1/2 pr-2">
+                                <div class="mb-4">
+                                    <label for="name" class="block text-gray-700 text-sm font-bold mb-2">Nom de
+                                        l'Entreprise :</label>
+                                    <input type="text" id="name" v-model="name" required
+                                        class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300">
+                                </div>
+
+                                <div class="mb-4">
+                                    <label for="description"
+                                        class="block text-gray-700 text-sm font-bold mb-2">Description :</label>
+                                    <textarea id="description" v-model="description" cols="30" rows="3"
+                                        class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300"></textarea>
+                                </div>
+
+
+
+                                <div class="flex space-x-2">
+                                    <div class="mb-4 w-1/2">
+                                        <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email
+                                            :</label>
+                                        <input type="email" id="start_date" v-model="email" required
+                                            class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300">
+                                    </div>
+                                    <div class="mb-4 w-1/2">
+                                        <label for="phoneNumber"
+                                            class="block text-gray-700 text-sm font-bold mb-2">Téléphone :</label>
+                                        <input type="text" id="phoneNumber" v-model="phoneNumber" required
+                                            class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="w-full md:w-1/2 pl-2">
+                                <!-- <div class="mb-4">
+                                    <label for="image" class="block text-gray-700 text-sm font-bold mb-2">Logo de l'entreprise
+                                        :</label>
+                                    <input type="file" id="image" accept="image/*" @change="onFileSelected"
+                                        class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300"
+                                        placeholder="Ajouter un logo">
+                                    <img v-if="selectedImage" :src="selectedImageURL" alt="Aperçu de l'image"
+                                        class="mt-2 rounded">
+                                </div> -->
+
+                                <div class="mb-4">
+                                    <label for="pobox" class="block text-gray-700 text-sm font-bold mb-2">Adresse
+                                        :</label>
+                                    <input type="text" id="pobox" v-model="pobox" required
+                                        class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300">
+                                </div>
+
+
+                            </div>
+
+                            <div class="flex justify-end w-full ">
+                                <button
+                                    class="w-2/5 bg-black text-white p-3 rounded hover:bg-gray-600 focus:outline-none focus:ring focus:ring-blue-300"
+                                    type="submit">
+                                    Ajouter
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="fixed inset-0 bg-black/50 flex items-start justify-end z-50 pt-12 pr-5" v-if="identity">
+                    <div class="bg-white p-6 gap-5 rounded-lg shadow-lg animate__animated animate__fadeInDown w-full max-w-lg">
                         <div class="flex justify-between">
                             <span class="w-full ">asd</span>
                             <button @click="hideIdentity">
@@ -281,30 +366,47 @@
 
                             <span>Bonjour</span>
 
-                            <button class="border border-gray-200 text-blue-600 py-1 px-5 rounded-2xl">Gérer votre compte</button>
+                            <button class="border border-gray-200 text-blue-600 py-1 px-5 rounded-2xl">Gérer votre
+                                compte</button>
                         </div>
 
-                        <div class="border border-gray-200 rounded-xl" >
+                        <div class="border border-gray-200 rounded-xl">
                             <div class="flex justify-between border-b border-gray-200 py-2 px-5">
                                 <span>Entreprise</span>
-                                <button @click="toggleEnterpriseList" class="w-auto bg-transparent  border border-gray-200 cursor-pointer rounded-full "  >
+                                <button @click="toggleEnterpriseList"
+                                    class="w-auto bg-transparent  border border-gray-200 cursor-pointer rounded-full ">
 
-                                    <ChevronUp :class="{ 'chevron-down': !isEnterprisesListVisible, 'chevron-up': isEnterprisesListVisible }"  class=" w-full h-5 transition-transform" />
+                                    <ChevronUp
+                                        :class="{ 'chevron-down': !isEnterprisesListVisible, 'chevron-up': isEnterprisesListVisible }"
+                                        class=" w-full h-5 transition-transform" />
                                 </button>
                             </div>
 
-                            <div class="w-full flex gap-4 border-b border-gray-200 py-2 px-5" v-if="isEnterprisesListVisible">
-                                <img src="" alt="">
-                                <div>asd</div>
+                            <div class="w-full flex flex-col"
+                                v-if="isEnterprisesListVisible">
+
+                                <div v-for="entreprise in entreprises" :key="entreprise.id" @click="selectEntreprise(entreprise.id)" class="  border-b border-gray-200 py-1 px-5">
+
+                                    <!-- <div class="w-4 h-4">
+                                        <img class=" border boreder-black  rounded-full "
+                                            src="../assets/images/logoflysoft.png" alt="logo Entreprise" />
+                                    </div> -->
+
+                                    <div class="flex flex-col ">
+                                        <span>{{ entreprise.name }}</span>
+                                        <span class="text-xs">{{ entreprise.email }}</span>
+                                    </div>
+                                </div>
                             </div>
 
-                            <button class="w-full flex gap-4 border-b border-gray-200 py-2 px-5">
+
+                            <button class="w-full flex gap-4 border-b border-gray-200 py-2 px-5" @click="addEnterprise">
                                 <Plus class="h-6 border border-gray-200 rounded-full text-blue-500" />
                                 <span>Ajouter une Entreprise</span>
                             </button>
 
                             <button class="w-full flex gap-4 py-2 px-5">
-                                <Power class="h-5"/>
+                                <Power class="h-5" />
                                 <span>Déconnexion</span>
                             </button>
 
@@ -316,6 +418,7 @@
             </div>
         </div>
     </div>
+
 </template>
 
 <script>
@@ -338,7 +441,8 @@ export default {
     data() {
         return {
             modalVisible: false,
-            identity:true,
+            identity: false,
+            modalVisible1: false,
             showMessagePage: false,
             showNotificationPage: false,
             currentPage: 'dashboard',
@@ -357,6 +461,11 @@ export default {
             projectPrivacyPolicy: '',
             budget: '',
             downloadUrlLink: '',
+
+            name: '',
+            phoneNumber: '',
+            email: '',
+            pobox: '',
             selectedImage: null,
             selectedImageURL: '',
             success: false,
@@ -367,11 +476,12 @@ export default {
             userId: '',
             projects: [
             ], // Liste des projets
+            entreprises: [], // Liste des entreprises
             selectedProjectId: '', // ID du projet sélectionné
             projectId: '',
             userData: null,
             isProjectListVisible: false,
-            isEnterprisesListVisible:false,
+            isEnterprisesListVisible: true,
         };
     },
     mounted() {
@@ -383,6 +493,7 @@ export default {
             this.$router.push('/auth'); // Rediriger vers la page de connexion
         }
         this.fetchProjects();
+        this.fetchEntreprises();
         this.userId = localStorage.getItem('userId');
         this.projectId = localStorage.getItem('projectId');
         this.fetchTeamMemberCount();
@@ -395,14 +506,21 @@ export default {
         hideModal() {
             this.modalVisible = false;
         },
+        hideModal1() {
+            this.modalVisible1 = false;
+        },
+
         showModal1() {
             this.modalVisible = true;
         },
-        hideIdentity(){
+        hideIdentity() {
             this.identity = false;
         },
-        showIdentity(){
+        showIdentity() {
             this.identity = true;
+        },
+        addEnterprise() {
+            this.modalVisible1 = true;
         },
         isConnected() {
             return localStorage.getItem('token') !== null;
@@ -529,6 +647,35 @@ export default {
         //         URL.revokeObjectURL(this.selectedImageURL);
         //     }
         // },
+        async createNewEntreprise() {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await axios.post(`${config.apiBaseUrl}/entreprises`, {
+                    name: this.name,
+                    description: this.description,
+                    email: this.email,
+                    phoneNumber: this.phoneNumber,
+                    pobox: this.pobox,
+                    userId: this.userId // Assure-toi d'inclure l'ID de l'utilisateur
+                }, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                this.success = true;
+                this.successMessage = response.data.message;
+                // Réinitialiser les champs du formulaire
+                this.name = '';
+                this.description = '';
+                this.email = '';
+                this.phoneNumber = '';
+                this.pobox = '';
+                console.log("Entreprise crée avec succes");
+            } catch (error) {
+                this.error = true;
+                this.errorMessage = error.response ? error.response.data.message : error.message;
+            }
+        },
 
         async fetchUserData() {
             try {
@@ -563,8 +710,24 @@ export default {
             this.isProjectListVisible = !this.isProjectListVisible;
         },
 
-        toggleEnterpriseList(){
+        toggleEnterpriseList() {
             this.isEnterprisesListVisible = !this.isEnterprisesListVisible;
+        },
+
+        async fetchEntreprises() {
+            
+            try {
+                const token = localStorage.getItem('token'); // ou une autre méthode pour récupérer le token
+                const response = await axios.get(`${config.apiBaseUrl}/entreprises/user/${this.userId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                this.entreprises = response.data;
+                console.log(this.userId);
+            } catch (error) {
+                this.errorMessage = 'Erreur lors de la récupération des entreprises : ' + (error.response ? error.response.data.message : error.message);
+            }
         },
 
         selectProject(projectId) {

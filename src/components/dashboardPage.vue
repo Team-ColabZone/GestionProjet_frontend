@@ -13,7 +13,7 @@ import { Users, Gauge, CircleGauge, ClockArrowDown, UserRoundCheck, Logs, Trendi
             <div class="w-full flex justify-between">
                 <div class="bg-indigo-100 rounded-lg p-4 text-center w-auto">
                     <div class="flex justify-between items-center">
-                        <h1 class="text-4xl ">0{{ teamMemberCount }}</h1>
+                        <h1 class="text-4xl ">{{ teamMemberCount }}</h1>
                         <Users class="w-10 h-10" />
                     </div>
 

@@ -277,6 +277,7 @@ input {
     border: 1px solid #DFDFDF;
     border-radius: 12px;
     font-size: 1rem;
+    padding: 0 1%;
 }
 
 .input-field span {
