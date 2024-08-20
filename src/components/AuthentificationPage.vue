@@ -79,6 +79,7 @@ export default {
                 const userData = response.data;
                 localStorage.setItem('userId', userData.user_id);  // Assurez-vous que 'user_id' est correct
                 localStorage.setItem('token', userData.access_token);
+                localStorage.setItem('userEmail', this.email); // Stocker l'email dans le localStorage
                 this.$router.push('/Home');
                 console.log(userData);
                 this.getUserInfo();
