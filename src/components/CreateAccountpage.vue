@@ -1,79 +1,80 @@
 <template>
-    <div class="container monda-font animate__animated ">
-        <authSlides />
-
-        <div class="formElement">
-            <div class="top">
-                <div class="logoflysoft">
-                    <img class="logo" src="../assets/images/logoflysoft.png" alt="logo Entreprise" />
-                    <!-- <p class="text">Systeme de gestion de projet de <br> FLYSOFT ENGINEERING</p> -->
-                </div>
-            </div>
-
-            <!-- registration form -->
-            <form @submit.prevent="createAccount">
-                <span style="color: black; font-size: 1.5rem; font-weight: bold;text-align: left;">Inscription</span>
-
-                <div class="input_block">
-                    <div class="input-field">
-                        <label for="firstname">Nom</label>
-                        <input type="text" id="firstname" v-model="firstname" :class="inputClass(errors.firstname)"
-                            @blur="validateFirstName" placeholder="Veuillez entrer votre nom" required>
-                        <!-- <span v-if="errors.firstname" class="error-message">{{ errors.firstname }}</span> -->
-                    </div>
-
-                    <div class="input-field">
-                        <label for="lastname">Prénom</label>
-                        <input type="text" id="lastname" v-model="lastname" :class="inputClass(errors.lastname)"
-                            @blur="validateLastName" placeholder="Veuillez entrer votre prénom" required>
-                        <!-- <span v-if="errors.lastname" class="error-message">{{ errors.lastname }}</span> -->
-                    </div>
-
-                    <div class="input-field">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" v-model="email" :class="inputClass(errors.email)"
-                            @blur="validateEmail" placeholder="Veuillez entrer votre email" required>
-                        <!-- <span v-if="errors.email" class="error-message">{{ errors.email }}</span> -->
-                    </div>
-
-                    <div class="input-field">
-                        <label for="phonenumber">Téléphone</label>
-                        <input type="text" id="phonenumber" v-model="phonenumber"
-                            :class="inputClass(errors.phonenumber)" @blur="validatePhoneNumber"
-                            placeholder="Veuillez entrer contact" required>
-                        <!-- <span v-if="errors.phonenumber" class="error-message">{{ errors.phonenumber }}</span> -->
-                    </div>
-                    <div class="input-field">
-                        <label for="password">Mot de passe</label>
-                        <input type="password" id="password" v-model="password" :class="inputClass(errors.password)"
-                            @blur="validatePassword" placeholder="Veuillez entrer un mot de passe" required>
-                        <!-- <span v-if="errors.password" class="error-message">{{ errors.password }}</span> -->
-                    </div>
-                </div>
-
-                <button class="btn" type="submit">
-                    S'incrire
-                </button>
-
-            </form>
-
-            <div class="bottom">
-                <span class="navigation">Avez vous déja un Compte?
-                    <router-link to="/auth" style="text-decoration: none; color: blue;">Connexion</router-link>
-                </span><br>
-                <span class="privacy">En continuant vous agréer la
-                    <router-link to="/Privacy" style="text-decoration: none; color: blue;">Politique de
-                        Confidentialité</router-link><br>
-                    et les
-                    <router-link to="/Privacy" style="text-decoration: none; color: blue;"> Conditions d'utilisations
-                    </router-link>
-                </span>
-            </div>
+    <div class="flex h-screen">
+        <!-- Auth Slide -->
+        <div class="small_screens w-full h-full p-2 lg:w-2/3 bg-white flex items-center justify-center">
+            <authSlides />
         </div>
-        <div v-if="successMessage" class="success-message">{{ successMessage }}</div>
-        <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
+
+        <!-- Registration Form -->
+        <div class="w-full h-full lg:w-1/3 bg-white p-6 flex flex-col justify-between">
+            <div class="h-full flex flex-col justify-between">
+                <div class="text-right">
+                    <img class="w-24 h-24" src="../assets/images/logoflysoft.png" alt="logo Entreprise" />
+                </div>
+
+                <!-- Registration Form -->
+                <form @submit.prevent="createAccount" class="w-full flex flex-col gap-4">
+                    <h2 class="text-2xl font-bold">Inscription</h2>
+
+                    <div class="flex flex-col gap-4">
+                        <div class="flex flex-col gap-2">
+                            <label for="firstname" class="text-black">Nom</label>
+                            <input type="text" id="firstname" v-model="firstname" :class="inputClass(errors.firstname)"
+                                @blur="validateFirstName" placeholder="Veuillez entrer votre nom" required
+                                class="p-4 border rounded-lg">
+                        </div>
+
+                        <div class="flex flex-col gap-2">
+                            <label for="lastname" class="text-black">Prénom</label>
+                            <input type="text" id="lastname" v-model="lastname" :class="inputClass(errors.lastname)"
+                                @blur="validateLastName" placeholder="Veuillez entrer votre prénom" required
+                                class="p-4 border rounded-lg">
+                        </div>
+
+                        <div class="flex flex-col gap-2">
+                            <label for="email" class="text-black">Email</label>
+                            <input type="email" id="email" v-model="email" :class="inputClass(errors.email)"
+                                @blur="validateEmail" placeholder="Veuillez entrer votre email" required
+                                class="p-4 border rounded-lg">
+                        </div>
+
+                        <div class="flex flex-col gap-2">
+                            <label for="phonenumber" class="text-black">Téléphone</label>
+                            <input type="text" id="phonenumber" v-model="phonenumber"
+                                :class="inputClass(errors.phonenumber)" @blur="validatePhoneNumber"
+                                placeholder="Veuillez entrer contact" required class="p-4 border rounded-lg">
+                        </div>
+
+                        <div class="flex flex-col gap-2">
+                            <label for="password" class="text-black">Mot de passe</label>
+                            <input type="password" id="password" v-model="password" :class="inputClass(errors.password)"
+                                @blur="validatePassword" placeholder="Veuillez entrer un mot de passe" required
+                                class="p-4 border rounded-lg">
+                        </div>
+                    </div>
+
+                    <button type="submit"
+                        class="bg-black hover:bg-gray-800 text-white py-3 rounded-lg">S'inscrire</button>
+                </form>
+
+                <div class="text-center">
+                    <span class="block text-black">Avez-vous déjà un Compte? <router-link to="/auth"
+                        class="text-blue-600">Connexion</router-link>
+                    </span>
+                    <span class="block text-black">En continuant vous agréer la <router-link to="/Privacy"
+                        class="text-blue-600">Politique de Confidentialité</router-link> et les <router-link
+                        to="/Privacy" class="text-blue-600">Conditions d'utilisations</router-link>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Success and Error Messages -->
+            <div v-if="successMessage" class="text-green-600 text-center mt-4">{{ successMessage }}</div>
+            <div v-if="errorMessage" class="text-red-600 text-center mt-4">{{ errorMessage }}</div>
+        </div>
     </div>
 </template>
+
 <script>
 import authSlides from "@/components/includ/authSlides.vue";
 import config from '../config';
@@ -189,151 +190,30 @@ export default {
 </script>
 
 <style scoped>
-body {
-    width: 100%;
-    padding: 0;
-    margin: 0;
-    font-family: Monda;
+@media (max-width: 800px) {
+    .small_screens {
+        display: none;
+    }
 }
 
-p {
-    padding-bottom: 10px;
-    padding-top: 0px;
-}
-
-.input-error {
-    border: 1px solid red;
-}
-
-.input-success {
-    border: 1px solid green;
-}
-
-.error-message {
-    color: red;
-    font-size: 12px;
-}
-
-.monda-font {
-    font-family: 'Monda', sans-serif;
-}
-
-.container {
-    width: 100%;
-    height: 100%;
-    border:1px solid red;
-    padding: 1vh 2% 1vh 1%;
-    text-align: left;
-    display: flex;
-    justify-content: space-between;
-}
-
-.formElement {
-    height: 100%;
-    width: 35%;
-    padding-left: 40px;
-    display: flex;
-    flex-direction: column;
-    /* justify-content: space-between; */
-    gap: 10px;
-}
-
-.logoflysoft {
-    text-align: right;
-    padding-right: 10%;
-}
-
-.logo {
-    width: 84px;
-    height: 80px;
-}
-
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    /* padding-bottom: 60px; */
-}
-
-.input_block {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-}
-
-.input-field {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-}
-
-label {
-    font-size: 1rem;
-    color: #202020;
-}
-
-input {
-    height: 50px;
-    border: 1px solid #DFDFDF;
-    border-radius: 12px;
-    font-size: 1rem;
-    padding: 0 1%;
-}
-
-.input-field span {
-    border: 1px solid teal;
-}
-
-.btn {
-    background: #202020;
-    border: none;
-    color: #FFFFFF;
-    font-size: 22px;
-    text-align: center;
-    border-radius: 12px;
-    height: 50px;
-}
-
-.bottom {
-    text-align: center;
-}
-
-span {
-    /* color: #FFFFFF; */
-    font-size: 1.1rem;
-    text-align: center;
-    /* border: 1px solid rgb(0, 4, 255); */
-}
-
-.navigation {
-    text-align: center;
-}
-
-.privacy {
-    text-align: center;
-}
-
-@media only screen and (max-width:800px) {
+@media (max-width: 1024px) {
     .container {
-        width: 99%;
-        height: auto;
-        padding: 0;
+        flex-direction: column;
     }
 
     .formElement {
-        width: 100%;
-        padding: 0px 3%;
+        padding: 0 3%;
     }
 }
-@media only screen and (min-height:600px){
+
+@media (min-height: 600px) {
     input {
-        height: 30px;
-        border-radius: 12px;
-        font-size: .9rem;
+        height: 40px;
+        font-size: 0.9rem;
     }
 
-    span {
-        font-size: .9rem;
+    .btn {
+        font-size: 1.2rem;
     }
 }
 </style>

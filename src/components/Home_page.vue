@@ -20,36 +20,62 @@
         </header>
 
         <main class="flex flex-col lg:flex-row gap-1">
-            <!-- Sidebar -->
-            <nav class="w-full lg:w-1/6 bg-white shadow-lg h-auto lg:h-full">
+            <!-- Hamburger Menu Button -->
+            <button @click="toggleNav" class="lg:hidden p-4">
+                <!-- Icon for 3 bars -->
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7">
+                    </path>
+                </svg>
+            </button>
+
+            <!-- Sidebar Navigation -->
+            <nav :class="{ 'fixed inset-0 bg-white z-50 flex flex-col items-start p-4 transform translate-x-0':
+                    isNavOpen, 'hidden': !isNavOpen && !isLgScreen, 'absolute w-full lg:w-1/6 bg-white shadow-lg h-auto lg:h-full lg:block lg:relative': isLgScreen, }">
                 <ul class="w-full p-3 flex flex-col h-full gap-5">
+                    <!-- Close Button for the Nav (Visible on small screens) -->
+                    <button @click="toggleNav" class="self-end lg:hidden text-gray-600 text-2xl">
+                        <X />
+                    </button>
+
                     <!-- Dashboard -->
                     <li class="w-full flex flex-col gap-2">
                         <button class="flex justify-between items-center w-full rounded" @click="showPage('dashboard')">
-                            <div class="flex w-4/5 md:w-3/5 items-center gap-1"
-                                :class="{ 'bg-gray-300 py-1 px-2 rounded-lg': currentPage === 'dashboard' }">
+                            <div class="flex w-4/5 md:w-3/5 items-center gap-1" :class="{
+                                'bg-gray-300 py-1 px-2 rounded-lg':
+                                    currentPage === 'dashboard',
+                            }">
                                 <Gauge class="h-4" />
-                                <h3
-                                    :class="{ 'text-black': currentPage === 'dashboard', 'text-gray-500': currentPage !== 'dashboard' }">
+                                <h3 :class="{
+                                    'text-black': currentPage === 'dashboard',
+                                    'text-gray-500': currentPage !== 'dashboard',
+                                }">
                                     Dashboard
                                 </h3>
                             </div>
                             <button @click="toggleProjectList" class="w-1/5 bg-transparent border-none cursor-pointer"
-                                :class="{ 'text-black': currentPage === 'dashboard', 'text-gray-500': currentPage !== 'dashboard' }">
-                                <ChevronUp
-                                    :class="{ 'chevron-down': !isProjectListVisible, 'chevron-up': isProjectListVisible }"
-                                    class="w-full h-4 transition-transform" />
+                                :class="{
+                                    'text-black': currentPage === 'dashboard',
+                                    'text-gray-500': currentPage !== 'dashboard',
+                                }">
+                                <ChevronUp :class="{
+                                    'chevron-down': !isProjectListVisible,
+                                    'chevron-up': isProjectListVisible,
+                                }" class="w-full h-4 transition-transform" />
                             </button>
                         </button>
 
-                        <div :class="{ 'block': isProjectListVisible, 'hidden': !isProjectListVisible }"
-                            class="w-full flex flex-col gap-2 p-2 bg-white shadow-sm border border-gray-300 rounded-lg">
+                        <div :class="{
+                            block: isProjectListVisible,
+                            hidden: !isProjectListVisible,
+                        }" class="w-full flex flex-col gap-2 p-2 bg-white shadow-sm border border-gray-300 rounded-lg">
                             <!-- Projects List -->
                             <div v-for="project in projects" :key="project.id" @click="selectProject(project.id)"
                                 class="project-item py-1 border-b border-gray-300 cursor-pointer">
                                 <p
                                     class="project-item text-left text-black text-xs md:text-sm bg-gray-100 rounded-lg p-2">
-                                    {{ project.projectname }}<br>
+                                    {{ project.projectname }}<br />
                                     {{ project.description }}
                                 </p>
                             </div>
@@ -83,48 +109,63 @@
                     <!-- Backlogs -->
                     <li class="w-full">
                         <button class="flex justify-between items-center w-full" @click="showPage('backlogs')">
-                            <div class="flex w-4/5 md:w-3/5 items-center gap-1"
-                                :class="{ 'bg-gray-300 py-1 px-2 rounded-lg': currentPage === 'backlogs' }">
+                            <div class="flex w-4/5 md:w-3/5 items-center gap-1" :class="{
+                                'bg-gray-300 py-1 px-2 rounded-lg': currentPage === 'backlogs',
+                            }">
                                 <SquarePlus class="h-5" />
-                                <h3
-                                    :class="{ 'text-black': currentPage === 'backlogs', 'text-gray-500': currentPage !== 'backlogs' }">
+                                <h3 :class="{
+                                    'text-black': currentPage === 'backlogs',
+                                    'text-gray-500': currentPage !== 'backlogs',
+                                }">
                                     Backlogs
                                 </h3>
                             </div>
-                            <ArrowRight class="w-1/5 h-4"
-                                :class="{ 'text-black': currentPage === 'backlogs', 'text-gray-500': currentPage !== 'backlogs' }" />
+                            <ArrowRight class="w-1/5 h-4" :class="{
+                                'text-black': currentPage === 'backlogs',
+                                'text-gray-500': currentPage !== 'backlogs',
+                            }" />
                         </button>
                     </li>
 
                     <!-- Tasks -->
                     <li class="w-full">
                         <button class="flex justify-between items-center w-full rounded-lg" @click="showPage('tasks')">
-                            <div class="flex w-4/5 md:w-3/5 items-center gap-1"
-                                :class="{ 'bg-gray-300 py-1 px-2 rounded-lg': currentPage === 'tasks' }">
+                            <div class="flex w-4/5 md:w-3/5 items-center gap-1" :class="{
+                                'bg-gray-300 py-1 px-2 rounded-lg': currentPage === 'tasks',
+                            }">
                                 <ListTodo class="h4" />
-                                <h3
-                                    :class="{ 'text-black': currentPage === 'tasks', 'text-gray-500': currentPage !== 'tasks' }">
+                                <h3 :class="{
+                                    'text-black': currentPage === 'tasks',
+                                    'text-gray-500': currentPage !== 'tasks',
+                                }">
                                     Tâches
                                 </h3>
                             </div>
-                            <ArrowRight class="w-1/5 h-4"
-                                :class="{ 'text-black': currentPage === 'tasks', 'text-gray-500': currentPage !== 'tasks' }" />
+                            <ArrowRight class="w-1/5 h-4" :class="{
+                                'text-black': currentPage === 'tasks',
+                                'text-gray-500': currentPage !== 'tasks',
+                            }" />
                         </button>
                     </li>
 
                     <!-- Team Members -->
                     <li class="w-full">
                         <button class="flex justify-between items-center w-full rounded-lg" @click="showPage('team')">
-                            <div class="flex w-4/5 md:w-3/5 items-center gap-1"
-                                :class="{ 'bg-gray-300 py-1 px-2 rounded-lg': currentPage === 'team' }">
-                                <Users class="h4" />
-                                <h3
-                                    :class="{ 'text-black': currentPage === 'team', 'text-gray-500': currentPage !== 'team' }">
+                            <div class="flex w-4/5 md:w-3/5 items-center gap-1" :class="{
+                                'bg-gray-300 py-1 px-2 rounded-lg': currentPage === 'team',
+                            }">
+                                <Users class="vue h4" />
+                                <h3 :class="{
+                                    'text-black': currentPage === 'team',
+                                    'text-gray-500': currentPage !== 'team',
+                                }">
                                     Membres
                                 </h3>
                             </div>
-                            <ArrowRight class="w-1/5 h-4"
-                                :class="{ 'text-black': currentPage === 'team', 'text-gray-500': currentPage !== 'team' }" />
+                            <ArrowRight class="w-1/5 h-4" :class="{
+                                'text-black': currentPage === 'team',
+                                'text-gray-500': currentPage !== 'team',
+                            }" />
                         </button>
                     </li>
 
@@ -132,16 +173,22 @@
                     <li class="w-full">
                         <button class="flex justify-between items-center w-full rounded-lg"
                             @click="showPage('enterprise')">
-                            <div class="flex w-4/5 md:w-3/5 items-center gap-1"
-                                :class="{ 'bg-gray-300 py-1 px-2 rounded-lg': currentPage === 'enterprise' }">
+                            <div class="flex w-4/5 md:w-3/5 items-center gap-1" :class="{
+                                'bg-gray-300 py-1 px-2 rounded-lg':
+                                    currentPage === 'enterprise',
+                            }">
                                 <Building2 class="h4" />
-                                <h3
-                                    :class="{ 'text-black': currentPage === 'enterprise', 'text-gray-500': currentPage !== 'enterprise' }">
+                                <h3 :class="{
+                                    'text-black': currentPage === 'enterprise',
+                                    'text-gray-500': currentPage !== 'enterprise',
+                                }">
                                     Entreprise
                                 </h3>
                             </div>
-                            <ArrowRight class="w-1/5 h-4"
-                                :class="{ 'text-black': currentPage === 'enterprise', 'text-gray-500': currentPage !== 'enterprise' }" />
+                            <ArrowRight class="w-1/5 h-4" :class="{
+                                'text-black': currentPage === 'enterprise',
+                                'text-gray-500': currentPage !== 'enterprise',
+                            }" />
                         </button>
                     </li>
                 </ul>
@@ -467,6 +514,9 @@ export default {
             userData: null,
             isProjectListVisible: false,
             isEnterprisesListVisible: true,
+
+            isNavOpen: false,
+            isLgScreen: false,
         };
     },
     mounted() {
@@ -477,6 +527,11 @@ export default {
             this.errorMessage = 'Utilisateur non connecté';
             this.$router.push('/auth'); // Rediriger vers la page de connexion
         }
+
+        this.handleResize();
+        window.addEventListener("resize", this.handleResize);
+
+
         this.fetchProjects();
         this.fetchEntreprises();
         this.userId = localStorage.getItem('userId');
@@ -488,6 +543,21 @@ export default {
         this.fetchTotalTasksCount();
     },
     methods: {
+
+        toggleNav() {
+            this.isNavOpen = !this.isNavOpen;
+        },
+        handleResize() {
+            this.isLgScreen = window.innerWidth >= 1024;
+            if (this.isLgScreen) {
+                this.isNavOpen = false;
+            }
+        },
+        beforeDestroy() {
+            window.removeEventListener("resize", this.handleResize);
+        },
+
+
         hideModal() {
             this.modalVisible = false;
         },
