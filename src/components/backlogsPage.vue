@@ -1,5 +1,5 @@
 <script setup>
-import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs, ChevronDown } from 'lucide-vue-next';
+import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs } from 'lucide-vue-next';
 </script>
 
 
@@ -99,20 +99,22 @@ import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs, ChevronDown } f
             </button>
 
             <div
-                class="flex flex-col bg-white p-6 gap-5 rounded-lg shadow-lg animate__animated animate__fadeInDown w-full max-w-4xl">
+                class="flex flex-col bg-white p-6 gap-5 rounded-lg shadow-lg animate__animated animate__fadeInDown w-full max-w-4xl h-full">
 
                 <div class="flex justify-between">
                     <h1 class="text-center text-2xl text-gray-800 ">AJOUTER UNE TACHE</h1>
-                    <button class="w-1/4 px-3 bg-black text-white rounded hover:bg-gray-600 " type="submit">
+                    <button class="w-1/4 px-3 bg-black text-white rounded hover:bg-gray-600 " @click="createNewTask()">
                         Ajouter
                     </button>
                 </div>
 
                 <form @submit.prevent="createNewTask" class="flex flex-col gap-4">
                     <div class="flex flex-col gap-4 border-t border-b border-gray-300">
-                        <input type="text" id="name" placeholder="Titre de la tache" v-model="taskname" required class="w-full p-2 focus:outline-none focus:ring focus:ring-gray-200">
+                        <input type="text" id="name" placeholder="Titre de la tache" v-model="taskname" required
+                            class="w-full p-2 focus:outline-none focus:ring focus:ring-gray-200">
 
-                        <textarea id="description" placeholder="Veuillez saisir une description de la tache" v-model="description" cols="30" rows="3"
+                        <textarea id="description" placeholder="Veuillez saisir une description de la tache"
+                            v-model="description" cols="30" rows="3"
                             class="w-full p-2 focus:outline-none focus:ring focus:ring-gray-200"></textarea>
                     </div>
 
@@ -129,18 +131,20 @@ import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs, ChevronDown } f
                                 <label for="Status" class="block text-gray-700 text-sm font-bold mb-2">Statut de la
                                     tache
                                 </label>
-                                <select v-model="statut" @click="toggleDropdown1"
+                                <select v-model="status" required
                                     class="block w-full px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-200 appearance-none">
-                                    <option v-for="status in statuses" :key="status" :value="priority">{{ status }}
-                                    </option>
+
+                                    <option value="EN_ATTENTE">En Attente</option>
+                                    <option value="EN_COURS">En Cours</option>
+                                    <option value="TERMINEE">Terminée</option>
                                 </select>
                             </div>
 
-                            <span class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                            <!-- <span class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
                                 <ChevronDown
                                     :class="{ 'chevron-down': isDropdown1Open, 'chevron-up': !isDropdown1Open }"
                                     class="w-5 h-5 text-gray-500" />
-                            </span>
+                            </span> -->
                         </div>
                     </div>
 
@@ -164,23 +168,23 @@ import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs, ChevronDown } f
                                 <label for="Priorité" class="block text-gray-700 text-sm font-bold mb-2">
                                     Priorité de la tache
                                 </label>
-                                <select v-model="priority" @click="toggleDropdown2"
+                                <select v-model="priority"
                                     class="block w-full px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-200 appearance-none">
-                                    <option v-for="priority in priorities" :key="priority" :value="priority"
-                                        class="mt-2 rounded-lg">
-                                        {{ priority }}
-                                    </option>
+                                    <option value="FAIBLE">Faible</option>
+                                    <option value="MOYENNE">Moyenne</option>
+                                    <option value="ELEVEE">Elevée</option>
                                 </select>
                             </div>
-                            <span class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                            <!-- <span class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
                                 <ChevronDown :class="{ 'chevron-down': isPriorityOpen, 'chevron-up': !isPriorityOpen }"
                                     class="w-5 h-5 text-gray-500" />
-                            </span>
+                            </span> -->
                         </div>
+
                     </div>
 
                     <div class="w-full flex flex-col md:flex-row gap-5">
-                        <div class="w-full">
+                        <div class="w-full md:w-1/2">
                             <label for="Budjet" class="block text-gray-700 text-sm font-bold mb-2">
                                 Budget de la tache
                             </label>
@@ -188,23 +192,37 @@ import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs, ChevronDown } f
                                 class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-200">
                         </div>
 
-                        <div class="w-full">
-                            <label for="piece" class="block text-gray-700 text-sm font-bold mb-2">Piece jointe</label>
-                            <input type="text" v-model="piece" required
-                                class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-300">
-                        </div>
-                    </div>
-
-                    <div class="flex flex-col md:flex-row gap-5">
-                        <div class="w-full md:w-1/2">
-                            <input type="text" placeholder="Ajouter un commentaire a la tache"
-                                class="w-full h-full border border-200 focus:outline-none focus:ring focus:ring-gray-300">
-                        </div>
+                        <!-- <div class="flex flex-col md:flex-row gap-5">
+                             -->
 
                         <div class="w-full md:w-1/2">
                             <label for="Type" class="block text-gray-700 text-sm font-bold mb-2">Type de tache</label>
-                            <input type="text" v-model="Priorité" required
+                            <input type="text" v-model="taskType"
                                 class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-300">
+                        </div>
+                        <!-- </div> -->
+
+
+                    </div>
+                    <div class="w-full flex flex-col md:flex-row gap-5">
+
+                        <div class="w-full md:w-1/2">
+                            <label for="piece" class="block text-gray-700 text-sm font-bold mb-2">Piece jointe</label>
+                            <input type="file"
+                                class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-300">
+                        </div>
+
+                    </div>
+
+                    <div class="w-full flex flex-col md:flex-row gap-5">
+                        <div class="w-full md:w-1/2 flex items-center gap-5">
+                            <div class="w-12 h-12 rounded-full overflow-hidden border-2 border-gray-300 flex-shrink-0">
+                                <img src="../assets/images/logoflysoft.png" alt="Photo de l'utilisateur"
+                                    class="w-full h-full object-cover">
+                            </div>
+                            <input type="text" placeholder="Ajouter un commentaire à la tâche"
+                                class="w-full h-full border border-150 rounded focus:outline-none focus:ring focus:ring-gray-300 pl-5"
+                                v-model="content">
                         </div>
                     </div>
                 </form>
@@ -239,12 +257,12 @@ export default {
             description: '',
             start_date: '',
             end_date: '',
-            statut: '',
+            status: '',
             budget: '',
             taskType: '',
             priority: '',
             taskId: '',
-            
+
 
             isDropdown1Open: false,
             selectedStatus: 'Select Status',
@@ -327,7 +345,7 @@ export default {
         selectProject(projectId) {
             this.selectedProjectId = projectId;
             localStorage.setItem('projectId', projectId); // Stocker l'ID du projet dans le localStorage
-            this.$router.push('/accueilPage'); // Rediriger vers la page des détails du projet
+            this.$router.push('/Home'); // Rediriger vers la page des détails du projet
         },
         async fetchPendingTasksCount() {
             try {
@@ -387,7 +405,7 @@ export default {
         },
         async createNewTask() {
             try {
-                
+
                 const token = localStorage.getItem('token');
                 const response = await axios.post(`${config.apiBaseUrl}/tasks`, {
                     taskname: this.taskname,
@@ -395,9 +413,9 @@ export default {
                     start_date: new Date(this.start_date), // Conversion en objet Date
                     end_date: new Date(this.end_date), // Conversion en objet Date
                     projectId: this.projectId,
-                    statut: this.statut,
+                    status: this.status,
                     budget: this.budget,
-                    taskType: this. taskType,
+                    taskType: this.taskType,
                     priority: this.priority,
                     // taskId: this.taskId,
                     userId: this.userId // Assure-toi d'inclure l'ID de l'utilisateur
@@ -408,11 +426,12 @@ export default {
                 });
                 this.success = true;
                 this.successMessage = response.data.message;
+                console.log("Tache crée avec succes")
                 // Réinitialiser les champs du formulaire
                 this.taskname = '';
                 this.description = '';
                 this.taskType = '';
-                this.statut = '';
+                this.status = '';
                 this.priority = '';
                 this.start_date = '';
                 this.end_date = '';
@@ -422,6 +441,22 @@ export default {
                 this.errorMessage = error.response ? error.response.data.message : error.message;
             }
         },
+        async getUserInfo() {
+            try {
+                const token = localStorage.getItem('token');
+
+                const response = await axios.get(`${config.apiBaseUrl}/users`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const userInfo = response.data;
+                console.log(userInfo);
+
+            } catch (error) {
+                console.error('Erreur lors de la récupération des informations des l\'utilisateur :', error);
+            }
+        }
 
     }
 };

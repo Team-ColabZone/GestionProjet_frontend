@@ -472,20 +472,20 @@ export default {
     mounted() {
         if (this.isConnected()) {
             this.userId = localStorage.getItem('userId');
+            this.projectId = localStorage.getItem('projectId');
             this.fetchUserData();
+            this.fetchProjects();
+            this.fetchEntreprises();
+            this.fetchTeamMemberCount();
+            this.fetchPendingTasksCount();
+            this.fetchInProgressTasksCount();
+            this.fetchCompletedTasksCount();
+            this.fetchTotalTasksCount();
         } else {
             this.errorMessage = 'Utilisateur non connecté';
             this.$router.push('/auth'); // Rediriger vers la page de connexion
         }
-        this.fetchProjects();
-        this.fetchEntreprises();
-        this.userId = localStorage.getItem('userId');
-        this.projectId = localStorage.getItem('projectId');
-        this.fetchTeamMemberCount();
-        this.fetchPendingTasksCount();
-        this.fetchInProgressTasksCount();
-        this.fetchCompletedTasksCount();
-        this.fetchTotalTasksCount();
+
     },
     methods: {
         hideModal() {
@@ -686,7 +686,7 @@ export default {
                     }
                 });
                 this.projects = response.data;
-                console.log(this.userId);
+                // console.log(this.userId);
             } catch (error) {
                 this.errorMessage = 'Erreur lors de la récupération des projets : ' + (error.response ? error.response.data.message : error.message);
             }
@@ -719,7 +719,9 @@ export default {
         selectProject(projectId) {
             this.selectedProjectId = projectId;
             localStorage.setItem('projectId', projectId); // Stocker l'ID du projet dans le localStorage
-            this.$router.push('/accueilPage'); // Rediriger vers la page des détails du projet
+            console.log("Bonjour");
+            console.log(this.projectId)
+            this.$router.push('/Home'); // Actualisation des données du dashboard
         },
 
         async fetchTeamMemberCount() {

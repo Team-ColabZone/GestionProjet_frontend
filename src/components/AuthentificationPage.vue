@@ -102,7 +102,7 @@ export default {
                 console.log(userInfo);
 
             } catch (error) {
-                console.error('Erreur lors de la récupération des informations de l\'utilisateur :', error);
+                console.error('Erreur lors de la récupération des informations des l\'utilisateur :', error);
             }
         }
     }
