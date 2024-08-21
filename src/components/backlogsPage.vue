@@ -93,9 +93,9 @@ import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs, ChevronDown } f
             </div>
         </div>
 
-        <modal class="fixed inset-0 bg-black/50 flex justify-end z-50" v-if="modalTasks">
+        <modal class="fixed inset-0 backdrop-blur-sm flex justify-end z-50" v-if="modalTasks">
             <button @click="closeNewTask()" class="self-start p-6">
-                <X class="text-gray-600 text-2xl" />
+                <X class="text-black text-2xl" />
             </button>
 
             <div
@@ -126,7 +126,7 @@ import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs, ChevronDown } f
 
                         <div class="w-full relative">
                             <div class="mb-2 w-full">
-                                <label for="Status" class="block text-gray-700 text-sm font-bold mb-2">Status de la
+                                <label for="Status" class="block text-gray-700 text-sm font-bold mb-2">Statut de la
                                     tache
                                 </label>
                                 <select v-model="statut" @click="toggleDropdown1"
@@ -148,7 +148,7 @@ import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs, ChevronDown } f
                         <div class="w-full md:w-1/2">
                             <div class="mb-4">
                                 <label for="Planing" class="block text-gray-700 text-sm font-bold mb-2">
-                                    Planing début et fin
+                                    Planning début et fin
                                 </label>
                                 <div class="flex w-full gap-2">
                                     <input type="date" v-model="start_date" required
@@ -182,14 +182,14 @@ import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs, ChevronDown } f
                     <div class="w-full flex flex-col md:flex-row gap-5">
                         <div class="w-full">
                             <label for="Budjet" class="block text-gray-700 text-sm font-bold mb-2">
-                                Budjet de la tache
+                                Budget de la tache
                             </label>
                             <input type="text" v-model="budget" required
                                 class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-200">
                         </div>
 
                         <div class="w-full">
-                            <label for="piece" class="block text-gray-700 text-sm font-bold mb-2">piece jointe</label>
+                            <label for="piece" class="block text-gray-700 text-sm font-bold mb-2">Piece jointe</label>
                             <input type="text" v-model="piece" required
                                 class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-300">
                         </div>
@@ -223,7 +223,7 @@ export default {
     },
     data() {
         return {
-            modalTasks: true,
+            modalTasks: false,
             taskCount: 0,
             completedTasksCount: 0,
             pendingTasksCount: 0,
@@ -247,10 +247,10 @@ export default {
 
             isDropdown1Open: false,
             selectedStatus: 'Select Status',
-            statuses: ['EN_ATTENTE', 'MOYENNE', 'FAIBLE'],
+            statuses: ['EN_ATTENTE', 'EN_COURS', 'TERMINEE'],
 
             selectedPriority: '',
-            priorities: ['ELEVEE', 'Medium', 'FAIBLE'],
+            priorities: ['ELEVEE', 'MOYENNE', 'FAIBLE'],
             placeholder: 'Select Priority',
             isPriorityOpen: false,
         };
