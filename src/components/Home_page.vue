@@ -1,7 +1,6 @@
 <template>
-    <div
-        class="container1 flex flex-col gap-0 w-full h-full m-0 p-0  bg-white monda-font animate__animated animate__fadeInDown">
-        <div class="flex justify-between items-center w-full px-4 border-b border-gray-200 ">
+    <div class="flex flex-col w-full h-full  bg-white monda-font animate__animated animate__fadeInDown">
+        <header class="flex justify-between items-center w-full px-4 border-b border-gray-200 ">
             <img src="../assets/images/logoflysoft.png" alt="logo Entreprise" class="h-11">
 
             <div class="flex gap-2">
@@ -18,228 +17,216 @@
                         src="../assets/images/logoflysoft.png" alt="logo Entreprise" />
                 </button>
             </div>
-        </div>
+        </header>
 
-        <div class=" flex gap-1  ">
-            <nav class=" w-1/6 bg-white shadow-lg h-full">
-                <ul class=" w-full p-3 flex flex-col h-full gap-5">
+        <main class="flex flex-col lg:flex-row gap-1">
+            <!-- Sidebar -->
+            <nav class="w-full lg:w-1/6 bg-white shadow-lg h-auto lg:h-full">
+                <ul class="w-full p-3 flex flex-col h-full gap-5">
+                    <!-- Dashboard -->
                     <li class="w-full flex flex-col gap-2">
                         <button class="flex justify-between items-center w-full rounded" @click="showPage('dashboard')">
-                            <div class="flex w-3/5 items-center gap-1"
+                            <div class="flex w-4/5 md:w-3/5 items-center gap-1"
                                 :class="{ 'bg-gray-300 py-1 px-2 rounded-lg': currentPage === 'dashboard' }">
                                 <Gauge class="h-4" />
                                 <h3
                                     :class="{ 'text-black': currentPage === 'dashboard', 'text-gray-500': currentPage !== 'dashboard' }">
-                                    Dashboard</h3>
+                                    Dashboard
+                                </h3>
                             </div>
-
-                            <button @click="toggleProjectList" class="w-1/5 bg-transparent border-none cursor-pointer "
+                            <button @click="toggleProjectList" class="w-1/5 bg-transparent border-none cursor-pointer"
                                 :class="{ 'text-black': currentPage === 'dashboard', 'text-gray-500': currentPage !== 'dashboard' }">
                                 <ChevronUp
                                     :class="{ 'chevron-down': !isProjectListVisible, 'chevron-up': isProjectListVisible }"
-                                    class=" w-full h-4 transition-transform" />
+                                    class="w-full h-4 transition-transform" />
                             </button>
                         </button>
 
                         <div :class="{ 'block': isProjectListVisible, 'hidden': !isProjectListVisible }"
                             class="w-full flex flex-col gap-2 p-2 bg-white shadow-sm border border-gray-300 rounded-lg">
-
+                            <!-- Projects List -->
                             <div v-for="project in projects" :key="project.id" @click="selectProject(project.id)"
-                                class="project-item py-1" style="border-bottom: 1px solid #D9D9D9; cursor: pointer;">
-
-                                <p class="project-item"
-                                    style="text-align: left;color: black; font-size: 13px; background-color: #F1F2F3;border-radius: 7px;padding-left: 8px;">
-                                    {{ project.projectname }}
-                                    <br>
+                                class="project-item py-1 border-b border-gray-300 cursor-pointer">
+                                <p
+                                    class="project-item text-left text-black text-xs md:text-sm bg-gray-100 rounded-lg p-2">
+                                    {{ project.projectname }}<br>
                                     {{ project.description }}
                                 </p>
                             </div>
 
-                            <div class="flex flex-col gap-1 ">
-                                <div class="addProject">
-                                    <button class="addProjectbtn" @click="showModal1"
-                                        style=" width: 100%; background-color: transparent; border: none; cursor: pointer;display: flex; justify-content: space-between; align-items: center">
+                            <!-- Action Buttons -->
+                            <div class="flex flex-col gap-1">
+                                <button
+                                    class="addProjectbtn flex justify-between items-center w-full bg-transparent border-none cursor-pointer text-xs"
+                                    @click="showModal1">
+                                    Créer un Projet
+                                    <SquarePlus class="w-4 h-4" />
+                                </button>
 
-                                        <span class="text-xs">Créer un nouveau Projet</span>
+                                <button
+                                    class="addEntreprisebtn flex justify-between items-center w-full bg-transparent border-none cursor-pointer text-xs"
+                                    @click="addEnterprise">
+                                    Créer une Entreprise
+                                    <Building2 class="w-4 h-4" />
+                                </button>
 
-                                        <SquarePlus class="w-4 h-4" />
-                                    </button>
-                                </div>
-                                <!--Bouton ajouter pour la creation de projet-->
-                                <div class="addProject">
-                                    <button class="addEntreprisebtn" @click="addEnterprise"
-                                        style=" width: 100%; background-color: transparent; border: none; cursor: pointer;display: flex; justify-content: space-between; align-items: center">
-
-                                        <span class="text-xs">Créer une nouvelle Entreprise</span>
-
-                                        <Building2 class="w-4 h-4" />
-                                    </button>
-                                </div>
-
-                                <div class="newprojectinvited" style="text-align: left; ">
-                                    <button class="addProjectbtn" @click="ShowInvitation()"
-                                        style="width: 100%; background-color: transparent; border: none; cursor: pointer;display: flex; justify-content: space-between;">
-
-                                        <span class="text-xs">Nouveau projet invité</span>
-
-                                        <FolderGit2 class="w-4 h-4" />
-                                    </button>
-                                </div>
+                                <button
+                                    class="addProjectbtn flex justify-between items-center w-full bg-transparent border-none cursor-pointer text-xs"
+                                    @click="ShowInvitation()">
+                                    Nouveau projet invité
+                                    <FolderGit2 class="w-4 h-4" />
+                                </button>
                             </div>
                         </div>
                     </li>
 
+                    <!-- Backlogs -->
                     <li class="w-full">
-                        <button class=" flex justify-between items-center w-full " @click="showPage('backlogs')">
-                            <div class="flex w-3/5 items-center gap-1"
+                        <button class="flex justify-between items-center w-full" @click="showPage('backlogs')">
+                            <div class="flex w-4/5 md:w-3/5 items-center gap-1"
                                 :class="{ 'bg-gray-300 py-1 px-2 rounded-lg': currentPage === 'backlogs' }">
                                 <SquarePlus class="h-5" />
-
                                 <h3
                                     :class="{ 'text-black': currentPage === 'backlogs', 'text-gray-500': currentPage !== 'backlogs' }">
-                                    Backlogs</h3>
+                                    Backlogs
+                                </h3>
                             </div>
-                            <ArrowRight class=" w-1/5 h-4 "
+                            <ArrowRight class="w-1/5 h-4"
                                 :class="{ 'text-black': currentPage === 'backlogs', 'text-gray-500': currentPage !== 'backlogs' }" />
                         </button>
                     </li>
 
+                    <!-- Tasks -->
                     <li class="w-full">
-                        <button class=" flex justify-between items-center w-full rounded-lg "
-                            @click="showPage('tasks')">
-                            <div class="flex w-3/5 items-center gap-1"
+                        <button class="flex justify-between items-center w-full rounded-lg" @click="showPage('tasks')">
+                            <div class="flex w-4/5 md:w-3/5 items-center gap-1"
                                 :class="{ 'bg-gray-300 py-1 px-2 rounded-lg': currentPage === 'tasks' }">
                                 <ListTodo class="h4" />
-
                                 <h3
                                     :class="{ 'text-black': currentPage === 'tasks', 'text-gray-500': currentPage !== 'tasks' }">
-                                    Tâches</h3>
+                                    Tâches
+                                </h3>
                             </div>
-
-                            <ArrowRight class=" w-1/5 h-4"
+                            <ArrowRight class="w-1/5 h-4"
                                 :class="{ 'text-black': currentPage === 'tasks', 'text-gray-500': currentPage !== 'tasks' }" />
                         </button>
                     </li>
 
+                    <!-- Team Members -->
                     <li class="w-full">
                         <button class="flex justify-between items-center w-full rounded-lg" @click="showPage('team')">
-                            <div class="flex w-3/5 items-center gap-1"
+                            <div class="flex w-4/5 md:w-3/5 items-center gap-1"
                                 :class="{ 'bg-gray-300 py-1 px-2 rounded-lg': currentPage === 'team' }">
                                 <Users class="h4" />
-
                                 <h3
                                     :class="{ 'text-black': currentPage === 'team', 'text-gray-500': currentPage !== 'team' }">
-                                    Membres</h3>
+                                    Membres
+                                </h3>
                             </div>
-
-                            <ArrowRight class=" w-1/5 h-4"
+                            <ArrowRight class="w-1/5 h-4"
                                 :class="{ 'text-black': currentPage === 'team', 'text-gray-500': currentPage !== 'team' }" />
                         </button>
                     </li>
 
-                    <!-- Entreprise -->
-                    <li width="w-full">
+                    <!-- Enterprise -->
+                    <li class="w-full">
                         <button class="flex justify-between items-center w-full rounded-lg"
                             @click="showPage('enterprise')">
-                            <div class="flex w-3/5 items-center gap-1"
+                            <div class="flex w-4/5 md:w-3/5 items-center gap-1"
                                 :class="{ 'bg-gray-300 py-1 px-2 rounded-lg': currentPage === 'enterprise' }">
                                 <Building2 class="h4" />
-
                                 <h3
-                                    :class="{ 'text-black': currentPage === 'team', 'text-gray-500': currentPage !== 'enterprise' }">
-                                    Entreprise</h3>
+                                    :class="{ 'text-black': currentPage === 'enterprise', 'text-gray-500': currentPage !== 'enterprise' }">
+                                    Entreprise
+                                </h3>
                             </div>
-
-                            <ArrowRight class=" w-1/5 h-4"
-                                :class="{ 'text-black': currentPage === 'team', 'text-gray-500': currentPage !== 'enterprise' }" />
+                            <ArrowRight class="w-1/5 h-4"
+                                :class="{ 'text-black': currentPage === 'enterprise', 'text-gray-500': currentPage !== 'enterprise' }" />
                         </button>
                     </li>
-
                 </ul>
             </nav>
 
-            <div class="w-5/6 bg-white shadow-md ">
+            <!-- Main Content -->
+            <div class="w-full lg:w-5/6 bg-white shadow-md">
                 <div class="page" v-if="currentPage === 'dashboard'">
                     <dashboardPage />
                 </div>
-
                 <div class="page" v-if="currentPage === 'backlogs'">
                     <backlogsPage />
                 </div>
-
                 <div class="page" v-if="currentPage === 'tasks'">
                     <tasksPage />
                 </div>
-
                 <div class="page" v-if="currentPage === 'team'">
                     <teamMemberPage />
                 </div>
-
                 <div class="page" v-if="currentPage === 'enterprise'">
                     <enterprisePage />
                 </div>
+            </div>
+        </main>
 
-                <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50" v-if="modalVisible">
-                    <div
-                        class="bg-white p-8 rounded-lg shadow-lg animate__animated animate__fadeInDown w-full max-w-3xl">
-                        <div class="flex justify-end">
-                            <button @click="hideModal">
-                                <X class="text-gray-600 text-2xl" />
-                            </button>
-                        </div>
+        <div>
+            <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50" v-if="modalVisible">
+                <div class="bg-white p-8 rounded-lg shadow-lg animate__animated animate__fadeInDown w-full max-w-3xl">
+                    <div class="flex justify-end">
+                        <button @click="hideModal">
+                            <X class="text-gray-600 text-2xl" />
+                        </button>
+                    </div>
 
-                        <h1 class="text-center text-2xl text-gray-800 mb-6">Ajouter un projet</h1>
+                    <h1 class="text-center text-2xl text-gray-800 mb-6">Ajouter un projet</h1>
 
-                        <form @submit.prevent="createNewProject" class="flex flex-wrap">
-                            <div class="w-full md:w-1/2 pr-2">
-                                <div class="mb-4">
-                                    <label for="projectname" class="block text-gray-700 text-sm font-bold mb-2">Nom du
-                                        projet :</label>
-                                    <input type="text" id="projectname" v-model="projectname" required
+                    <form @submit.prevent="createNewProject" class="flex flex-wrap">
+                        <div class="w-full md:w-1/2 pr-2">
+                            <div class="mb-4">
+                                <label for="projectname" class="block text-gray-700 text-sm font-bold mb-2">Nom du
+                                    projet :</label>
+                                <input type="text" id="projectname" v-model="projectname" required
+                                    class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300">
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="description" class="block text-gray-700 text-sm font-bold mb-2">Description
+                                    :</label>
+                                <textarea id="description" v-model="description" cols="30" rows="3"
+                                    class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300"></textarea>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="projectType" class="block text-gray-700 text-sm font-bold mb-2">Type de
+                                    projet :</label>
+                                <input type="text" id="projectType" v-model="projectType" required
+                                    class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300">
+                            </div>
+
+                            <div class="flex space-x-2">
+                                <div class="mb-4 w-1/2">
+                                    <label for="start_date" class="block text-gray-700 text-sm font-bold mb-2">Date
+                                        de début :</label>
+                                    <input type="date" id="start_date" v-model="start_date" required
                                         class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300">
                                 </div>
-
-                                <div class="mb-4">
-                                    <label for="description"
-                                        class="block text-gray-700 text-sm font-bold mb-2">Description :</label>
-                                    <textarea id="description" v-model="description" cols="30" rows="3"
-                                        class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300"></textarea>
-                                </div>
-
-                                <div class="mb-4">
-                                    <label for="projectType" class="block text-gray-700 text-sm font-bold mb-2">Type de
-                                        projet :</label>
-                                    <input type="text" id="projectType" v-model="projectType" required
+                                <div class="mb-4 w-1/2">
+                                    <label for="end_date" class="block text-gray-700 text-sm font-bold mb-2">Date de
+                                        fin :</label>
+                                    <input type="date" id="end_date" v-model="end_date" required
                                         class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300">
-                                </div>
-
-                                <div class="flex space-x-2">
-                                    <div class="mb-4 w-1/2">
-                                        <label for="start_date" class="block text-gray-700 text-sm font-bold mb-2">Date
-                                            de début :</label>
-                                        <input type="date" id="start_date" v-model="start_date" required
-                                            class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300">
-                                    </div>
-                                    <div class="mb-4 w-1/2">
-                                        <label for="end_date" class="block text-gray-700 text-sm font-bold mb-2">Date de
-                                            fin :</label>
-                                        <input type="date" id="end_date" v-model="end_date" required
-                                            class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300">
-                                    </div>
-                                </div>
-
-                                <div class="mb-4">
-                                    <label for="projectPrivacyPolicy"
-                                        class="block text-gray-700 text-sm font-bold mb-2">politique de confidentialite
-                                        :</label>
-                                    <textarea id="projectPrivacyPolicy" v-model="projectPrivacyPolicy" cols="30"
-                                        rows="3"
-                                        class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300"></textarea>
                                 </div>
                             </div>
 
-                            <div class="w-full md:w-1/2 pl-2">
-                                <!-- <div class="mb-4">
+                            <div class="mb-4">
+                                <label for="projectPrivacyPolicy"
+                                    class="block text-gray-700 text-sm font-bold mb-2">politique de confidentialite
+                                    :</label>
+                                <textarea id="projectPrivacyPolicy" v-model="projectPrivacyPolicy" cols="30" rows="3"
+                                    class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="w-full md:w-1/2 pl-2">
+                            <!-- <div class="mb-4">
                                     <label for="image" class="block text-gray-700 text-sm font-bold mb-2">Project Logo
                                         :</label>
                                     <input type="file" id="image" accept="image/*" @change="onFileSelected"
@@ -249,79 +236,78 @@
                                         class="mt-2 rounded">
                                 </div> -->
 
-                                <div class="mb-4">
-                                    <label for="budget" class="block text-gray-700 text-sm font-bold mb-2">Budget
-                                        Estimatif :</label>
-                                    <input type="text" id="budget" v-model="budget" required
-                                        class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300">
-                                </div>
-
-                                <div class="mb-4">
-                                    <label for="downloadUrlLink" class="block text-gray-700 text-sm font-bold mb-2">Lien
-                                        github du projet :</label>
-                                    <input type="text" id="downloadUrlLink" v-model="downloadUrlLink" required
-                                        class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300">
-                                </div>
-
+                            <div class="mb-4">
+                                <label for="budget" class="block text-gray-700 text-sm font-bold mb-2">Budget
+                                    Estimatif :</label>
+                                <input type="text" id="budget" v-model="budget" required
+                                    class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300">
                             </div>
 
-                            <div class="flex justify-end w-full ">
-                                <button
-                                    class="w-2/5 bg-black text-white p-3 rounded hover:bg-gray-600 focus:outline-none focus:ring focus:ring-blue-300"
-                                    type="submit">
-                                    Enregistrer le projet
-                                </button>
+                            <div class="mb-4">
+                                <label for="downloadUrlLink" class="block text-gray-700 text-sm font-bold mb-2">Lien
+                                    github du projet :</label>
+                                <input type="text" id="downloadUrlLink" v-model="downloadUrlLink" required
+                                    class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300">
                             </div>
-                        </form>
-                    </div>
-                </div>
 
-                <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50" v-if="modalVisible1">
-                    <div
-                        class="bg-white p-8 rounded-lg shadow-lg animate__animated animate__fadeInDown w-full max-w-3xl">
-                        <div class="flex justify-end">
-                            <button @click="hideModal1">
-                                <X class="text-gray-600 text-2xl" />
-                            </button>
                         </div>
 
-                        <h1 class="text-center text-2xl text-gray-800 mb-6">Ajouter une Entreprise</h1>
-                        <form @submit.prevent="createNewEntreprise" class="flex flex-wrap">
-                            <div class="w-full md:w-1/2 pr-2">
-                                <div class="mb-4">
-                                    <label for="name" class="block text-gray-700 text-sm font-bold mb-2">Nom de
-                                        l'Entreprise :</label>
-                                    <input type="text" id="name" v-model="name" required
-                                        class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300">
-                                </div>
+                        <div class="flex justify-end w-full ">
+                            <button
+                                class="w-2/5 bg-black text-white p-3 rounded hover:bg-gray-600 focus:outline-none focus:ring focus:ring-blue-300"
+                                type="submit">
+                                Enregistrer le projet
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
 
-                                <div class="mb-4">
-                                    <label for="description"
-                                        class="block text-gray-700 text-sm font-bold mb-2">Description :</label>
-                                    <textarea id="description" v-model="description" cols="30" rows="3"
-                                        class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300"></textarea>
-                                </div>
+            <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50" v-if="modalVisible1">
+                <div class="bg-white p-8 rounded-lg shadow-lg animate__animated animate__fadeInDown w-full max-w-3xl">
+                    <div class="flex justify-end">
+                        <button @click="hideModal1">
+                            <X class="text-gray-600 text-2xl" />
+                        </button>
+                    </div>
 
-
-
-                                <div class="flex space-x-2">
-                                    <div class="mb-4 w-1/2">
-                                        <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email
-                                            :</label>
-                                        <input type="email" id="start_date" v-model="email" required
-                                            class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300">
-                                    </div>
-                                    <div class="mb-4 w-1/2">
-                                        <label for="phoneNumber"
-                                            class="block text-gray-700 text-sm font-bold mb-2">Téléphone :</label>
-                                        <input type="text" id="phoneNumber" v-model="phoneNumber" required
-                                            class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300">
-                                    </div>
-                                </div>
+                    <h1 class="text-center text-2xl text-gray-800 mb-6">Ajouter une Entreprise</h1>
+                    <form @submit.prevent="createNewEntreprise" class="flex flex-wrap">
+                        <div class="w-full md:w-1/2 pr-2">
+                            <div class="mb-4">
+                                <label for="name" class="block text-gray-700 text-sm font-bold mb-2">Nom de
+                                    l'Entreprise :</label>
+                                <input type="text" id="name" v-model="name" required
+                                    class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300">
                             </div>
 
-                            <div class="w-full md:w-1/2 pl-2">
-                                <!-- <div class="mb-4">
+                            <div class="mb-4">
+                                <label for="description" class="block text-gray-700 text-sm font-bold mb-2">Description
+                                    :</label>
+                                <textarea id="description" v-model="description" cols="30" rows="3"
+                                    class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300"></textarea>
+                            </div>
+
+
+
+                            <div class="flex space-x-2">
+                                <div class="mb-4 w-1/2">
+                                    <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email
+                                        :</label>
+                                    <input type="email" id="start_date" v-model="email" required
+                                        class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300">
+                                </div>
+                                <div class="mb-4 w-1/2">
+                                    <label for="phoneNumber"
+                                        class="block text-gray-700 text-sm font-bold mb-2">Téléphone :</label>
+                                    <input type="text" id="phoneNumber" v-model="phoneNumber" required
+                                        class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="w-full md:w-1/2 pl-2">
+                            <!-- <div class="mb-4">
                                     <label for="image" class="block text-gray-700 text-sm font-bold mb-2">Logo de l'entreprise
                                         :</label>
                                     <input type="file" id="image" accept="image/*" @change="onFileSelected"
@@ -331,90 +317,89 @@
                                         class="mt-2 rounded">
                                 </div> -->
 
-                                <div class="mb-4">
-                                    <label for="pobox" class="block text-gray-700 text-sm font-bold mb-2">Adresse
-                                        :</label>
-                                    <input type="text" id="pobox" v-model="pobox" required
-                                        class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300">
-                                </div>
-
-
+                            <div class="mb-4">
+                                <label for="pobox" class="block text-gray-700 text-sm font-bold mb-2">Adresse
+                                    :</label>
+                                <input type="text" id="pobox" v-model="pobox" required
+                                    class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300">
                             </div>
 
-                            <div class="flex justify-end w-full ">
-                                <button
-                                    class="w-2/5 bg-black text-white p-3 rounded hover:bg-gray-600 focus:outline-none focus:ring focus:ring-blue-300"
-                                    type="submit">
-                                    Ajouter
-                                </button>
-                            </div>
-                        </form>
-                    </div>
+
+                        </div>
+
+                        <div class="flex justify-end w-full ">
+                            <button
+                                class="w-2/5 bg-black text-white p-3 rounded hover:bg-gray-600 focus:outline-none focus:ring focus:ring-blue-300"
+                                type="submit">
+                                Ajouter
+                            </button>
+                        </div>
+                    </form>
                 </div>
+            </div>
 
-                <div class="fixed inset-0 bg-black/50 flex items-start justify-end z-50 pt-12 pr-5" v-if="identity">
-                    <div class="bg-white p-6 gap-5 rounded-lg shadow-lg animate__animated animate__fadeInDown w-full max-w-lg">
-                        <div class="flex justify-between">
-                            <span class="w-full ">asd</span>
-                            <button @click="hideIdentity">
-                                <X class="text-gray-600 text-2xl" />
+            <div class="fixed inset-0 bg-black/50 flex items-start justify-end z-50 pt-12 pr-5" v-if="identity">
+                <div
+                    class="bg-white p-6 gap-5 rounded-lg shadow-lg animate__animated animate__fadeInDown w-full max-w-lg">
+                    <div class="flex justify-between">
+                        <span class="w-full ">asd</span>
+                        <button @click="hideIdentity">
+                            <X class="text-gray-600 text-2xl" />
+                        </button>
+                    </div>
+
+                    <div class="w-full flex flex-col items-center">
+                        <img src="" alt="">
+
+                        <span>Bonjour</span>
+
+                        <button class="border border-gray-200 text-blue-600 py-1 px-5 rounded-2xl">Gérer votre
+                            compte</button>
+                    </div>
+
+                    <div class="border border-gray-200 rounded-xl">
+                        <div class="flex justify-between border-b border-gray-200 py-2 px-5">
+                            <span>Entreprise</span>
+                            <button @click="toggleEnterpriseList"
+                                class="w-auto bg-transparent  border border-gray-200 cursor-pointer rounded-full ">
+
+                                <ChevronUp
+                                    :class="{ 'chevron-down': !isEnterprisesListVisible, 'chevron-up': isEnterprisesListVisible }"
+                                    class=" w-full h-5 transition-transform" />
                             </button>
                         </div>
 
-                        <div class="w-full flex flex-col items-center">
-                            <img src="" alt="">
+                        <div class="w-full flex flex-col" v-if="isEnterprisesListVisible">
 
-                            <span>Bonjour</span>
+                            <div v-for="entreprise in entreprises" :key="entreprise.id"
+                                @click="selectEntreprise(entreprise.id)" class="  border-b border-gray-200 py-1 px-5">
 
-                            <button class="border border-gray-200 text-blue-600 py-1 px-5 rounded-2xl">Gérer votre
-                                compte</button>
-                        </div>
-
-                        <div class="border border-gray-200 rounded-xl">
-                            <div class="flex justify-between border-b border-gray-200 py-2 px-5">
-                                <span>Entreprise</span>
-                                <button @click="toggleEnterpriseList"
-                                    class="w-auto bg-transparent  border border-gray-200 cursor-pointer rounded-full ">
-
-                                    <ChevronUp
-                                        :class="{ 'chevron-down': !isEnterprisesListVisible, 'chevron-up': isEnterprisesListVisible }"
-                                        class=" w-full h-5 transition-transform" />
-                                </button>
-                            </div>
-
-                            <div class="w-full flex flex-col"
-                                v-if="isEnterprisesListVisible">
-
-                                <div v-for="entreprise in entreprises" :key="entreprise.id" @click="selectEntreprise(entreprise.id)" class="  border-b border-gray-200 py-1 px-5">
-
-                                    <!-- <div class="w-4 h-4">
+                                <!-- <div class="w-4 h-4">
                                         <img class=" border boreder-black  rounded-full "
                                             src="../assets/images/logoflysoft.png" alt="logo Entreprise" />
                                     </div> -->
 
-                                    <div class="flex flex-col ">
-                                        <span>{{ entreprise.name }}</span>
-                                        <span class="text-xs">{{ entreprise.email }}</span>
-                                    </div>
+                                <div class="flex flex-col ">
+                                    <span>{{ entreprise.name }}</span>
+                                    <span class="text-xs">{{ entreprise.email }}</span>
                                 </div>
                             </div>
-
-
-                            <button class="w-full flex gap-4 border-b border-gray-200 py-2 px-5" @click="addEnterprise">
-                                <Plus class="h-6 border border-gray-200 rounded-full text-blue-500" />
-                                <span>Ajouter une Entreprise</span>
-                            </button>
-
-                            <button class="w-full flex gap-4 py-2 px-5">
-                                <Power class="h-5" />
-                                <span>Déconnexion</span>
-                            </button>
-
                         </div>
 
-                    </div>
-                </div>
 
+                        <button class="w-full flex gap-4 border-b border-gray-200 py-2 px-5" @click="addEnterprise">
+                            <Plus class="h-6 border border-gray-200 rounded-full text-blue-500" />
+                            <span>Ajouter une Entreprise</span>
+                        </button>
+
+                        <button class="w-full flex gap-4 py-2 px-5">
+                            <Power class="h-5" />
+                            <span>Déconnexion</span>
+                        </button>
+
+                    </div>
+
+                </div>
             </div>
         </div>
     </div>
@@ -716,7 +701,7 @@ export default {
         },
 
         async fetchEntreprises() {
-            
+
             try {
                 const token = localStorage.getItem('token'); // ou une autre méthode pour récupérer le token
                 const response = await axios.get(`${config.apiBaseUrl}/entreprises/user/${this.userId}`, {
