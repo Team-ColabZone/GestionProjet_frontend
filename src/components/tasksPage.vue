@@ -112,6 +112,10 @@ export default {
             projectId: '',
             userData: null,
             isTaskListLateVisible: false,
+            inProgressTasksCount: 0,
+            inProgressTasks:[],
+            completedTasks: [],
+            pendingTasks: [],
         };
     },
     mounted() {
@@ -128,6 +132,9 @@ export default {
         this.fetchInProgressTasksCount();
         this.fetchCompletedTasksCount();
         this.fetchTotalTasksCount();
+        this.fetchPendingTasks();
+        this.fetchInProgressTasks();
+        this.fetchCompletedTasks();
     },
     methods: {
         isConnected() {
@@ -170,40 +177,106 @@ export default {
 
         async fetchPendingTasksCount() {
             try {
-                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/pending`);
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/pending`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 this.pendingTasksCount = response.data.length;
                 console.log(this.pendingTasksCount);
             } catch (error) {
-                console.error('Erreur lors de la récupération des tâches en attente :', error);
+                console.error('Erreur lors de la récupération du nombre de tâches en attente :', error);
             }
         },
         async fetchInProgressTasksCount() {
             try {
-                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/in-progress`);
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/in-progress`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 this.inProgressTasksCount = response.data.length;
                 console.log(this.inProgressTasksCount);
             } catch (error) {
-                console.error('Erreur lors de la récupération des tâches en cours :', error);
+                console.error('Erreur lors de la récupération du nombre de tache en cours :', error);
             }
         },
         async fetchCompletedTasksCount() {
             try {
-                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/completed`);
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/completed`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 this.completedTasksCount = response.data.length;
                 console.log(this.completedTasksCount);
             } catch (error) {
-                console.error('Erreur lors de la récupération des tâches terminées :', error);
+                console.error('Erreur lors de la récupération du nombre de taches terminées :', error);
             }
         },
         async fetchTotalTasksCount() {
             try {
-                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/tasks/count`);
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/tasks/count`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 this.taskCount = response.data;
                 console.log(this.taskCount);
             } catch (error) {
                 console.error('Erreur lors de la récupération du nombre total de tâches :', error);
             }
         },
+
+        //Methode pour recupérer les taches en fonction des statut
+
+        async fetchPendingTasks() {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/pending`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                this.pendingTasks = response.data;
+                console.log(this.pendingTasks);
+            } catch (error) {
+                console.error('Erreur lors de la récupération des tâches en attente :', error);
+            }
+        },
+        async fetchInProgressTasks() {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/in-progress`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                this.inProgressTasks = response.data;
+                console.log(this.inProgressTasks);
+            } catch (error) {
+                console.error('Erreur lors de la récupération des tâches en cours :', error);
+            }
+        },
+        async fetchCompletedTasks() {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/completed`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                this.completedTasks = response.data;
+                console.log(this.completedTasks);
+            } catch (error) {
+                console.error('Erreur lors de la récupération des tâches terminées :', error);
+            }
+        },
+
     }
 };
 </script>

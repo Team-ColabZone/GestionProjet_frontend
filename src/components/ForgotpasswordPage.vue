@@ -54,7 +54,8 @@ export default {
 
                 const result = await response.json();
                 if (response.ok) {
-                    alert(result.message);
+                    alert("Un mail de réinitialisation vous a été envoyé!<br> Veuillez consultez votre boite mail");
+                    console.log(result.message)
                 } else {
                     alert('Erreur: ' + result.message);
                 }

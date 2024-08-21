@@ -44,6 +44,7 @@
 
 
 <script>
+
 import config from "../config";
 
 export default {
@@ -71,16 +72,21 @@ export default {
                     body: JSON.stringify({
                         email: this.email,
                         current_password: this.actualPassword,
-                        new_password: this.newPassword
+                        new_password: this.newpassword
                     })
                 });
 
                 const result = await response.json();
                 if (response.ok) {
-                    alert(result.message);
-                    console.log("mot de passe modifier avec success");                   
+                    this.actualPassword = '';
+                    this.newpassword = '';
+                    this.confirmPassword = '';
+                    alert("Mot de passe modifier avec success");
+                    console.log(result.message);                   
+                    this.$router.push('/auth');
                 } else {
-                    alert('Erreur: ' + result.message);
+                    alert("Une erreur c'est produite veuillez réessayer");
+                    console.log('Erreur: ' + result.message)
                 }
 
                 

@@ -232,6 +232,7 @@ export default {
             selectedProjectId: '', // ID du projet sélectionné
             userId: '',
             projectId: '',
+
             userData: null,
 
             taskname: '',
@@ -330,7 +331,12 @@ export default {
         },
         async fetchPendingTasksCount() {
             try {
-                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/pending`);
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/pending`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 this.pendingTasksCount = response.data.length;
                 console.log(this.pendingTasksCount);
             } catch (error) {
@@ -339,7 +345,12 @@ export default {
         },
         async fetchInProgressTasksCount() {
             try {
-                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/in-progress`);
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/in-progress`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 this.inProgressTasksCount = response.data.length;
                 console.log(this.inProgressTasksCount);
             } catch (error) {
@@ -348,7 +359,12 @@ export default {
         },
         async fetchCompletedTasksCount() {
             try {
-                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/completed`);
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/completed`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 this.completedTasksCount = response.data.length;
                 console.log(this.completedTasksCount);
             } catch (error) {
@@ -357,13 +373,56 @@ export default {
         },
         async fetchTotalTasksCount() {
             try {
-                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/tasks/count`);
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/tasks/count`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 this.taskCount = response.data;
                 console.log(this.taskCount);
             } catch (error) {
                 console.error('Erreur lors de la récupération du nombre total de tâches :', error);
             }
         },
+        async createNewTask() {
+            try {
+                
+                const token = localStorage.getItem('token');
+                const response = await axios.post(`${config.apiBaseUrl}/tasks`, {
+                    taskname: this.taskname,
+                    description: this.description,
+                    start_date: new Date(this.start_date), // Conversion en objet Date
+                    end_date: new Date(this.end_date), // Conversion en objet Date
+                    projectId: this.projectId,
+                    statut: this.statut,
+                    budget: this.budget,
+                    taskType: this. taskType,
+                    priority: this.priority,
+                    // taskId: this.taskId,
+                    userId: this.userId // Assure-toi d'inclure l'ID de l'utilisateur
+                }, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                this.success = true;
+                this.successMessage = response.data.message;
+                // Réinitialiser les champs du formulaire
+                this.taskname = '';
+                this.description = '';
+                this.taskType = '';
+                this.statut = '';
+                this.priority = '';
+                this.start_date = '';
+                this.end_date = '';
+                this.budget = '';
+            } catch (error) {
+                this.error = true;
+                this.errorMessage = error.response ? error.response.data.message : error.message;
+            }
+        },
+
     }
 };
 
