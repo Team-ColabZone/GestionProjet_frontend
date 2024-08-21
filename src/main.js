@@ -19,8 +19,10 @@ import teamMemberPage from './components/teamMemberPage.vue';
 import EnterprisePage from "./components/EnterprisePage.vue";
 import ForgotpasswordPage from "./components/ForgotpasswordPage.vue";
 import UpdatePasswordPage from  "./components/UpdatePasswordPage.vue";
+import authSlides from "../src/components/includ/authSlides.vue";
 
 const routes = [
+  {path: '/authSlides', component: authSlides},
     { path: '/', component: LoadingPage },
     { path: '/CreateAccount', component: CreateAccount },
     { path: '/auth', component: AuthentificationPage },
