@@ -1,6 +1,6 @@
 <template>
-    <div class="flex flex-col w-full h-full  bg-white monda-font animate__animated animate__fadeInDown">
-        <header class="flex justify-between items-center w-full px-4 border-b border-gray-200 ">
+    <div class="flex flex-col w-full h-screen  bg-white monda-font animate__animated animate__fadeInDown">
+        <header class="h-auto flex justify-between items-center w-full px-4 border-b border-gray-200 ">
             <img src="../assets/images/logoflysoft.png" alt="logo Entreprise" class="h-11">
 
             <div class="flex gap-2">
@@ -19,20 +19,15 @@
             </div>
         </header>
 
-        <main class="flex flex-col lg:flex-row gap-1">
+        <main class="h-full flex flex-col lg:flex-row gap-1">
             <!-- Hamburger Menu Button -->
             <button @click="toggleNav" class="lg:hidden p-4">
                 <!-- Icon for 3 bars -->
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7">
-                    </path>
-                </svg>
+                <AlignJustify class="w-6 h-6" />
             </button>
 
             <!-- Sidebar Navigation -->
-            <nav :class="{ 'fixed inset-0 bg-white z-50 flex flex-col items-start p-4 transform translate-x-0':
-                    isNavOpen, 'hidden': !isNavOpen && !isLgScreen, 'absolute w-full lg:w-1/6 bg-white shadow-lg h-auto lg:h-full lg:block lg:relative': isLgScreen, }">
+            <nav :class="{ 'fixed inset-0 bg-white z-50 flex flex-col items-start p-4 transform translate-x-0': isNavOpen, 'hidden': !isNavOpen && !isLgScreen, 'absolute w-full lg:w-1/6 bg-white shadow-lg h-auto lg:h-full lg:block lg:relative': isLgScreen, }">
                 <ul class="w-full p-3 flex flex-col h-full gap-5">
                     <!-- Close Button for the Nav (Visible on small screens) -->
                     <button @click="toggleNav" class="self-end lg:hidden text-gray-600 text-2xl">
@@ -42,23 +37,14 @@
                     <!-- Dashboard -->
                     <li class="w-full flex flex-col gap-2">
                         <button class="flex justify-between items-center w-full rounded" @click="showPage('dashboard')">
-                            <div class="flex w-4/5 md:w-3/5 items-center gap-1" :class="{
-                                'bg-gray-300 py-1 px-2 rounded-lg':
-                                    currentPage === 'dashboard',
-                            }">
-                                <Gauge class="h-4" />
-                                <h3 :class="{
-                                    'text-black': currentPage === 'dashboard',
-                                    'text-gray-500': currentPage !== 'dashboard',
-                                }">
+                            <div class="flex w-4/5 md:w-3/5 items-center gap-1" :class="{  'bg-gray-300 py-1 px-2 rounded-lg': currentPage === 'dashboard', }">
+                                <Gauge class="h-7" />
+                                <h3 :class="{ 'text-black': currentPage === 'dashboard', 'text-gray-500': currentPage !== 'dashboard', }">
                                     Dashboard
                                 </h3>
                             </div>
-                            <button @click="toggleProjectList" class="w-1/5 bg-transparent border-none cursor-pointer"
-                                :class="{
-                                    'text-black': currentPage === 'dashboard',
-                                    'text-gray-500': currentPage !== 'dashboard',
-                                }">
+                            
+                            <button @click="toggleProjectList" class="w-1/5 bg-transparent border-none cursor-pointer" :class="{ 'text-black': currentPage === 'dashboard', 'text-gray-500': currentPage !== 'dashboard', }">
                                 <ChevronUp :class="{
                                     'chevron-down': !isProjectListVisible,
                                     'chevron-up': isProjectListVisible,
@@ -215,7 +201,7 @@
         </main>
 
         <div>
-            <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50" v-if="modalVisible">
+            <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50" v-if="modalProject">
                 <div class="bg-white p-8 rounded-lg shadow-lg animate__animated animate__fadeInDown w-full max-w-3xl">
                     <div class="flex justify-end">
                         <button @click="hideModal">
@@ -310,7 +296,55 @@
                 </div>
             </div>
 
-            <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50" v-if="modalVisible1">
+            <div class="fixed h-full inset-0 bg-black/50 flex items-center justify-center z-50" v-if="modalmembers">
+                <div class="bg-white p-8 rounded-lg shadow-lg animate__animated animate__fadeInDown w-full max-w-3xl">
+                    <div class="h-auto flex justify-between content-center w-full">
+                        <h1 class=" text-black mb-6">AJOUTER UN MEMBRE AU PROJET</h1>
+                        <button @click="hideModalmembers">
+                            <X class="text-black text-2xl" />
+                        </button>
+                    </div>
+
+                    <form @submit.prevent="addMember" class="flex flex-col gap-6">
+                        <div class="flex gap-2">
+                            <div class="w-1/2">
+                                <label for="email" class="block text-black text-sm font-bold mb-2">
+                                    Email
+                                </label>
+                                <input type="text" id="email" v-model="email" @input="searchEmails"
+                                    class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-200"
+                                    placeholder="Rechercher un email..." />
+                                <ul v-if="filteredEmails.length" class="bg-white border rounded mt-2">
+                                    <li v-for="(filteredEmail, index) in filteredEmails" :key="index"
+                                        @click="selectEmail(filteredEmail)"
+                                        class="p-2 cursor-pointer hover:bg-gray-100">
+                                        {{ filteredEmail }}
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="w-1/2">
+                                <label for="roleId" class="block text-black text-sm font-bold mb-2">
+                                    Role
+                                </label>
+                                <input type="text" id="roleId" v-model="roleId"
+                                    class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-200"
+                                    placeholder="Entrer un rôle..." />
+                            </div>
+                        </div>
+
+                        <div class="flex justify-end">
+                            <button
+                                class="w-2/5 bg-black text-white p-3 rounded hover:bg-gray-600 focus:outline-none focus:ring focus:ring-blue-300"
+                                type="submit">
+                                Ajouter
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50" v-if="modalEnterprise">
                 <div class="bg-white p-8 rounded-lg shadow-lg animate__animated animate__fadeInDown w-full max-w-3xl">
                     <div class="flex justify-end">
                         <button @click="hideModal1">
@@ -385,7 +419,7 @@
                 </div>
             </div>
 
-            <div class="fixed inset-0 bg-black/50 flex items-start justify-end z-50 pt-12 pr-5" v-if="identity">
+            <div class="fixed inset-0 bg-black/50 flex items-start justify-end z-50 pt-12 pr-5" v-if="modalIdentity">
                 <div
                     class="bg-white p-6 gap-5 rounded-lg shadow-lg animate__animated animate__fadeInDown w-full max-w-lg">
                     <div class="flex justify-between">
@@ -448,6 +482,7 @@
 
                 </div>
             </div>
+
         </div>
     </div>
 
@@ -472,9 +507,10 @@ export default {
     },
     data() {
         return {
-            modalVisible: false,
-            identity: false,
-            modalVisible1: false,
+            modalProject: false,
+            modalIdentity: false,
+            modalEnterprise: false,
+            modalmembers: false,
             showMessagePage: false,
             showNotificationPage: false,
             currentPage: 'dashboard',
@@ -511,6 +547,9 @@ export default {
             entreprises: [], // Liste des entreprises
             selectedProjectId: '', // ID du projet sélectionné
             projectId: '',
+            roleId: '',
+            emails: ['user1@example.com', 'user2@example.com', 'user3@example.com'], // This should be fetched from the system
+            filteredEmails: [],
             userData: null,
             isProjectListVisible: false,
             isEnterprisesListVisible: true,
@@ -540,7 +579,7 @@ export default {
         window.addEventListener("resize", this.handleResize);
 
 
-       
+
     },
     methods: {
 
@@ -557,26 +596,29 @@ export default {
             window.removeEventListener("resize", this.handleResize);
         },
 
-
         hideModal() {
-            this.modalVisible = false;
+            this.modalProject = false;
         },
         hideModal1() {
-            this.modalVisible1 = false;
+            this.modalEnterprise = false;
+        },
+
+        hideModalmembers() {
+            this.modalmembers = false;
         },
 
         showModal1() {
-            this.modalVisible = true;
+            this.modalProject = true;
         },
         hideIdentity() {
-            this.identity = false;
+            this.modalIdentity = false;
         },
         showIdentity() {
-            this.identity = true;
+            this.modalIdentity = true;
         },
         addEnterprise() {
-            this.modalVisible1 = true;
-            this.identity = false;
+            this.modalEnterprise = true;
+            this.modalIdentity = false;
         },
         isConnected() {
             return localStorage.getItem('token') !== null;
@@ -608,6 +650,7 @@ export default {
                     }
                 });
                 this.success = true;
+                this.modalmembers = true;
                 this.successMessage = response.data.message;
                 // Réinitialiser les champs du formulaire
                 this.projectname = '';
@@ -624,85 +667,33 @@ export default {
             }
         },
 
-        // async createNewProject() {
+        // async addMember() {
         //     try {
         //         const token = localStorage.getItem('token');
-
-        //         const formData = new FormData();
-
-        //         formData.append('projectname', this.projectname);
-        //         formData.append('description', this.description);
-        //         formData.append('start_date', new Date(this.start_date).toISOString());
-        //         formData.append('end_date', new Date(this.end_date).toISOString());
-        //         formData.append('budget', this.budget);
-        //         formData.append('projectType', this.projectType);
-        //         formData.append('projectPrivacyPolicy', this.projectPrivacyPolicy);
-        //         formData.append('downloadUrlLink', this.downloadUrlLink);
-        //         formData.append('userId', this.userId);
-
-        //         if (this.selectedImage) {
-        //             formData.append('projectlogo', this.selectedImage);
-        //         }
-
-
-        //         console.log('projectname', this.projectname);
-        //         console.log('description', this.description);
-        //         console.log('projectType', this.projectType);
-
-        //         console.log('start_date', new Date(this.start_date).toISOString());
-        //         console.log('end_date', new Date(this.end_date).toISOString());
-        //         console.log('projectPrivacyPolicy', this.projectPrivacyPolicy);
-        //         console.log('budget', this.budget);
-        //         console.log('downloadUrlLink', this.downloadUrlLink);
-        //         console.log('userId', this.userId);
-        //         console.log('projectlogo', this.selectedImage);
-
-
-        //         Send the request
-        //         const response = await axios.post(`${config.apiBaseUrl}/projects`, formData, {
+        //         const response = await axios.post(`${config.apiBaseUrl}/member`, {
+        //             Id: this.roleId,
+        //         }, {
         //             headers: {
         //                 'Authorization': `Bearer ${token}`
         //             }
-        //         },);
-
-        //         Handle success
-        //         this.success = true;
-        //         this.successMessage = response.data.message;
-
-        //         Clear the form after submission
-        //         this.projectname = '';
-        //         this.description = '';
-        //         this.projectType = '';
-        //         this.start_date = '';
-        //         this.end_date = '';
-        //         this.projectPrivacyPolicy = '';
-        //         this.budget = '';
-        //         this.downloadUrlLink = '';
-        //         this.selectedImage = null;
-        //         this.selectedImageURL = '';
-
-        //         Hide the modal
-        //         this.hideModal();
-
+        //         });
+                
         //     } catch (error) {
         //         this.error = true;
-        //         this.errorMessage = error.response ? error.response.data.message : error.message;
         //     }
         // },
 
-        // onFileSelected(event) {
-        //     const file = event.target.files[0];
-        //     if (file) {
-        //         this.selectedImage = file;
-        //         this.selectedImageURL = URL.createObjectURL(file);
-        //     }
-        // },
+        searchEmails() {
+            this.filteredEmails = this.emails.filter((e) =>
+                e.toLowerCase().includes(this.email.toLowerCase())
+            );
+        },
 
-        // beforeDestroy() {
-        //     if (this.selectedImageURL) {
-        //         URL.revokeObjectURL(this.selectedImageURL);
-        //     }
-        // },
+        selectEmail(email) {
+            this.email = email;
+            this.filteredEmails = [];
+        },
+
         async createNewEntreprise() {
             try {
                 const token = localStorage.getItem('token');

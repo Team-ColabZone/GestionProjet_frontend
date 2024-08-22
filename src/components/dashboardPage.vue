@@ -3,175 +3,146 @@ import { Users, Gauge, CircleGauge, ClockArrowDown, UserRoundCheck, Logs, Trendi
 </script>
 
 <template>
-    <div class=" flex flex-col w-full p-2 gap-4">
-        <div class="flex items-center w-full h-14 gap-4 px-3 border rounded-lg">
+    <div class="h-full w-full flex flex-col gap-4 p-2">
+        <!-- Header Section -->
+        <div class="flex items-center h-14 w-full gap-4 px-3 border rounded-lg">
             <Gauge />
-            <p class="text-xl ">Dashboard</p>
+            <p class="text-xl">Dashboard</p>
         </div>
 
-        <div class=" w-full pb-5">
-            <div class="w-full flex justify-between">
-                <div class="bg-indigo-100 rounded-lg p-4 text-center w-auto">
-                    <div class="flex justify-between items-center">
-                        <h1 class="text-4xl ">{{ teamMemberCount }}</h1>
-                        <Users class="w-10 h-10" />
-                    </div>
-
-                    <h3 class="mt-2 text-black">Nombre de membre</h3>
+        <!-- Statistics Section -->
+        <div class="flex flex-wrap justify-between gap-4 w-full">
+            <div class="stat-box bg-indigo-100 rounded-xl px-4 pb-0 pt-3">
+                <div class="flex justify-between items-center">
+                    <h1 class="text-4xl">{{ teamMemberCount }}</h1>
+                    <Users class="w-10 h-10" />
                 </div>
+                <h3 class="mt-2 text-black text-center">Nombre de membre</h3>
+            </div>
 
-                <div class=" bg-pink-100 rounded-lg p-4 text-center w-auto">
-                    <div class="flex justify-between items-center">
-                        <h1 class="text-4xl ">20%</h1>
-                        <CircleGauge class="w-10 h-10 " />
-                    </div>
-                    <!-- <h1>{{ affectationCount }}%</h1> -->
-                    <h3 class="mt-2 text-black">Pourcentage de réalisation</h3>
+            <div class="stat-box bg-pink-100 rounded-xl p-3">
+                <div class="flex justify-between items-center">
+                    <h1 class="text-4xl">20%</h1>
+                    <CircleGauge class="w-10 h-10" />
                 </div>
+                <h3 class="mt-2 text-black text-center">Pourcentage de réalisation</h3>
+            </div>
 
-                <div class="bg-green-100 rounded-lg p-4 text-center w-auto">
-                    <div class="flex justify-between items-center">
-                        <h1 class="text-4xl ">30j/t</h1>
-                        <ClockArrowDown class="w-10 h-10 " />
-                        <!-- <h1>{{ stageCount }}</h1> -->
-                    </div>
-
-                    <h3 class="mt-2 text-black">Taux de tache journaliere</h3>
+            <div class="stat-box bg-green-100 rounded-xl p-3">
+                <div class="flex justify-between items-center">
+                    <h1 class="text-4xl">30j/t</h1>
+                    <ClockArrowDown class="w-10 h-10" />
                 </div>
+                <h3 class="mt-2 text-black text-center">Taux de tache journaliere</h3>
+            </div>
 
-                <div class="bg-pink-50 rounded-lg p-4 text-center w-auto">
-                    <div class="flex justify-between items-center">
-                        <h1 class="text-4xl ">01</h1>
-                        <!-- <h1>{{ taskCount }}</h1> -->
-                        <UserRoundCheck class="w-10 h-10 " />
-                    </div>
-
-                    <h3 class="mt-2 text-black">Nombre de membres <br> performant</h3>
+            <div class="stat-box bg-pink-50 rounded-xl p-3">
+                <div class="flex justify-between items-center">
+                    <h1 class="text-4xl">01</h1>
+                    <UserRoundCheck class="w-10 h-10" />
                 </div>
+                <h3 class="mt-2 text-black text-center">Nombre de membres performant</h3>
+            </div>
 
-                <div class="bg-blue-50 rounded-lg p-4 text-center w-auto">
-                    <div class="flex justify-between items-center">
-                        <!-- <h1>04</h1> -->
-                        <h1 class="text-4xl ">0{{ taskCount }}</h1>
-                        <Logs class="w-10 h-10 " />
-                    </div>
-
-                    <h3 class="mt-2 text-black">Nombre de tache</h3>
+            <div class="stat-box bg-blue-50 rounded-xl p-3">
+                <div class="flex justify-between items-center">
+                    <h1 class="text-4xl">0{{ taskCount }}</h1>
+                    <Logs class="w-10 h-10" />
                 </div>
+                <h3 class="mt-2 text-black text-center">Nombre de tache</h3>
+            </div>
 
-                <div class="bg-lime-100 rounded-lg p-4 text-center w-auto">
-                    <div class="flex justify-between items-center">
-                        <h1 class="text-4xl ">30%</h1>
-                        <!-- <h1>{{ taskCount }}</h1> -->
-                        <TrendingUp class="w-10 h-10 " />
-                    </div>
-
-                    <h3 class="mt-2 text-black">Taux de reactivité</h3>
+            <div class="stat-box bg-lime-100 rounded-xl p-3">
+                <div class="flex justify-between items-center">
+                    <h1 class="text-4xl">30%</h1>
+                    <TrendingUp class="w-10 h-10" />
                 </div>
+                <h3 class="mt-2 text-black text-center">Taux de reactivité</h3>
             </div>
         </div>
 
+        <!-- Search and Error Section -->
         <div class="flex w-full gap-8">
             <form action="" class="flex w-1/2 gap-4">
-                <div class="flex relative item-center w-3/4">
+                <div class="relative w-3/4">
                     <Search class="absolute left-2 top-2.5 text-gray-600 h-1/2" />
                     <input type="search" id="search-input"
-                        class=" w-full h-11 pl-10 pr-4 border border-gray-300 rounded-lg text-gray-800 focus:outline-none focus:border-blue-500"
-                        placeholder="Rechercher...">
+                        class="w-full h-11 pl-10 pr-4 border border-gray-300 rounded-lg text-gray-800 focus:outline-none focus:border-blue-500"
+                        placeholder="Rechercher..." />
                 </div>
-
                 <input type="submit" value="Rechercher"
-                    class=" w-1/4 h-11 bg-black text-white font-bold rounded-lg hover:bg-slate-600 focus:outline-none">
-
+                    class="w-1/4 h-11 bg-black text-white font-bold rounded-lg hover:bg-slate-600 focus:outline-none" />
             </form>
-
-            <div class="w-1/2 ">error message</div>
+            <div class="w-1/2 flex items-center justify-center text-red-500">error message</div>
         </div>
 
-        <div class="flex gap-4">
-            <div class="w-1/2 border border-gray-300 rounded-lg">
-                <div class="flex items-center justify-between border-b border-gray-300 pt-1 pb-1">
-                    <div class="flex gap-2 items-center pl-2">
+        <!-- Task Sections -->
+        <div class="flex gap-4 w-full h-full">
+            <!-- Current Tasks -->
+            <div class="task-box w-full lg:w-1/2">
+                <div class="flex justify-between items-center border-b border-gray-300 p-2">
+                    <div class="flex gap-2 items-center">
                         <ChartPie class="h-2/3 text-black" />
-
                         <p class="text-black text-base font-semibold">Tâches Courantes</p>
                     </div>
-
-                    <button class="icon-ChevronUp pr-2" @click="showTaskList()"
+                    <button class="icon-ChevronUp" @click="showTaskList()"
                         style="border: none;background-color: transparent">
                         <ChevronUp />
                     </button>
                 </div>
+                <div class="h-full p-4"></div>
             </div>
 
-            <div class="w-1/4 border border-gray-300 rounded-lg">
-                <div class="flex items-center justify-between border-b border-gray-300 pt-1 pb-1">
-                    <div class="flex flex-wrap gap-2 items-center pl-2">
-
+            <!-- Best Contributors -->
+            <div class="task-box w-full lg:w-1/4">
+                <div class="flex justify-between items-center border-b border-gray-300 p-2">
+                    <div class="flex gap-2 items-center">
                         <UserRoundCheck class="h-2/3 text-black" />
-                        <p class="text-black text-base font-semibold">
-                            Meilleurs contributeurs
-                        </p>
+                        <p class="text-black text-base font-semibold">Meilleurs contributeurs</p>
                     </div>
-
-                    <button class="icon-ChevronUp pr-2" @click="showTaskList()"
+                    <button class="icon-ChevronUp" @click="showTaskList()"
                         style="border: none;background-color: transparent">
                         <ChevronUp />
                     </button>
                 </div>
             </div>
 
-            <div class="w-1/4 border border-gray-300 rounded-lg">
-                <div class="flex items-center justify-between border-b border-gray-300 pt-1 pb-1">
-                    <div class="flex gap-2 items-center pl-2">
+            <!-- Task Overview -->
+            <div class="task-box w-full lg:w-1/4">
+                <div class="flex justify-between items-center border-b border-gray-300 p-2">
+                    <div class="flex gap-2 items-center">
                         <ArrowDownUp class="task"
                             style="width: 24px; height: 24px; stroke-width: 1.5px; color: #000000;" />
-
-                        <p style="color: #000000; padding-left: 15px; font-size: 15px; font-weight: bold;">
-                            Bilan des tâches
-                        </p>
+                        <p style="color: #000000; padding-left: 15px; font-size: 15px; font-weight: bold;">Bilan des
+                            tâches</p>
                     </div>
-
-                    <button class="icon-ChevronUp pr-2" @click="showTaskList()"
+                    <button class="icon-ChevronUp" @click="showTaskList()"
                         style="border: none;background-color: transparent; cursor: pointer;">
                         <ChevronUp class="task" style="width: 24px;height: 24px; color: #6F6F6F" />
                     </button>
                 </div>
-
-                <div class="flex flex-col p-2 gap-2 border border-gray-200">
+                <div class="flex flex-col gap-2 p-4">
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full bg-orange-200 flex items-center justify-center">
                             <p class="text-black">{{ pendingTasksCount }}</p>
                         </div>
-                        <p class="text-sm font-bold text-gray-600">
-                            Nombre de tâche en attente
-                        </p>
+                        <p class="text-sm font-bold text-gray-600">Nombre de tâche en attente</p>
                     </div>
-
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full bg-green-200 flex items-center justify-center">
                             <p class="text-black">{{ inProgressTasksCount }}</p>
                         </div>
-                        <p class="text-sm font-bold text-gray-600">
-                            Nombre de tâche en cours
-                        </p>
+                        <p class="text-sm font-bold text-gray-600">Nombre de tâche en cours</p>
                     </div>
-
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 rounded-full bg-blue-200 flex items-center justify-center">
                             <p class="text-black">{{ completedTasksCount }}</p>
                         </div>
-                        <p class=" text-sm font-bold text-gray-600">
-                            Nombre de tâche terminée
-                        </p>
+                        <p class="text-sm font-bold text-gray-600">Nombre de tâche terminée</p>
                     </div>
-                </div>
-
-                <div class="p-2">
-                    <p class="text-sm font-bold text-right text-black">
-                        {{ taskCount }} tâche(s) au total
-                    </p>
-
+                    <div class="p-2">
+                        <p class="text-sm font-bold text-right text-black">{{ taskCount }} tâche(s) au total</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -315,11 +286,19 @@ export default {
 <style scoped>
 @import url(https://fonts.googleapis.com/css2?family=Monda:wght@100;200;300;400;500;600;700&display=swap);
 
-body {
-    width: 100%;
-    padding: 0;
-    margin: 0;
-    background-color: rgba(0, 0, 0, 0.05);
-    font-family: Monda;
+.stat-box {
+  flex: 1 1 calc(10% - 1rem);
+  max-width: 200px;
+  margin-bottom: 1rem;
+}
+
+.task-box {
+  min-height: 300px;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: white;
 }
 </style>

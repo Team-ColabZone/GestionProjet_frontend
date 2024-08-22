@@ -456,7 +456,7 @@ export default {
             } catch (error) {
                 console.error('Erreur lors de la récupération des informations des l\'utilisateur :', error);
             }
-        }
+        },
 
     }
 };
