@@ -27,7 +27,8 @@
             </button>
 
             <!-- Sidebar Navigation -->
-            <nav :class="{ 'fixed inset-0 bg-white z-50 flex flex-col items-start p-4 transform translate-x-0': isNavOpen, 'hidden': !isNavOpen && !isLgScreen, 'absolute w-full lg:w-1/6 bg-white shadow-lg h-auto lg:h-full lg:block lg:relative': isLgScreen, }">
+            <nav
+                :class="{ 'fixed inset-0 bg-white z-50 flex flex-col items-start p-4 transform translate-x-0': isNavOpen, 'hidden': !isNavOpen && !isLgScreen, 'absolute w-full lg:w-1/6 bg-white shadow-lg h-auto lg:h-full lg:block lg:relative': isLgScreen, }">
                 <ul class="w-full p-3 flex flex-col h-full gap-5">
                     <!-- Close Button for the Nav (Visible on small screens) -->
                     <button @click="toggleNav" class="self-end lg:hidden text-gray-600 text-2xl">
@@ -36,15 +37,18 @@
 
                     <!-- Dashboard -->
                     <li class="w-full flex flex-col gap-2">
-                        <button class="flex justify-between items-center w-full rounded" @click="showPage('dashboard')">
-                            <div class="flex w-4/5 md:w-3/5 items-center gap-1" :class="{  'bg-gray-300 py-1 px-2 rounded-lg': currentPage === 'dashboard', }">
+                        <button class="flex justify-between items-center w-full rounded"
+                            :class="{ 'bg-gray-100 py-1 px-2 rounded-lg': currentPage === 'dashboard', }"
+                            @click="showPage('dashboard')">
+                            <div class="flex w-4/5 md:w-3/5 items-center gap-1">
                                 <Gauge class="h-7" />
-                                <h3 :class="{ 'text-black': currentPage === 'dashboard', 'text-gray-500': currentPage !== 'dashboard', }">
+                                <h3 class="text-black">
                                     Dashboard
                                 </h3>
                             </div>
-                            
-                            <button @click="toggleProjectList" class="w-1/5 bg-transparent border-none cursor-pointer" :class="{ 'text-black': currentPage === 'dashboard', 'text-gray-500': currentPage !== 'dashboard', }">
+
+                            <button @click="toggleProjectList" class="w-1/5 bg-transparent border-none cursor-pointer"
+                                :class="{ 'text-black': currentPage === 'dashboard', 'text-gray-500': currentPage !== 'dashboard', }">
                                 <ChevronUp :class="{
                                     'chevron-down': !isProjectListVisible,
                                     'chevron-up': isProjectListVisible,
@@ -58,16 +62,16 @@
                         }" class="w-full flex flex-col gap-2 p-2 bg-white shadow-sm border border-gray-300 rounded-lg">
                             <!-- Projects List -->
                             <div v-for="project in projects" :key="project.id" @click="selectProject(project.id)"
-                                class="project-item py-1 border-b border-gray-300 cursor-pointer">
-                                <p
-                                    class="project-item text-left text-black text-xs md:text-sm bg-gray-100 rounded-lg p-2">
-                                    {{ project.projectname }}<br />
+                                class="flex items-center border-b border-gray-300 cursor-pointer bg-gray-100 rounded-lg">
+                                <img src="" alt="#" class="w-12 h-full rounded border">
+                                <p class=" text-left text-black text-xs md:text-sm p-2">
+                                    <span class="font-medium">{{ project.projectname }}</span><br>
                                     {{ project.description }}
                                 </p>
                             </div>
 
                             <!-- Action Buttons -->
-                            <div class="flex flex-col gap-1">
+                            <div class="w-full pt-2 flex flex-col gap-2 border-t border-gray-200">
                                 <button
                                     class="addProjectbtn flex justify-between items-center w-full bg-transparent border-none cursor-pointer text-xs"
                                     @click="showModal1">
@@ -75,12 +79,12 @@
                                     <SquarePlus class="w-4 h-4" />
                                 </button>
 
-                                <button
+                                <!-- <button
                                     class="addEntreprisebtn flex justify-between items-center w-full bg-transparent border-none cursor-pointer text-xs"
                                     @click="addEnterprise">
                                     Créer une Entreprise
                                     <Building2 class="w-4 h-4" />
-                                </button>
+                                </button> -->
 
                                 <button
                                     class="addProjectbtn flex justify-between items-center w-full bg-transparent border-none cursor-pointer text-xs"
@@ -94,15 +98,12 @@
 
                     <!-- Backlogs -->
                     <li class="w-full">
-                        <button class="flex justify-between items-center w-full" @click="showPage('backlogs')">
-                            <div class="flex w-4/5 md:w-3/5 items-center gap-1" :class="{
-                                'bg-gray-300 py-1 px-2 rounded-lg': currentPage === 'backlogs',
-                            }">
+                        <button class="flex justify-between items-center w-full" :class="{
+                            'bg-gray-100 py-1 px-2 rounded-lg': currentPage === 'backlogs',
+                        }" @click="showPage('backlogs')">
+                            <div class="flex w-4/5 md:w-3/5 items-center gap-1">
                                 <SquarePlus class="h-5" />
-                                <h3 :class="{
-                                    'text-black': currentPage === 'backlogs',
-                                    'text-gray-500': currentPage !== 'backlogs',
-                                }">
+                                <h3 class="text-black">
                                     Backlogs
                                 </h3>
                             </div>
@@ -115,15 +116,12 @@
 
                     <!-- Tasks -->
                     <li class="w-full">
-                        <button class="flex justify-between items-center w-full rounded-lg" @click="showPage('tasks')">
-                            <div class="flex w-4/5 md:w-3/5 items-center gap-1" :class="{
-                                'bg-gray-300 py-1 px-2 rounded-lg': currentPage === 'tasks',
-                            }">
+                        <button class="flex justify-between items-center w-full rounded-lg" :class="{
+                            'bg-gray-100 py-1 px-2 rounded-lg': currentPage === 'tasks',
+                        }" @click="showPage('tasks')">
+                            <div class="flex w-4/5 md:w-3/5 items-center gap-1">
                                 <ListTodo class="h4" />
-                                <h3 :class="{
-                                    'text-black': currentPage === 'tasks',
-                                    'text-gray-500': currentPage !== 'tasks',
-                                }">
+                                <h3 class="text-black">
                                     Tâches
                                 </h3>
                             </div>
@@ -136,15 +134,12 @@
 
                     <!-- Team Members -->
                     <li class="w-full">
-                        <button class="flex justify-between items-center w-full rounded-lg" @click="showPage('team')">
-                            <div class="flex w-4/5 md:w-3/5 items-center gap-1" :class="{
-                                'bg-gray-300 py-1 px-2 rounded-lg': currentPage === 'team',
-                            }">
+                        <button class="flex justify-between items-center w-full rounded-lg" :class="{
+                            'bg-gray-100 py-1 px-2 rounded-lg': currentPage === 'team',
+                        }" @click="showPage('team')">
+                            <div class="flex w-4/5 md:w-3/5 items-center gap-1">
                                 <Users class="vue h4" />
-                                <h3 :class="{
-                                    'text-black': currentPage === 'team',
-                                    'text-gray-500': currentPage !== 'team',
-                                }">
+                                <h3 class="text-black">
                                     Membres
                                 </h3>
                             </div>
@@ -157,17 +152,12 @@
 
                     <!-- Enterprise -->
                     <li class="w-full">
-                        <button class="flex justify-between items-center w-full rounded-lg"
-                            @click="showPage('enterprise')">
-                            <div class="flex w-4/5 md:w-3/5 items-center gap-1" :class="{
-                                'bg-gray-300 py-1 px-2 rounded-lg':
-                                    currentPage === 'enterprise',
-                            }">
+                        <button class="flex justify-between items-center w-full rounded-lg" :class="{
+                            'bg-gray-100 py-1 px-2 rounded-lg': currentPage === 'enterprise',
+                        }" @click="showPage('enterprise')">
+                            <div class="flex w-4/5 md:w-3/5 items-center gap-1">
                                 <Building2 class="h4" />
-                                <h3 :class="{
-                                    'text-black': currentPage === 'enterprise',
-                                    'text-gray-500': currentPage !== 'enterprise',
-                                }">
+                                <h3 class="text-black">
                                     Entreprise
                                 </h3>
                             </div>
@@ -204,7 +194,7 @@
             <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50" v-if="modalProject">
                 <div class="bg-white p-8 rounded-lg shadow-lg animate__animated animate__fadeInDown w-full max-w-3xl">
                     <div class="flex justify-end">
-                        <button @click="hideModal">
+                        <button @click="hideModalProject">
                             <X class="text-gray-600 text-2xl" />
                         </button>
                     </div>
@@ -345,67 +335,68 @@
             </div>
 
             <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50" v-if="modalEnterprise">
-                <div class="bg-white p-8 rounded-lg shadow-lg animate__animated animate__fadeInDown w-full max-w-3xl">
-                    <div class="flex justify-end">
-                        <button @click="hideModal1">
+                <div
+                    class="bg-white flex flex-col p-8 gap-5 rounded-lg shadow-lg animate__animated animate__fadeInDown w-full max-w-3xl">
+                    <div class="flex justify-between">
+                        <h1 class="text-center text-2xl font-bold mb-6">Ajouter une Entreprise</h1>
+                        <button @click="hideModalEnterprise">
                             <X class="text-gray-600 text-2xl" />
                         </button>
                     </div>
 
-                    <h1 class="text-center text-2xl text-gray-800 mb-6">Ajouter une Entreprise</h1>
                     <form @submit.prevent="createNewEntreprise" class="flex flex-wrap">
                         <div class="w-full md:w-1/2 pr-2">
                             <div class="mb-4">
-                                <label for="name" class="block text-gray-700 text-sm font-bold mb-2">Nom de
-                                    l'Entreprise :</label>
+                                <label for="name" class="block text-sm font-bold mb-2">
+                                    Nom de l'Entreprise
+                                </label>
                                 <input type="text" id="name" v-model="name" required
-                                    class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300">
+                                    class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-200">
                             </div>
 
                             <div class="mb-4">
-                                <label for="description" class="block text-gray-700 text-sm font-bold mb-2">Description
+                                <label for="description" class="block text-sm font-bold mb-2">Description
                                     :</label>
                                 <textarea id="description" v-model="description" cols="30" rows="3"
-                                    class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300"></textarea>
+                                    class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-200"></textarea>
                             </div>
-
-
 
                             <div class="flex space-x-2">
                                 <div class="mb-4 w-1/2">
-                                    <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email
+                                    <label for="email" class="block text-sm font-bold mb-2">Email
                                         :</label>
                                     <input type="email" id="start_date" v-model="email" required
-                                        class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300">
+                                        class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-200">
                                 </div>
                                 <div class="mb-4 w-1/2">
-                                    <label for="phoneNumber"
-                                        class="block text-gray-700 text-sm font-bold mb-2">Téléphone :</label>
+                                    <label for="phoneNumber" class="block text-sm font-bold mb-2">Téléphone :</label>
                                     <input type="text" id="phoneNumber" v-model="phoneNumber" required
-                                        class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300">
+                                        class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-200">
                                 </div>
                             </div>
                         </div>
 
-                        <div class="w-full md:w-1/2 pl-2">
-                            <!-- <div class="mb-4">
-                                    <label for="image" class="block text-gray-700 text-sm font-bold mb-2">Logo de l'entreprise
-                                        :</label>
-                                    <input type="file" id="image" accept="image/*" @change="onFileSelected"
-                                        class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300"
-                                        placeholder="Ajouter un logo">
-                                    <img v-if="selectedImage" :src="selectedImageURL" alt="Aperçu de l'image"
-                                        class="mt-2 rounded">
-                                </div> -->
+                        <div class="w-full h-full md:w-1/2 pl-2">
+                            <div class="relative mb-4">
+                                <input type="file" id="logo" accept="image/*" @change="onFileSelected"
+                                    class="absolute inset-0 opacity-0 cursor-pointer w-1/2 h-full" />
 
-                            <div class="mb-4">
-                                <label for="pobox" class="block text-gray-700 text-sm font-bold mb-2">Adresse
-                                    :</label>
-                                <input type="text" id="pobox" v-model="pobox" required
-                                    class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300">
+                                <div
+                                    class="w-1/2 h-32 border border-gray-300 flex items-center justify-center bg-gray-100 rounded-lg">
+                                    <img v-if="selectedImageURL" :src="selectedImageURL" alt="Image Preview"
+                                        class="w-full h-full object-cover rounded-lg">
+                                    <span v-else class="text-gray-500 p-4 text-center">Ajouter un Logo ou une photo de
+                                        stucture</span>
+                                </div>
                             </div>
 
-
+                            <div class="mb-4">
+                                <label for="pobox" class="block text-sm font-bold mb-2">
+                                    Adresse :
+                                </label>
+                                <input type="text" id="pobox" v-model="pobox" required
+                                    class="w-2/3 p-2 border rounded focus:outline-none focus:ring focus:ring-gray-200">
+                            </div>
                         </div>
 
                         <div class="flex justify-end w-full ">
@@ -421,26 +412,41 @@
 
             <div class="fixed inset-0 bg-black/50 flex items-start justify-end z-50 pt-12 pr-5" v-if="modalIdentity">
                 <div
-                    class="bg-white p-6 gap-5 rounded-lg shadow-lg animate__animated animate__fadeInDown w-full max-w-lg">
-                    <div class="flex justify-between">
-                        <span class="w-full ">asd</span>
+                    class="bg-white flex flex-col p-6 gap-5 rounded-lg shadow-lg animate__animated animate__fadeInDown w-full max-w-lg">
+                    <div class="flex justify-between font-medium">
+                        <span></span>
+                        <!-- Displaying user's email -->
+                        <span>{{ userData.email }}</span>
+
+                        <!-- Close button -->
                         <button @click="hideIdentity">
-                            <X class="text-gray-600 text-2xl" />
+                            <X class="text-black text-2xl" />
                         </button>
                     </div>
 
-                    <div class="w-full flex flex-col items-center">
-                        <img src="" alt="">
+                    <div class="w-full flex flex-col items-center gap-3">
+                        <!-- Profile Image -->
+                        <div class="w-20 h-20  rounded-full">
+                            <div v-if="loading">Loading...</div>
+                            <div v-else>
+                                <img :src="'data:image/jpeg;base64,' + userData.profileImage" alt="Profile Image"
+                                    class="h-20 w-20 rounded-full border object-contain">
+                            </div>
+                        </div>
 
-                        <span>Bonjour</span>
+                        <!-- Greeting with user's last name -->
+                        <span class="font-medium text-xl">{{ userData.lastname ? 'Bonjour ' + userData.lastname + ' !' :
+                            '' }}</span>
 
-                        <button class="border border-gray-200 text-blue-600 py-1 px-5 rounded-2xl">Gérer votre
-                            compte</button>
+                        <!-- Manage Account button -->
+                        <button class="border border-gray-200 text-blue-600 px-5 rounded-2xl">
+                            Gérer votre compte
+                        </button>
                     </div>
 
                     <div class="border border-gray-200 rounded-xl">
                         <div class="flex justify-between border-b border-gray-200 py-2 px-5">
-                            <span>Entreprise</span>
+                            <span class=" font-medium">Entreprise</span>
                             <button @click="toggleEnterpriseList"
                                 class="w-auto bg-transparent  border border-gray-200 cursor-pointer rounded-full ">
 
@@ -453,27 +459,29 @@
                         <div class="w-full flex flex-col" v-if="isEnterprisesListVisible">
 
                             <div v-for="entreprise in entreprises" :key="entreprise.id"
-                                @click="selectEntreprise(entreprise.id)" class="  border-b border-gray-200 py-1 px-5">
+                                @click="selectEntreprise(entreprise.id)"
+                                class=" flex items-center border-b border-gray-200 py-1 px-2 gap-4">
 
-                                <!-- <div class="w-4 h-4">
-                                        <img class=" border boreder-black  rounded-full "
-                                            src="../assets/images/logoflysoft.png" alt="logo Entreprise" />
-                                    </div> -->
+                                <div class="w-10 h-10">
+                                    <img class=" border boreder-black  rounded-full "
+                                        src="../assets/images/logoflysoft.png" alt="logo Entreprise" />
+                                </div>
 
                                 <div class="flex flex-col ">
-                                    <span>{{ entreprise.name }}</span>
+                                    <span class="font-medium">{{ entreprise.name }}</span>
                                     <span class="text-xs">{{ entreprise.email }}</span>
                                 </div>
                             </div>
                         </div>
 
 
-                        <button class="w-full flex gap-4 border-b border-gray-200 py-2 px-5" @click="addEnterprise">
+                        <button class="w-full flex gap-4 border-b border-gray-200 py-2 px-5 text-black font-medium"
+                            @click="addEnterprise">
                             <Plus class="h-6 border border-gray-200 rounded-full text-blue-500" />
                             <span>Ajouter une Entreprise</span>
                         </button>
 
-                        <button class="w-full flex gap-4 py-2 px-5">
+                        <button class="w-full flex gap-4 py-2 px-5 text-black font-medium" @click="logout">
                             <Power class="h-5" />
                             <span>Déconnexion</span>
                         </button>
@@ -509,7 +517,7 @@ export default {
         return {
             modalProject: false,
             modalIdentity: false,
-            modalEnterprise: false,
+            modalEnterprise: true,
             modalmembers: false,
             showMessagePage: false,
             showNotificationPage: false,
@@ -535,12 +543,14 @@ export default {
             email: '',
             pobox: '',
             selectedImage: null,
-            selectedImageURL: '',
+            selectedImageURL: null,
+            encodeURI: '',
             success: false,
             successMessage: '',
             error: false,
             errorMessage: '',
 
+            // userData: {},
             userId: '',
             projects: [
             ], // Liste des projets
@@ -550,7 +560,8 @@ export default {
             roleId: '',
             emails: ['user1@example.com', 'user2@example.com', 'user3@example.com'], // This should be fetched from the system
             filteredEmails: [],
-            userData: null,
+            userData: {},
+            loading: true,
             isProjectListVisible: false,
             isEnterprisesListVisible: true,
 
@@ -596,10 +607,10 @@ export default {
             window.removeEventListener("resize", this.handleResize);
         },
 
-        hideModal() {
+        hideModalProject() {
             this.modalProject = false;
         },
-        hideModal1() {
+        hideModalEnterprise() {
             this.modalEnterprise = false;
         },
 
@@ -667,22 +678,6 @@ export default {
             }
         },
 
-        // async addMember() {
-        //     try {
-        //         const token = localStorage.getItem('token');
-        //         const response = await axios.post(`${config.apiBaseUrl}/member`, {
-        //             Id: this.roleId,
-        //         }, {
-        //             headers: {
-        //                 'Authorization': `Bearer ${token}`
-        //             }
-        //         });
-                
-        //     } catch (error) {
-        //         this.error = true;
-        //     }
-        // },
-
         searchEmails() {
             this.filteredEmails = this.emails.filter((e) =>
                 e.toLowerCase().includes(this.email.toLowerCase())
@@ -703,7 +698,7 @@ export default {
                     email: this.email,
                     phoneNumber: this.phoneNumber,
                     pobox: this.pobox,
-                    userId: this.userId // Assure-toi d'inclure l'ID de l'utilisateur
+                    userId: this.userId, // add's user id
                 }, {
                     headers: {
                         'Authorization': `Bearer ${token}`
@@ -711,17 +706,57 @@ export default {
                 });
                 this.success = true;
                 this.successMessage = response.data.message;
+
+                // Send the logo image if the enterprise creation is successful
+                if (response.data.success && this.logoBase64) {
+                    await this.uploadLogo(response.data.email);
+                }
                 // Réinitialiser les champs du formulaire
-                this.name = '';
-                this.description = '';
-                this.email = '';
-                this.phoneNumber = '';
-                this.pobox = '';
+                this.clearFormFields();
                 console.log("Entreprise crée avec succes");
             } catch (error) {
                 this.error = true;
                 this.errorMessage = error.response ? error.response.data.message : error.message;
             }
+        },
+
+        async uploadLogo(email) {
+            try {
+                const token = localStorage.getItem('token');
+                const logoResponse = await axios.post(`${config.apiBaseUrl}/uploadLogo`, {
+                    email: email,
+                    logo: this.logoBase64
+                }, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                console.log("Logo uploaded successfully:", logoResponse.data.message);
+            } catch (error) {
+                console.error("Error uploading logo:", error.response ? error.response.data.message : error.message);
+            }
+        },
+
+        onFileSelected(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    this.selectedImageURL = e.target.result;
+                    this.encodedLogo = e.target.result.split(',')[1];
+                };
+                reader.readAsDataURL(file);
+            }
+        },
+
+        clearFormFields() {
+            this.name = '';
+            this.description = '';
+            this.email = '';
+            this.phoneNumber = '';
+            this.pobox = '';
+            this.logoBase64 = ''; // Clear the logo field
+            this.hideModalEnterprise(); // Close the modal if applicable
         },
 
         async fetchUserData() {
@@ -732,9 +767,12 @@ export default {
                         'Authorization': `Bearer ${token}`
                     }
                 });
+                console.log(this.userData);
                 this.userData = response.data;
             } catch (error) {
                 this.errorMessage = 'Erreur lors de la récupération des données utilisateur : ' + error.response.data.message;
+            } finally {
+                this.loading = false;
             }
         },
 
@@ -856,6 +894,20 @@ export default {
                 console.error('Erreur lors de la récupération du nombre total de tâches :', error);
             }
         },
+        async logout() {
+            try {
+                // const token = localStorage.getItem('token');
+                // await axios.post(`${config.apiBaseUrl}/logout`, {}, {
+                //     headers: {
+                //         'Authorization': `Bearer ${token}`
+                //     }
+                // });
+                localStorage.removeItem('token');
+                this.$router.push('/auth'); // Redirect to login page after logout
+            } catch (error) {
+                this.errorMessage = 'Erreur lors de la déconnexion : ' + error.response.data.message;
+            }
+        }
     }
 };
 </script>
