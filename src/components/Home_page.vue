@@ -517,7 +517,7 @@ export default {
         return {
             modalProject: false,
             modalIdentity: false,
-            modalEnterprise: true,
+            modalEnterprise: false,
             modalmembers: false,
             showMessagePage: false,
             showNotificationPage: false,
