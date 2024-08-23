@@ -296,53 +296,7 @@
                 </div>
             </div>
 
-            <div class="fixed h-full inset-0 bg-black/50 flex items-center justify-center z-50" v-if="modalmembers">
-                <div class="bg-white p-8 rounded-lg shadow-lg animate__animated animate__fadeInDown w-full max-w-3xl">
-                    <div class="h-auto flex justify-between content-center w-full">
-                        <h1 class=" text-black mb-6">AJOUTER UN MEMBRE AU PROJET</h1>
-                        <button @click="hideModalmembers">
-                            <X class="text-black text-2xl" />
-                        </button>
-                    </div>
-
-                    <form @submit.prevent="addMember" class="flex flex-col gap-6">
-                        <div class="flex gap-2">
-                            <div class="w-1/2">
-                                <label for="email" class="block text-black text-sm font-bold mb-2">
-                                    Email
-                                </label>
-                                <input type="text" id="email" v-model="email" @input="searchEmails"
-                                    class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-200"
-                                    placeholder="Rechercher un email..." />
-                                <ul v-if="filteredEmails.length" class="bg-white border rounded mt-2">
-                                    <li v-for="(filteredEmail, index) in filteredEmails" :key="index"
-                                        @click="selectEmail(filteredEmail)"
-                                        class="p-2 cursor-pointer hover:bg-gray-100">
-                                        {{ filteredEmail }}
-                                    </li>
-                                </ul>
-                            </div>
-
-                            <div class="w-1/2">
-                                <label for="roleId" class="block text-black text-sm font-bold mb-2">
-                                    Role
-                                </label>
-                                <input type="text" id="roleId" v-model="roleId"
-                                    class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-200"
-                                    placeholder="Entrer un rôle..." />
-                            </div>
-                        </div>
-
-                        <div class="flex justify-end">
-                            <button
-                                class="w-2/5 bg-black text-white p-3 rounded hover:bg-gray-600 focus:outline-none focus:ring focus:ring-blue-300"
-                                type="submit">
-                                Ajouter
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+           
 
             <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50" v-if="modalEnterprise">
                 <div class="bg-white p-8 rounded-lg shadow-lg animate__animated animate__fadeInDown w-full max-w-3xl">

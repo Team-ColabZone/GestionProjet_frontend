@@ -5,7 +5,7 @@ import { ListTodo, Search, Filter } from 'lucide-vue-next';
 
 <template>
     <div class=" h-full w-full flex flex-col gap-4 p-2">
-        <div class="flex items-center h-14 w-full gap-4 px-3 border rounded-lg">
+        <div class="flex items-center h-10 w-full gap-4 px-3 border rounded-lg">
             <ListTodo class="" />
             <p class="text-lg">Tâches</p>
         </div>

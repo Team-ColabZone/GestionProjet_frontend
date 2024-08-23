@@ -6,7 +6,7 @@ import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs } from 'lucide-v
 <template>
     <div class="h-full w-full flex flex-col gap-4 p-2 min-h-screen">
         <!-- Header Section -->
-        <div class="flex items-center h-14 w-full gap-4 px-3 border rounded-lg">
+        <div class="flex items-center h-10 w-full gap-4 px-3 border rounded-lg">
             <SquarePlus class="ico-dash text-xl mr-2" />
             <p class="title_entete text-lg">Backlogs</p>
         </div>
