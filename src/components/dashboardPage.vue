@@ -5,7 +5,7 @@ import { Users, Gauge, CircleGauge, ClockArrowDown, UserRoundCheck, Logs, Trendi
 <template>
     <div class="h-full w-full flex flex-col gap-4 p-2">
         <!-- Header Section -->
-        <div class="flex items-center h-14 w-full gap-4 px-3 border rounded-lg">
+        <div class="flex items-center h-10 w-full gap-4 px-3 border rounded-lg">
             <Gauge />
             <p class="text-xl">Dashboard</p>
         </div>
@@ -71,7 +71,7 @@ import { Users, Gauge, CircleGauge, ClockArrowDown, UserRoundCheck, Logs, Trendi
                         placeholder="Rechercher..." />
                 </div>
                 <input type="submit" value="Rechercher"
-                    class="w-1/4 h-11 bg-black text-white font-bold rounded-lg hover:bg-slate-600 focus:outline-none" />
+                    class="w-1/4 h-11 bg-black text-white  rounded-lg hover:bg-slate-600 focus:outline-none" />
             </form>
             <div class="w-full md:w-1/2 flex items-center justify-center text-red-500 mt-4 md:mt-0">error message</div>
         </div>
