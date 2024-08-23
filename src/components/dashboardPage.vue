@@ -62,8 +62,8 @@ import { Users, Gauge, CircleGauge, ClockArrowDown, UserRoundCheck, Logs, Trendi
         </div>
 
         <!-- Search and Error Section -->
-        <div class="flex w-full gap-8">
-            <form action="" class="flex w-1/2 gap-4">
+        <div class="flex flex-wrap w-full">
+            <form action="" class="flex w-full md:w-1/2 gap-4 pr-0 md:pr-5">
                 <div class="relative w-3/4">
                     <Search class="absolute left-2 top-2.5 text-gray-600 h-1/2" />
                     <input type="search" id="search-input"
@@ -73,7 +73,7 @@ import { Users, Gauge, CircleGauge, ClockArrowDown, UserRoundCheck, Logs, Trendi
                 <input type="submit" value="Rechercher"
                     class="w-1/4 h-11 bg-black text-white font-bold rounded-lg hover:bg-slate-600 focus:outline-none" />
             </form>
-            <div class="w-1/2 flex items-center justify-center text-red-500">error message</div>
+            <div class="w-full md:w-1/2 flex items-center justify-center text-red-500 mt-4 md:mt-0">error message</div>
         </div>
 
         <!-- Task Sections -->
@@ -108,7 +108,7 @@ import { Users, Gauge, CircleGauge, ClockArrowDown, UserRoundCheck, Logs, Trendi
             </div>
 
             <!-- Task Overview -->
-            <div class="task-box w-full lg:w-1/4">
+            <div class="task-box w-full flex flex-col justify-between lg:w-1/4">
                 <div class="flex justify-between items-center border-b border-gray-300 p-2">
                     <div class="flex gap-2 items-center">
                         <ArrowDownUp class="task"
@@ -140,9 +140,9 @@ import { Users, Gauge, CircleGauge, ClockArrowDown, UserRoundCheck, Logs, Trendi
                         </div>
                         <p class="text-sm font-bold text-gray-600">Nombre de tâche terminée</p>
                     </div>
-                    <div class="p-2">
-                        <p class="text-sm font-bold text-right text-black">{{ taskCount }} tâche(s) au total</p>
-                    </div>
+                </div>
+                <div class="p-2 border border-gray-200">
+                    <p class="text-sm font-bold text-right text-black boder">{{ taskCount }} tâche(s) au total</p>
                 </div>
             </div>
         </div>
@@ -287,18 +287,18 @@ export default {
 @import url(https://fonts.googleapis.com/css2?family=Monda:wght@100;200;300;400;500;600;700&display=swap);
 
 .stat-box {
-  flex: 1 1 calc(10% - 1rem);
-  max-width: 200px;
-  margin-bottom: 1rem;
+    flex: 1 1 calc(10% - 1rem);
+    max-width: 200px;
+    margin-bottom: 1rem;
 }
 
 .task-box {
-  min-height: 300px;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.5rem;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  background: white;
+    min-height: 300px;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background: white;
 }
 </style>

@@ -4,11 +4,11 @@ import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs } from 'lucide-v
 
 
 <template>
-    <div class="backlogs-container w-full p-4 flex flex-col min-h-screen">
+    <div class="h-full w-full flex flex-col gap-4 p-2 min-h-screen">
         <!-- Header Section -->
-        <div class="entete flex items-center border-2 border-gray-300 rounded-lg px-4 py-2 mb-6">
+        <div class="flex items-center h-14 w-full gap-4 px-3 border rounded-lg">
             <SquarePlus class="ico-dash text-xl mr-2" />
-            <p class="title_entete text-lg font-bold">Backlogs</p>
+            <p class="title_entete text-lg">Backlogs</p>
         </div>
 
         <!-- Stat Cards Section -->
