@@ -43,7 +43,7 @@ import { ListTodo, Search, Filter } from 'lucide-vue-next';
                         <p class="text-black text-xs m-0">{{ pendingTasksCount }}</p>
                     </div>
                 </div>
-                <div class=" border border-gray-300 rounded-lg p-4">asd</div>
+                <div class=" border border-gray-300 rounded-lg p-4"></div>
             </div>
 
             <div class="flex flex-col gap-2">
@@ -51,10 +51,10 @@ import { ListTodo, Search, Filter } from 'lucide-vue-next';
                     <div class="w-6 h-6 rounded-full bg-green-300"></div>
                     <p class="font-bold text-sm px-2">EN COURS</p>
                     <div class="w-8 h-6 bg-gray-300 rounded-lg flex items-center justify-center">
-                        <p class="text-black text-xs m-0">{{ completedTasksCount }}</p>
+                        <p class="text-black text-xs m-0">{{ inProgressTasksCount }}</p>
                     </div>
                 </div>
-                <div class=" border border-gray-300 rounded-lg p-4">asd</div>
+                <div class=" border border-gray-300 rounded-lg p-4"></div>
             </div>
 
             <div class="flex flex-col gap-2">
@@ -62,11 +62,11 @@ import { ListTodo, Search, Filter } from 'lucide-vue-next';
                     <div class="w-6 h-6 rounded-full bg-blue-300"></div>
                     <p class="font-bold text-sm px-2">TERMINÉE</p>
                     <div class="w-8 h-6 bg-gray-300 rounded-lg flex items-center justify-center">
-                        <p class="text-black text-xs m-0 border border-gray-300 rounded-lg">{{ inProgressTasksCount }}
+                        <p class="text-black text-xs m-0 border border-gray-300 rounded-lg">{{ completedTasksCount }}
                         </p>
                     </div>
                 </div>
-                <div class=" border border-gray-300 rounded-lg p-4">asd</div>
+                <div class=" border border-gray-300 rounded-lg p-4"></div>
             </div>
         </div>
     </div>
@@ -100,6 +100,7 @@ export default {
     mounted() {
         if (this.isConnected()) {
             this.userId = localStorage.getItem('userId');
+            this.projectId = localStorage.getItem('projectId');
             this.fetchUserData();
         } else {
             this.errorMessage = 'Utilisateur non connecté';
@@ -137,7 +138,7 @@ export default {
 
         async fetchProjects() {
             try {
-                const response = await axios.get(`${config.apiBaseUrl}/projects/user/:userId`);
+                const response = await axios.get(`${config.apiBaseUrl}/projects/user/${this.userId}`);
                 this.projects = response.data;
                 console.log(this.userId)
             } catch (error) {

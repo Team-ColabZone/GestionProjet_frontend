@@ -27,22 +27,93 @@
             </div>
         </div>
 
-        <div>asd</div>
+        <div class=" mt-8 flex-grow flex">
+            <div class="border border-gray-300 rounded-lg p-2 w-full flex flex-col">
+                <div class="flex justify-between items-center border-b border-gray-300 pb-1 mb-2">
+                    <div class="flex items-center">
+                        <building2 class="task text-xl text-black mr-2" />
+                        <p class="text-black text-sm font-bold">Listes des entreprise</p>
+                    </div>
+                    <button @click="toggleteamEnterpriseList()" class="flex gap-1  text-black px-3 py-2 rounded-lg">
+                        <ChevronUp :class="{ 'chevron-down': !isEnterpriseListVisible, 'chevron-up': isEnterpriseListVisible,
+                        }" class="w-full h-6 transition-transform" />
+                    </button>
+                </div>
+
+                <div :class="{ block: isEnterpriseListVisible, hidden: !isEnterpriseListVisible,}" class="flex-grow" v-if="isEnterpriseListVisible">
+                    <table class="min-w-full divide-y divide-gray-200 text-left">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Nom de l'entreprise</th>
+                                <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Email </th>
+                                <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Adresse </th>
+                                <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Date Ajout </th>
+                                <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Actions </th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr v-for="entreprise in entreprises" :key="entreprise.id" class="hover:bg-gray-50">
+                                <td class="px-6 py-4 whitespace-nowrap">{{ entreprise.name }}asd</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ entreprise.email }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ entreprise.adress }}</td>
+                                <!-- <td class="px-6 py-4 whitespace-nowrap">{{ member.Role.nom }}</td> -->
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <button type="button" class="text-black hover:text-green-900" @click="showMemberDetails()">
+                                        <Eye class=" w-full h-6" />
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
+import config from "../config";
+import axios from 'axios';
+
 export default{
     components: {
     },
+    mounted() {
+        this.fetchEntreprises();
+        this.userId = localStorage.getItem('userId');
+        this.enterpriseId = localStorage.getItem('enterpriseId');
+    },
     data() {
         return {
+            isEnterpriseListVisible: true,
+            enterpriseId: '',
+            entreprises: [], // Liste des entreprises
         }
     },
     methods: {
         showModal2() {
             this.modalVisible = true
-        }
+        },
+        
+        toggleteamEnterpriseList() {
+            this.isEnterpriseListVisible =!this.isEnterpriseListVisible
+        },
+
+        async fetchEntreprises() {
+            try {
+                const token = localStorage.getItem('token'); // ou une autre méthode pour récupérer le token
+                const response = await axios.get(`${config.apiBaseUrl}/entreprises/user/${this.userId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                this.entreprises = response.data;
+                console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+            } catch (error) {
+                this.errorMessage = 'Erreur lors de la récupération des entreprises : ' + (error.response ? error.response.data.message : error.message);
+            }
+        },
     }
 }
 </script>

@@ -38,7 +38,7 @@ import { Users, List, Plus, Search, ChevronUp, Eye } from 'lucide-vue-next';
             </div>
         </div>
         <!-- Task List Section -->
-        <div class="body-milieu mt-8 flex-grow flex">
+        <div class=" mt-8 flex-grow flex">
             <div class="border border-gray-300 rounded-lg p-2 w-full flex flex-col">
                 <div class="flex justify-between items-center border-b border-gray-300 pb-1 mb-2">
                     <div class="flex items-center">
@@ -54,23 +54,15 @@ import { Users, List, Plus, Search, ChevronUp, Eye } from 'lucide-vue-next';
                     </button>
                 </div>
 
-                <div :class="{
-                    block: isteamMemberListVisible,
-                    hidden: !isteamMemberListVisible,
-                }" class="list-late flex-grow" v-if="isteamMemberListVisible">
+                <div :class="{ block: isteamMemberListVisible, hidden: !isteamMemberListVisible,}" class="flex-grow" v-if="isteamMemberListVisible">
                     <table class="min-w-full divide-y divide-gray-200 text-left">
                         <thead class="bg-gray-50">
                             <tr>
-                                <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Nom &
-                                    Profil</th>
-                                <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Email
-                                </th>
-                                <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Contact
-                                </th>
-                                <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Role
-                                </th>
-                                <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Actions
-                                </th>
+                                <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Nom & Profil</th>
+                                <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Email </th>
+                                <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Contact </th>
+                                <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Role </th>
+                                <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Actions </th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
@@ -78,19 +70,16 @@ import { Users, List, Plus, Search, ChevronUp, Eye } from 'lucide-vue-next';
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex items-center space-x-2">
 
-                                        <img class=" border boreder-black  h-11 w-11  rounded-full mr-5 "
-                                            src="../assets/images/logoflysoft.png" alt="logo Entreprise" />
+                                        <img class=" border boreder-black  h-11 w-11  rounded-full mr-5 " src="../assets/images/logoflysoft.png" alt="logo Entreprise" />
                                     <!--{{ member.userMember.avatar }}-->
-                                    {{ member.userMember.firstname }} {{
-                                        member.userMember.lastname }}
+                                    {{ member.userMember.firstname }} {{ member.userMember.lastname }}
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ member.userMember.email }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ member.userMember.phonenumber }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ member.Role.nom }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <button type="button" class="text-black hover:text-green-900"
-                                        @click="showMemberDetails()">
+                                    <button type="button" class="text-black hover:text-green-900" @click="showMemberDetails()">
                                         <Eye class=" w-full h-6" />
                                     </button>
                                 </td>

@@ -27,8 +27,7 @@
             </button>
 
             <!-- Sidebar Navigation -->
-            <nav
-                :class="{ 'fixed inset-0 bg-white z-50 flex flex-col items-start p-4 transform translate-x-0': isNavOpen, 'hidden': !isNavOpen && !isLgScreen, 'absolute w-full lg:w-1/6 bg-white shadow-lg h-auto lg:h-full lg:block lg:relative': isLgScreen, }">
+            <nav :class="{ 'fixed inset-0 bg-white z-50 flex flex-col items-start p-4 transform translate-x-0': isNavOpen, 'hidden': !isNavOpen && !isLgScreen, 'absolute w-full lg:w-1/6 bg-white shadow-lg h-auto lg:h-full lg:block lg:relative': isLgScreen, }">
                 <ul class="w-full p-3 flex flex-col h-full gap-5">
                     <!-- Close Button for the Nav (Visible on small screens) -->
                     <button @click="toggleNav" class="self-end lg:hidden text-gray-600 text-2xl">
@@ -258,6 +257,19 @@
                                     <img v-if="selectedImage" :src="selectedImageURL" alt="Aperçu de l'image"
                                         class="mt-2 rounded">
                                 </div> -->
+                                
+                                <div class="relative mb-4">
+                                <input type="file" id="logo" accept="image/*" @change="onFileSelected"
+                                    class="absolute inset-0 opacity-0 cursor-pointer w-1/2 h-full" />
+
+                                <div
+                                    class="w-1/2 h-32 border border-gray-300 flex items-center justify-center bg-gray-100 rounded-lg">
+                                    <img v-if="selectedImageURL" :src="selectedImageURL" alt="Image Preview"
+                                        class="w-full h-full object-cover rounded-lg">
+                                    <span v-else class="text-gray-500 p-4 text-center">Ajouter un Logo ou une photo de
+                                        stucture</span>
+                                </div>
+                            </div>
 
                             <div class="mb-4">
                                 <label for="budget" class="block text-gray-700 text-sm font-bold mb-2">Budget
@@ -285,8 +297,6 @@
                     </form>
                 </div>
             </div>
-
-           
 
             <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50" v-if="modalEnterprise">
                 <div
@@ -412,8 +422,7 @@
 
                         <div class="w-full flex flex-col" v-if="isEnterprisesListVisible">
 
-                            <div v-for="entreprise in entreprises" :key="entreprise.id"
-                                @click="selectEntreprise(entreprise.id)"
+                            <div v-for="entreprise in entreprises" :key="entreprise.id" @click="selectEntreprise(entreprise.id)"
                                 class=" flex items-center border-b border-gray-200 py-1 px-2 gap-4">
 
                                 <div class="w-10 h-10">
@@ -511,8 +520,7 @@ export default {
             entreprises: [], // Liste des entreprises
             selectedProjectId: '', // ID du projet sélectionné
             projectId: '',
-            roleId: '',
-            emails: ['user1@example.com', 'user2@example.com', 'user3@example.com'], // This should be fetched from the system
+            roleId: '', // This should be fetched from the system
             filteredEmails: [],
             userData: {},
             loading: true,
@@ -754,7 +762,6 @@ export default {
         },
 
         async fetchEntreprises() {
-
             try {
                 const token = localStorage.getItem('token'); // ou une autre méthode pour récupérer le token
                 const response = await axios.get(`${config.apiBaseUrl}/entreprises/user/${this.userId}`, {
