@@ -327,8 +327,9 @@ export default {
                     }
                 });
                 this.projectMembers = response.data;
-                console.log("Bonsoir")
-                console.log(this.projectMembers)
+                console.log("Bonsoir");
+                console.log("Voici la liste des membres d'equipe");
+                console.log(this.projectMembers);
             } catch (error) {
                 this.errorMessage = 'Erreur lors de la récupération des membres du projet : ' + (error.response ? error.response.data.message : error.message);
             }
