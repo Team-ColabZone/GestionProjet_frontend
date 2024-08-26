@@ -1,113 +1,233 @@
 <script setup>
-import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs, ChevronUp } from 'lucide-vue-next';
+import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs } from 'lucide-vue-next';
 </script>
 
 
 <template>
-    <div class="backlogs-container">
-        <div class="entete">
-            <SquarePlus class="ico-dash" />
-            <p class="title_entete">Backlogs</p>
+    <div class="backlogs-container w-full p-4 flex flex-col min-h-screen">
+        <!-- Header Section -->
+        <div class="entete flex items-center border-2 border-gray-300 rounded-lg px-4 py-2 mb-6">
+            <SquarePlus class="ico-dash text-xl mr-2" />
+            <p class="title_entete text-lg font-bold">Backlogs</p>
         </div>
 
+        <!-- Stat Cards Section -->
         <div class="cont">
-            <div class="s_menu">
-                <div class="contex" style="background-color: #F0F1FF;border-radius: 8px;">
-                    <div class="nbre_icons">
-                        <h1>02</h1>
-                        <!-- <h1>0{{ pendingTasksCount }}</h1> -->
-                        <ListVideo class="icon-lucide" />
+            <div class="s_menu grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <!-- Card 1 -->
+                <div class="contex bg-blue-50 rounded-lg p-4 text-center">
+                    <div class="nbre_icons flex justify-between items-center">
+                        <h1 class="text-4xl font-bold">02</h1>
+                        <ListVideo class="icon-lucide text-4xl" />
                     </div>
-                    <h3>Nombre de tache a faire</h3>
+                    <h3 class="text-sm mt-2">Nombre de tache à faire</h3>
                 </div>
 
-                <div class="contex" style="background-color: #FFDBE6;border-radius: 8px;">
-                    <div class="nbre_icons">
-                        <h1>05</h1>
-                        <ListCheck class="icon-lucide" />
+                <!-- Card 2 -->
+                <div class="contex bg-pink-100 rounded-lg p-4 text-center">
+                    <div class="nbre_icons flex justify-between items-center">
+                        <h1 class="text-4xl font-bold">05</h1>
+                        <ListCheck class="icon-lucide text-4xl" />
                     </div>
-                    <!-- <h1>{{ completedTasksCount }}%</h1> -->
-                    <h3>Nombre de tache terminée</h3>
+                    <h3 class="text-sm mt-2">Nombre de tache terminée</h3>
                 </div>
 
-                <div class="contex" style="background-color: #EAFBEA;border-radius: 8px;">
-                    <div class="nbre_icons">
-                        <h1>03</h1>
-                        <ClockArrowDown class="icon-lucide" />
-                        <!-- <h1>{{ tasklateCount }}</h1> -->
+                <!-- Card 3 -->
+                <div class="contex bg-green-50 rounded-lg p-4 text-center">
+                    <div class="nbre_icons flex justify-between items-center">
+                        <h1 class="text-4xl font-bold">03</h1>
+                        <ClockArrowDown class="icon-lucide text-4xl" />
                     </div>
-                    <h3>Nombre de tache en retard</h3>
+                    <h3 class="text-sm mt-2">Nombre de tache en retard</h3>
                 </div>
 
-                <div class="contex" style="background-color: #EDF6FF;border-radius: 8px;">
-                    <div class="nbre_icons">
-                        <h1>12</h1>
-                        <!-- <h1>0{{ taskCount }}</h1> -->
-                        <Logs class="icon-lucide" />
+                <!-- Card 4 -->
+                <div class="contex bg-blue-100 rounded-lg p-4 text-center">
+                    <div class="nbre_icons flex justify-between items-center">
+                        <h1 class="text-4xl font-bold">12</h1>
+                        <Logs class="icon-lucide text-4xl" />
                     </div>
-                    <h3>Nombre de tache</h3>
+                    <h3 class="text-sm mt-2">Nombre de tache</h3>
                 </div>
             </div>
         </div>
 
-        <div class="search-zone">
-            <form action="" class="search-form">
-                <div class="search-barrediv">
-                    <Search class="icon-search" />
-                    <input type="search" id="search-input" class="search-barre" placeholder="Rechercher...">
+        <!-- Search Bar Section -->
+        <div class="search-zone mt-6">
+            <form action="" class="search-form flex w-full max-w-4xl">
+                <div class="search-barrediv flex items-center relative w-3/4">
+                    <Search class="icon-search absolute left-4 text-xl" />
+                    <input type="search" id="search-input"
+                        class="search-barre w-full border border-gray-300 rounded-lg pl-12 pr-4 py-2 text-lg focus:ring focus:border-blue-300"
+                        placeholder="Rechercher..." />
                 </div>
-
-                <div class="search-butt">
-                    <input type="submit" value="Rechercher" class="searchbtn">
+                <div class="search-butt ml-4">
+                    <input type="submit" value="Rechercher"
+                        class="searchbtn bg-black text-white font-bold rounded-lg py-2 px-6 hover:bg-gray-800" />
                 </div>
             </form>
         </div>
 
-        <div class="body-milieu">
-            <div class="tache-late"
-                style="border: 1px solid #D9D9D9; width: 99%;border-radius: 8px; margin-left: 0.5%;">
-                <div class="title-div1"
-                    style="display: flex; padding-left: 0.5%; border-bottom: 1px solid #D9D9D9; height: 40px; padding-top: 0.5%; padding-bottom: 0.5%;">
-                    <div class="icon-chart" style="padding-top: 0.5%;">
-                        <ClockArrowDown class="task"
-                            style="width: 24px; height: 24px; stroke-width: 1.5px; color: #000000;" />
+        <!-- Task List Section -->
+        <div class="body-milieu mt-8 flex-grow flex">
+            <div class="tache-late border border-gray-300 rounded-lg p-4 w-full flex flex-col">
+                <div class="title-div1 flex justify-between items-center border-b border-gray-300 pb-2 mb-4">
+                    <div class="flex items-center">
+                        <ClockArrowDown class="task text-xl text-black mr-2" />
+                        <p class="text-black text-sm font-bold">Tâches en Retard</p>
                     </div>
-
-                    <div class="tache-late">
-                        <p
-                            style="color: #000000; padding-left: 20px; padding-top: 0.1%; padding-bottom: 4%; font-size: 14px; font-weight: bold;">
-                            Tâches en Retard</p>
-                    </div>
-
-                    <div class="icon-ChevronUp" style="padding-left: 88%;">
-                        <button class="task-list" @click="showLateTaskList()"
-                            style="border: none;background-color: transparent;">
-                            <ChevronUp
-                                :class="{ 'chevron-up': !isTaskListLateVisible, 'chevron-down': isTaskListLateVisible }"
-                                class="task"
-                                style="width: 24px;height: 24px; color: #6F6F6F; margin-top: 25%; cursor: pointer;" />
-                        </button>
-                    </div>
+                    <button class="flex gap-1 bg-black hover:hover:bg-gray-600 text-white px-3 py-2 rounded-lg"
+                        @click="addtask()">
+                        <Plus class="h-6 " />
+                        <span>Ajouter une tache</span>
+                    </button>
                 </div>
 
-                <div :class="{ 'taskLate-list': true, 'visible': isTaskListLateVisible }" class="list-late">
-                    <div class="list-late-title"
-                        style="display: flex; justify-content: space-between; padding-left: 20px; padding-right: 30px; margin-top: 10px;">
-                        <p>Nom de la tache</p>
-                        <p>Responsable(s)</p>
-                        <p>Statut</p>
-                        <p>Date début</p>
-                        <p>Date fin</p>
-                        <p>Date Actuelle</p>
+                <div :class="{ 'taskLate-list': true, 'visible': isTaskListLateVisible }" class="list-late flex-grow">
+                    <div class="list-late-title flex justify-between px-4">
+                        <p class="text-sm font-bold">Nom de la tache</p>
+                        <p class="text-sm font-bold">Responsable(s)</p>
+                        <p class="text-sm font-bold">Statut</p>
                     </div>
                 </div>
-
             </div>
-
-
         </div>
 
+        <modal class="fixed inset-0 backdrop-blur-sm flex justify-end z-50" v-if="modalTasks">
+            <button @click="closeNewTask()" class="self-start p-6">
+                <X class="text-black text-2xl" />
+            </button>
 
+            <div
+                class="flex flex-col bg-white p-6 gap-5 rounded-lg shadow-lg animate__animated animate__fadeInDown w-full max-w-4xl h-full">
+
+                <div class="flex justify-between">
+                    <h1 class="text-center text-2xl text-gray-800 ">AJOUTER UNE TACHE</h1>
+                    <button class="w-1/4 px-3 bg-black text-white rounded hover:bg-gray-600 " @click="createNewTask()">
+                        Ajouter
+                    </button>
+                </div>
+
+                <form @submit.prevent="createNewTask" class="flex flex-col gap-4">
+                    <div class="flex flex-col gap-4 border-t border-b border-gray-300">
+                        <input type="text" id="name" placeholder="Titre de la tache" v-model="taskname" required
+                            class="w-full p-2 focus:outline-none focus:ring focus:ring-gray-200">
+
+                        <textarea id="description" placeholder="Veuillez saisir une description de la tache"
+                            v-model="description" cols="30" rows="3"
+                            class="w-full p-2 focus:outline-none focus:ring focus:ring-gray-200"></textarea>
+                    </div>
+
+                    <div class="w-full flex flex-col md:flex-row gap-5">
+                        <div class="w-full">
+                            <label for="Attribuer" class="block text-gray-700 text-sm font-bold mb-2">Attribuer
+                                a</label>
+                            <input type="text" v-model="Attribuer" required
+                                class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-200">
+                        </div>
+
+                        <div class="w-full relative">
+                            <div class="mb-2 w-full">
+                                <label for="Status" class="block text-gray-700 text-sm font-bold mb-2">Statut de la
+                                    tache
+                                </label>
+                                <select v-model="status" required
+                                    class="block w-full px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-200 appearance-none">
+
+                                    <option value="EN_ATTENTE">En Attente</option>
+                                    <option value="EN_COURS">En Cours</option>
+                                    <option value="TERMINEE">Terminée</option>
+                                </select>
+                            </div>
+
+                            <!-- <span class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                                <ChevronDown
+                                    :class="{ 'chevron-down': isDropdown1Open, 'chevron-up': !isDropdown1Open }"
+                                    class="w-5 h-5 text-gray-500" />
+                            </span> -->
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col md:flex-row gap-5">
+                        <div class="w-full md:w-1/2">
+                            <div class="mb-4">
+                                <label for="Planing" class="block text-gray-700 text-sm font-bold mb-2">
+                                    Planning début et fin
+                                </label>
+                                <div class="flex w-full gap-2">
+                                    <input type="date" v-model="start_date" required
+                                        class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-200">
+                                    <input type="date" v-model="end_date" required
+                                        class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-200">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="w-full md:w-1/2 relative">
+                            <div class="mb-4 w-full">
+                                <label for="Priorité" class="block text-gray-700 text-sm font-bold mb-2">
+                                    Priorité de la tache
+                                </label>
+                                <select v-model="priority"
+                                    class="block w-full px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-200 appearance-none">
+                                    <option value="FAIBLE">Faible</option>
+                                    <option value="MOYENNE">Moyenne</option>
+                                    <option value="ELEVEE">Elevée</option>
+                                </select>
+                            </div>
+                            <!-- <span class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                                <ChevronDown :class="{ 'chevron-down': isPriorityOpen, 'chevron-up': !isPriorityOpen }"
+                                    class="w-5 h-5 text-gray-500" />
+                            </span> -->
+                        </div>
+
+                    </div>
+
+                    <div class="w-full flex flex-col md:flex-row gap-5">
+                        <div class="w-full md:w-1/2">
+                            <label for="Budjet" class="block text-gray-700 text-sm font-bold mb-2">
+                                Budget de la tache
+                            </label>
+                            <input type="text" v-model="budget" required
+                                class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-200">
+                        </div>
+
+                        <!-- <div class="flex flex-col md:flex-row gap-5">
+                             -->
+
+                        <div class="w-full md:w-1/2">
+                            <label for="Type" class="block text-gray-700 text-sm font-bold mb-2">Type de tache</label>
+                            <input type="text" v-model="taskType"
+                                class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-300">
+                        </div>
+                        <!-- </div> -->
+
+
+                    </div>
+                    <div class="w-full flex flex-col md:flex-row gap-5">
+
+                        <div class="w-full md:w-1/2">
+                            <label for="piece" class="block text-gray-700 text-sm font-bold mb-2">Piece jointe</label>
+                            <input type="file"
+                                class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-300">
+                        </div>
+
+                    </div>
+
+                    <div class="w-full flex flex-col md:flex-row gap-5">
+                        <div class="w-full md:w-1/2 flex items-center gap-5">
+                            <div class="w-12 h-12 rounded-full overflow-hidden border-2 border-gray-300 flex-shrink-0">
+                                <img src="../assets/images/logoflysoft.png" alt="Photo de l'utilisateur"
+                                    class="w-full h-full object-cover">
+                            </div>
+                            <input type="text" placeholder="Ajouter un commentaire à la tâche"
+                                class="w-full h-full border border-150 rounded focus:outline-none focus:ring focus:ring-gray-300 pl-5"
+                                v-model="content">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </modal>
     </div>
 </template>
 
@@ -121,7 +241,7 @@ export default {
     },
     data() {
         return {
-
+            modalTasks: false,
             taskCount: 0,
             completedTasksCount: 0,
             pendingTasksCount: 0,
@@ -130,10 +250,31 @@ export default {
             selectedProjectId: '', // ID du projet sélectionné
             userId: '',
             projectId: '',
+
             userData: null,
-            isTaskListLateVisible: false,
+
+            taskname: '',
+            description: '',
+            start_date: '',
+            end_date: '',
+            status: '',
+            budget: '',
+            taskType: '',
+            priority: '',
+            taskId: '',
+
+
+            isDropdown1Open: false,
+            selectedStatus: 'Select Status',
+            statuses: ['EN_ATTENTE', 'EN_COURS', 'TERMINEE'],
+
+            selectedPriority: '',
+            priorities: ['ELEVEE', 'MOYENNE', 'FAIBLE'],
+            placeholder: 'Select Priority',
+            isPriorityOpen: false,
         };
     },
+
     mounted() {
         if (this.isConnected()) {
             this.userId = localStorage.getItem('userId');
@@ -149,6 +290,7 @@ export default {
         this.fetchCompletedTasksCount();
         this.fetchTotalTasksCount();
     },
+
     methods: {
         isConnected() {
             return localStorage.getItem('token') !== null;
@@ -160,6 +302,28 @@ export default {
         showPage(page) {
             this.currentPage = page;
         },
+
+        addtask() {
+            this.modalTasks = true
+        },
+
+        closeNewTask() {
+            this.modalTasks = false;
+        },
+
+        toggleDropdown1() {
+            this.isDropdown1Open = !this.isDropdown1Open;
+        },
+
+        toggleDropdown2() {
+            this.isPriorityOpen = !this.isPriorityOpen;
+        },
+
+        selectStatus(status) {
+            this.selectedStatus = status;
+            this.isDropdown1Open = false;
+        },
+
         async fetchUserData() {
             try {
                 const response = await axios.get(`${config.apiBaseUrl}/users/${this.userId}`);
@@ -178,19 +342,19 @@ export default {
                 this.errorMessage = 'Erreur lors de la récupération des projets : ' + error.response.data.message;
             }
         },
-        showLateTaskList() {
-            this.isTaskListLateVisible = !this.isTaskListLateVisible;
-        },
         selectProject(projectId) {
             this.selectedProjectId = projectId;
             localStorage.setItem('projectId', projectId); // Stocker l'ID du projet dans le localStorage
-            this.$router.push('/accueilPage'); // Rediriger vers la page des détails du projet
+            this.$router.push('/Home'); // Rediriger vers la page des détails du projet
         },
-
-
         async fetchPendingTasksCount() {
             try {
-                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/pending`);
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/pending`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 this.pendingTasksCount = response.data.length;
                 console.log(this.pendingTasksCount);
             } catch (error) {
@@ -199,7 +363,12 @@ export default {
         },
         async fetchInProgressTasksCount() {
             try {
-                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/in-progress`);
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/in-progress`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 this.inProgressTasksCount = response.data.length;
                 console.log(this.inProgressTasksCount);
             } catch (error) {
@@ -208,7 +377,12 @@ export default {
         },
         async fetchCompletedTasksCount() {
             try {
-                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/completed`);
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/completed`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 this.completedTasksCount = response.data.length;
                 console.log(this.completedTasksCount);
             } catch (error) {
@@ -217,200 +391,76 @@ export default {
         },
         async fetchTotalTasksCount() {
             try {
-                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/tasks/count`);
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/tasks/count`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 this.taskCount = response.data;
                 console.log(this.taskCount);
             } catch (error) {
                 console.error('Erreur lors de la récupération du nombre total de tâches :', error);
             }
         },
+        async createNewTask() {
+            try {
+
+                const token = localStorage.getItem('token');
+                const response = await axios.post(`${config.apiBaseUrl}/tasks`, {
+                    taskname: this.taskname,
+                    description: this.description,
+                    start_date: new Date(this.start_date), // Conversion en objet Date
+                    end_date: new Date(this.end_date), // Conversion en objet Date
+                    projectId: this.projectId,
+                    status: this.status,
+                    budget: this.budget,
+                    taskType: this.taskType,
+                    priority: this.priority,
+                    // taskId: this.taskId,
+                    userId: this.userId // Assure-toi d'inclure l'ID de l'utilisateur
+                }, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                this.success = true;
+                this.successMessage = response.data.message;
+                console.log("Tache crée avec succes")
+                // Réinitialiser les champs du formulaire
+                this.taskname = '';
+                this.description = '';
+                this.taskType = '';
+                this.status = '';
+                this.priority = '';
+                this.start_date = '';
+                this.end_date = '';
+                this.budget = '';
+            } catch (error) {
+                this.error = true;
+                this.errorMessage = error.response ? error.response.data.message : error.message;
+            }
+        },
+        async getUserInfo() {
+            try {
+                const token = localStorage.getItem('token');
+
+                const response = await axios.get(`${config.apiBaseUrl}/users`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const userInfo = response.data;
+                console.log(userInfo);
+
+            } catch (error) {
+                console.error('Erreur lors de la récupération des informations des l\'utilisateur :', error);
+            }
+        }
+
     }
 };
+
 </script>
 
-<style scoped>
-@import url(https://fonts.googleapis.com/css2?family=Monda:wght@100;200;300;400;500;600;700&display=swap);
-
-body {
-    width: 100%;
-    padding: 0;
-    margin: 0;
-    background-color: rgba(0, 0, 0, 0.05);
-    font-family: Monda;
-}
-
-.backlogs-container {
-    width: 99%;
-    margin: auto;
-}
-
-.entete {
-    border: 2px solid #D9D9D9;
-    border-radius: 8px;
-    width: 99%;
-    height: 62px;
-    margin: auto;
-    margin-top: 4px;
-    margin-bottom: 20px;
-    display: flex;
-}
-
-.entete .ico-dash {
-    padding-left: 1%;
-    padding-top: 1%;
-    padding-bottom: 3%;
-}
-
-.entete p {
-    font-size: 16px;
-    color: #000000;
-    padding-left: 15px;
-    font-weight: bold;
-    padding-top: 4px;
-}
-
-.cont {
-    width: 100%;
-    padding-bottom: 20px;
-}
-
-.s_menu {
-    width: 99%;
-    margin: auto;
-    display: flex;
-    justify-content: space-between;
-}
-
-.s_menu .contex {
-    width: 240px;
-    height: 150px;
-    /* box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); */
-    border-radius: 8px;
-    text-align: center;
-    /* background-color: rgb(0, 122, 94); */
-    color: #000000;
-    padding-left: 1%;
-    padding-right: 1%;
-}
-
-.s_menu .contex .nbre_icons {
-    display: flex;
-    justify-content: space-between;
-    flex: 1;
-}
-
-.s_menu .contex .nbre_icons .icon-lucide {
-    font-size: 50px;
-    padding-top: 10%;
-    padding-right: 8%;
-}
-
-.contex h1 {
-    font-weight: bold;
-    font-size: 38px;
-    padding-left: 8%;
-}
-
-.icon-lucide {
-    width: 60px;
-    height: 60px;
-    color: #202020;
-    stroke-width: 1px;
-}
-
-.contex h3 {
-    font-size: 14px;
-    text-align: left;
-    padding-left: 8%;
-    padding-bottom: 10%;
-}
-
-.search-zone {
-    display: flex;
-    justify-content: flex-start;
-    padding-left: 0.5%;
-    padding-bottom: 20px;
-}
-
-.search-form {
-    display: flex;
-    border: 1px solid red;
-
-}
-
-form div {
-    width: 80%;
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-    border: 1px solid red;
-}
-
-.search-barrediv {
-    display: flex;
-    position: relative;
-}
-
-.icon-search {
-    position: absolute;
-    left: 10px;
-    padding-top: 1%;
-}
-
-.search-barre {
-    height: 45px;
-    width: 730px;
-    border: 1px solid #D9D9D9;
-    border-radius: 8px;
-    padding-left: 50px;
-    /* Espace pour l'icône */
-    box-sizing: border-box;
-    font-size: 18px;
-}
-
-.search-butt {
-    margin-left: 10px;
-}
-
-.searchbtn {
-    /* padding: 5px 10px; */
-    background-color: #000000;
-    color: white;
-    font-weight: bold;
-    /* Texte en gras */
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    height: 45px;
-    width: 200px;
-    font-size: 12px;
-}
-
-.searchbtn:hover {
-    background-color: #0056b3;
-}
-
-.chevron-up {
-    transition: transform 0.3s;
-    transform: rotate(0deg);
-}
-
-.chevron-down {
-    transform: rotate(180deg);
-    transition: transform 0.3s;
-}
-
-.taskLate-list {
-    display: none;
-}
-
-.taskLate-list.visible {
-    display: block;
-}
-
-.list-late-title p {
-    font-size: 14px;
-    font-weight: bold;
-    color: solid black;
-}
-</style>
+<style scoped></style>

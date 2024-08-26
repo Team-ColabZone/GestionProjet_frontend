@@ -1,51 +1,45 @@
 <template>
-    <div class="container monda-font animate__animated ">
-        <authSlides />
+    <div class="flex lg:flex-row h-screen">
+        <!-- Auth Slide -->
+        <div class="small_screens lg:w-2/3 w-full p-2 h-full lg:h-full bg-white">
+            <authSlides />
+        </div>
 
-        <div class="formElement">
-            <div class="top">
-                <div class="logoflysoft">
-                    <img class="logo" src="../assets/images/logoflysoft.png" alt="logo Entreprise" />
-                </div>
+        <!-- Form Element -->
+        <div class="lg:w-1/3 w-full h-full lg:h-full bg-white flex flex-col justify-between p-6">
+            <div class="w-full flex justify-end text-right">
+                <img class="w-24 h-24 mx-auto lg:mx-0 lg:mr-4" src="../assets/images/logoflysoft.png" alt="logo Entreprise" />
             </div>
 
-            <!-- Login form -->
-            <form @submit.prevent="login">
-                <span style="color: black; font-size: 36px; font-weight: bold;text-align: left;">Connexion</span>
+            <!-- Login Form -->
+            <form @submit.prevent="login" class="flex flex-col gap-6">
+                <h2 class="text-3xl font-bold">Connexion</h2>
 
-                <div class="input_block">
-                    <div class="input-field">
-                        <label for="email">Identifiant de connexion</label>
+                <div class="flex flex-col gap-6">
+                    <div class="flex flex-col gap-2">
+                        <label for="email" class="text-gray-700">Identifiant de connexion</label>
                         <input type="email" id="email" v-model="email" placeholder="Veuillez entrer votre E-mail"
-                            required>
+                            required class="p-4 border rounded-lg">
                     </div>
 
-                    <div class="input-field passf">
-                        <label for="password">Mot de passe</label>
+                    <div class="flex flex-col gap-2">
+                        <label for="password" class="text-gray-700">Mot de passe</label>
                         <input type="password" id="password" v-model="password"
-                            placeholder="Veuillez entrer un mot de passe" required>
-                        <router-link to="/Forgotpassword" style="color: blue; font: .8px; text-align: right;">Mot de
-                            passe oublié?</router-link>
+                            placeholder="Veuillez entrer un mot de passe" required class="p-4 border rounded-lg">
+                        <router-link to="/Forgotpassword" class="text-blue-600 text-right text-sm">Mot de passe
+                            oublié?</router-link>
                     </div>
                 </div>
 
-                <button class="btn" type="submit">
-                    Se connecter
-                </button>
+                <button type="submit" class="bg-black text-white py-3 rounded-lg hover:bg-gray-800">Se connecter</button>
             </form>
 
-            <div class="bottom">
-                <span class="navigation">Pas de compte ?
-                    <router-link to="/CreateAccount"
-                        style="text-decoration: none; color: blue;">Inscription</router-link>
-                </span><br>
-                <span class="privacy">En continuant vous agréer la
-                    <router-link to="/Privacy" style="text-decoration: none; color: blue;">Politique de
-                        Confidentialité</router-link><br>
-                    et les
-                    <router-link to="/Privacy" style="text-decoration: none; color: blue;"> Conditions d'utilisations
-                    </router-link>
-                </span>
+            <div class="text-center mt-6">
+                <span class="text-gray-700">Pas de compte ? <router-link to="/CreateAccount"
+                        class="text-blue-600">Inscription</router-link></span><br>
+                <span class="text-gray-700">En continuant vous agréer la <router-link to="/Privacy"
+                        class="text-blue-600">Politique de Confidentialité</router-link> et les <router-link
+                        to="/Privacy" class="text-blue-600">Conditions d'utilisations</router-link></span>
             </div>
         </div>
     </div>
@@ -79,6 +73,7 @@ export default {
                 const userData = response.data;
                 localStorage.setItem('userId', userData.user_id);  // Assurez-vous que 'user_id' est correct
                 localStorage.setItem('token', userData.access_token);
+                localStorage.setItem('userEmail', this.email); // Stocker l'email dans le localStorage
                 this.$router.push('/Home');
                 console.log(userData);
                 this.getUserInfo();
@@ -101,7 +96,7 @@ export default {
                 console.log(userInfo);
 
             } catch (error) {
-                console.error('Erreur lors de la récupération des informations de l\'utilisateur :', error);
+                console.error('Erreur lors de la récupération des informations des l\'utilisateur :', error);
             }
         }
     }
@@ -109,120 +104,31 @@ export default {
 </script>
 
 <style scoped>
-.monda-font {
-    font-family: 'Monda', sans-serif;
+@media (max-width: 800px) {
+    .small_screens {
+        display: none;
+    }
 }
 
-body {
-    width: 100%;
-    padding: 0;
-    margin: 0;
-    font-family: Monda;
-}
-
-.container {
-    width: 97%;
-    height: 96vh;
-    padding: 1vh 2% 1vh 1%;
-    text-align: left;
-    display: flex;
-    justify-content: space-between;
-}
-
-.formElement {
-    height: 100%;
-    width: 35%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding-left: 40px;
-}
-
-.logoflysoft {
-    text-align: right;
-}
-
-.logo {
-    width: 100px;
-    height: 100px;
-}
-
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.input_block {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    /* border: 1px solid teal; */
-}
-
-.input-field {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-}
-
-label {
-    font-size: 1rem;
-    /* border: 1px solid red; */
-    color: #202020;
-}
-
-input {
-    height: 50px;
-    border: 1px solid #DFDFDF;
-    border-radius: 12px;
-    font-size: 1rem;
-}
-
-.btn {
-    background: #202020;
-    border: none;
-    color: #FFFFFF;
-    font-size: 22px;
-    text-align: center;
-    border-radius: 12px;
-    height: 50px;
-}
-
-.bottom {
-    text-align: center;
-}
-
-span {
-    /* color: #FFFFFF; */
-    font-size: 1.1rem;
-    text-align: center;
-    /* border: 1px solid rgb(0, 4, 255); */
-}
-
-.navigation {
-    text-align: center;
-}
-
-.privacy {
-    text-align: center;
-}
-
-
-@media only screen and (max-width:800px) {
+@media (max-width: 1024px) {
     .container {
-        width: 99%;
-        height: auto;
-        padding: 0;
+        flex-direction: column;
     }
 
     .formElement {
-        width: 100%;
-        padding: 0px 3%;
+        padding: 0 5%;
     }
 
-    span {
-        font-size: .9rem;
+    .logo {
+        margin-bottom: 20px;
+    }
+
+    .authSlide {
+        height: 40%;
+    }
+
+    form {
+        height: 60%;
     }
 }
 </style>

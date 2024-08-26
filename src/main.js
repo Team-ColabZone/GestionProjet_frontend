@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import './assets/tailwind.css'
+import './index.css'
 import '@fortawesome/fontawesome-free/css/all.css';
 import * as lucideIcons from 'lucide-vue-next';
 
@@ -16,9 +16,13 @@ import dashboardPage from './components/dashboardPage.vue';
 import backlogsPage from './components/backlogsPage.vue';
 import tasksPage from './components/tasksPage.vue';
 import teamMemberPage from './components/teamMemberPage.vue';
-
+import EnterprisePage from "./components/EnterprisePage.vue";
+import ForgotpasswordPage from "./components/ForgotpasswordPage.vue";
+import UpdatePasswordPage from  "./components/UpdatePasswordPage.vue";
+import authSlides from "../src/components/includ/authSlides.vue";
 
 const routes = [
+  {path: '/authSlides', component: authSlides},
     { path: '/', component: LoadingPage },
     { path: '/CreateAccount', component: CreateAccount },
     { path: '/auth', component: AuthentificationPage },
@@ -30,7 +34,10 @@ const routes = [
     { path: '/backlogsPage', component: backlogsPage },
     { path: '/tasksPage', component: tasksPage },
     { path: '/teamMemberPage', component: teamMemberPage },
-]
+    { path: '/enterprisePage', component: EnterprisePage },
+    { path: '/Forgotpassword', component: ForgotpasswordPage },
+    { path: '/Updatepassword', component: UpdatePasswordPage },
+  ]
 
 
 

@@ -3,199 +3,175 @@ import { Users, Gauge, CircleGauge, ClockArrowDown, UserRoundCheck, Logs, Trendi
 </script>
 
 <template>
-    <div>
-        <div class="entete">
-            <Gauge class="ico-dash"/>
-            <p class="title_entete">Dashboard</p>
+    <div class=" flex flex-col w-full p-2 gap-4">
+        <div class="flex items-center w-full h-14 gap-4 px-3 border rounded-lg">
+            <Gauge />
+            <p class="text-xl ">Dashboard</p>
         </div>
 
-        <div class="cont">
-            <div class="s_menu">
-                <div class="contex" style="background-color: #F0F1FF;border-radius: 8px;">
-                    <div class="nbre_icons">
-                        <h1>0{{ teamMemberCount }}</h1>
-                        <Users class="icon-lucide" />
+        <div class=" w-full pb-5">
+            <div class="w-full flex justify-between">
+                <div class="bg-indigo-100 rounded-lg p-4 text-center w-auto">
+                    <div class="flex justify-between items-center">
+                        <h1 class="text-4xl ">{{ teamMemberCount }}</h1>
+                        <Users class="w-10 h-10" />
                     </div>
 
-                    <h3>Nombre de membre</h3>
+                    <h3 class="mt-2 text-black">Nombre de membre</h3>
                 </div>
 
-                <div class="contex" style="background-color: #FFE8EF;border-radius: 8px;">
-                    <div class="nbre_icons">
-                        <h1>20%</h1>
-                        <CircleGauge class="icon-lucide" />
+                <div class=" bg-pink-100 rounded-lg p-4 text-center w-auto">
+                    <div class="flex justify-between items-center">
+                        <h1 class="text-4xl ">20%</h1>
+                        <CircleGauge class="w-10 h-10 " />
                     </div>
                     <!-- <h1>{{ affectationCount }}%</h1> -->
-                    <h3>Pourcentage de réalisation</h3>
+                    <h3 class="mt-2 text-black">Pourcentage de réalisation</h3>
                 </div>
 
-                <div class="contex" style="background-color: #EAFBEA;border-radius: 8px;">
-                    <div class="nbre_icons">
-                        <h1>30%</h1>
-                        <ClockArrowDown class="icon-lucide" />
+                <div class="bg-green-100 rounded-lg p-4 text-center w-auto">
+                    <div class="flex justify-between items-center">
+                        <h1 class="text-4xl ">30j/t</h1>
+                        <ClockArrowDown class="w-10 h-10 " />
                         <!-- <h1>{{ stageCount }}</h1> -->
                     </div>
 
-                    <h3>Taux de tache journaliere</h3>
+                    <h3 class="mt-2 text-black">Taux de tache journaliere</h3>
                 </div>
 
-                <div class="contex" style="background-color: #FDF2E1;border-radius: 8px;">
-                    <div class="nbre_icons">
-                        <h1>01</h1>
+                <div class="bg-pink-50 rounded-lg p-4 text-center w-auto">
+                    <div class="flex justify-between items-center">
+                        <h1 class="text-4xl ">01</h1>
                         <!-- <h1>{{ taskCount }}</h1> -->
-                        <UserRoundCheck class="icon-lucide" />
+                        <UserRoundCheck class="w-10 h-10 " />
                     </div>
 
-                    <h3>Nombre de membres performant</h3>
+                    <h3 class="mt-2 text-black">Nombre de membres <br> performant</h3>
                 </div>
 
-                <div class="contex" style="background-color: #EDF6FF;border-radius: 8px;">
-                    <div class="nbre_icons">
+                <div class="bg-blue-50 rounded-lg p-4 text-center w-auto">
+                    <div class="flex justify-between items-center">
                         <!-- <h1>04</h1> -->
-                        <h1>0{{ taskCount }}</h1>
-                        <Logs class="icon-lucide" />
+                        <h1 class="text-4xl ">0{{ taskCount }}</h1>
+                        <Logs class="w-10 h-10 " />
                     </div>
 
-                    <h3>Nombre de tache</h3>
+                    <h3 class="mt-2 text-black">Nombre de tache</h3>
                 </div>
 
-                <div class="contex" style="background-color: #FAFFE6;border-radius: 8px;">
-                    <div class="nbre_icons">
-                        <h1>30%</h1>
+                <div class="bg-lime-100 rounded-lg p-4 text-center w-auto">
+                    <div class="flex justify-between items-center">
+                        <h1 class="text-4xl ">30%</h1>
                         <!-- <h1>{{ taskCount }}</h1> -->
-                        <TrendingUp class="icon-lucide" />
+                        <TrendingUp class="w-10 h-10 " />
                     </div>
 
-                    <h3>Taux de reactivité</h3>
+                    <h3 class="mt-2 text-black">Taux de reactivité</h3>
                 </div>
             </div>
         </div>
 
-        <div class="search-zone">
-            <form action="" class="search-form">
-                <div class="search-barrediv">
-                    <Search class="icon-search" />
-                    <input type="search" id="search-input" class="search-barre" placeholder="Rechercher...">
+        <div class="flex w-full gap-8">
+            <form action="" class="flex w-1/2 gap-4">
+                <div class="flex relative item-center w-3/4">
+                    <Search class="absolute left-2 top-2.5 text-gray-600 h-1/2" />
+                    <input type="search" id="search-input"
+                        class=" w-full h-11 pl-10 pr-4 border border-gray-300 rounded-lg text-gray-800 focus:outline-none focus:border-blue-500"
+                        placeholder="Rechercher...">
                 </div>
 
-                <div class="search-butt">
-                    <input type="submit" value="Rechercher" class="searchbtn">
-                </div>
+                <input type="submit" value="Rechercher"
+                    class=" w-1/4 h-11 bg-black text-white font-bold rounded-lg hover:bg-slate-600 focus:outline-none">
+
             </form>
+
+            <div class="w-1/2 ">error message</div>
         </div>
 
-        <div class="body-milieu" style="display: flex; ">
-            <div class="tache-courante" style="border: 1px solid #D9D9D9; width: 950px;border-radius: 8px; margin-left: 0.5%;">
-                <div class="title-div1" style="display: flex; padding-left: 1%; border-bottom: 1px solid #D9D9D9; padding-top: 1%; padding-bottom: 1%; height: 40px;">
-                    <div class="icon-chart" style="padding-left: 1%; padding-top: 1.5%;">
-                        <ChartPie class="task" style="width: 24px; height: 24px; stroke-width: 1.5px; color: #000000;" />
+        <div class="flex gap-4">
+            <div class="w-1/2 border border-gray-300 rounded-lg">
+                <div class="flex items-center justify-between border-b border-gray-300 pt-1 pb-1">
+                    <div class="flex gap-2 items-center pl-2">
+                        <ChartPie class="h-2/3 text-black" />
+
+                        <p class="text-black text-base font-semibold">Tâches Courantes</p>
                     </div>
 
-                    <div class="tache-courante">
-                        <p style="color: #000000; padding-left: 20px; font-size: 15px; font-weight: bold;">Tâches Courantes</p>
-                    </div>
-
-                    <div class="icon-ChevronUp" style="padding-left: 75%; padding-top: 1.5%;">
-                        <button class="task-list" @click="showTaskList()" style="border: none;background-color: transparent">
-                            <ChevronUp class="task" style="width: 24px;height: 24px; color: #6F6F6F; " />
-                        </button>
-                    </div>
+                    <button class="icon-ChevronUp pr-2" @click="showTaskList()"
+                        style="border: none;background-color: transparent">
+                        <ChevronUp />
+                    </button>
                 </div>
             </div>
 
-            <div class="meilleur-contributeurs" style="border: 1px solid #D9D9D9; width: 450px; border-radius: 8px; margin-left: 0.5%; margin-left: 2%;">
-                <div class="title-div1" style="display: flex; padding-left: 1%; border-bottom: 1px solid #D9D9D9; padding-top: 1.5%; padding-bottom: 1.5%; height: 45px;">
-                    <div class="icon-chart" style="padding-left: 2%; padding-top: 3%;">
-                        <UserRoundCheck class="task" style="width: 24px; height: 24px; stroke-width: 1.5px; color: #000000;" />
-                    </div>
+            <div class="w-1/4 border border-gray-300 rounded-lg">
+                <div class="flex items-center justify-between border-b border-gray-300 pt-1 pb-1">
+                    <div class="flex flex-wrap gap-2 items-center pl-2">
 
-                    <div class="contributeurs">
-                        <p style="color: #000000; padding-left: 15px; font-size: 15px; font-weight: bold;">
+                        <UserRoundCheck class="h-2/3 text-black" />
+                        <p class="text-black text-base font-semibold">
                             Meilleurs contributeurs
                         </p>
                     </div>
 
-                    <div class="icon-ChevronUp" style="padding-left: 40%; padding-top: 3%;">
-                        <button class="task-list" @click="showTaskList()" style="border: none;background-color: transparent">
-                            <ChevronUp class="task" style="width: 24px;height: 24px; color: #6F6F6F; cursor: pointer;" />
-                        </button>
-                    </div>
+                    <button class="icon-ChevronUp pr-2" @click="showTaskList()"
+                        style="border: none;background-color: transparent">
+                        <ChevronUp />
+                    </button>
                 </div>
             </div>
 
-            <div class="bilan" style="border: 1px solid #D9D9D9; width: 455px; border-radius: 8px; margin-left: 0.5%; margin-left: 2%;">
-                <div class="title-div1" style="display: flex; padding-left: 4%; border-bottom: 1px solid #D9D9D9; padding-top: 1.5%; padding-bottom: 1.5%; height: 45px;">
-                    <div class="icon-chart" style="padding-left: 2%; padding-top: 3%;">
-                        <ArrowDownUp class="task" style="width: 24px; height: 24px; stroke-width: 1.5px; color: #000000;" />
-                    </div>
+            <div class="w-1/4 border border-gray-300 rounded-lg">
+                <div class="flex items-center justify-between border-b border-gray-300 pt-1 pb-1">
+                    <div class="flex gap-2 items-center pl-2">
+                        <ArrowDownUp class="task"
+                            style="width: 24px; height: 24px; stroke-width: 1.5px; color: #000000;" />
 
-                    <div class="contributeurs">
                         <p style="color: #000000; padding-left: 15px; font-size: 15px; font-weight: bold;">
                             Bilan des tâches
                         </p>
                     </div>
 
-                    <div class="icon-ChevronUp" style="padding-left: 50%; padding-top: 3%;">
-                        <button class="task-list" @click="showTaskList()" style="border: none;background-color: transparent; cursor: pointer;">
-                            <ChevronUp class="task" style="width: 24px;height: 24px; color: #6F6F6F" />
-                        </button>
+                    <button class="icon-ChevronUp pr-2" @click="showTaskList()"
+                        style="border: none;background-color: transparent; cursor: pointer;">
+                        <ChevronUp class="task" style="width: 24px;height: 24px; color: #6F6F6F" />
+                    </button>
+                </div>
+
+                <div class="flex flex-col p-2 gap-2 border border-gray-200">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-orange-200 flex items-center justify-center">
+                            <p class="text-black">{{ pendingTasksCount }}</p>
+                        </div>
+                        <p class="text-sm font-bold text-gray-600">
+                            Nombre de tâche en attente
+                        </p>
+                    </div>
+
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-green-200 flex items-center justify-center">
+                            <p class="text-black">{{ inProgressTasksCount }}</p>
+                        </div>
+                        <p class="text-sm font-bold text-gray-600">
+                            Nombre de tâche en cours
+                        </p>
+                    </div>
+
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-blue-200 flex items-center justify-center">
+                            <p class="text-black">{{ completedTasksCount }}</p>
+                        </div>
+                        <p class=" text-sm font-bold text-gray-600">
+                            Nombre de tâche terminée
+                        </p>
                     </div>
                 </div>
 
-                <div class="task-status" style="display: block; padding-left: 4%; border-bottom: 1px solid #D9D9D9">
-                    <div class="status">
-                        <div class="statut-attente" style="display: flex; padding-bottom: 30px; margin-top: 50px">
-                            <div class="attente" style="width: 50px; height: 50px; border-radius: 50%; background-color: #FFD1A6; ">
-                                <p style="color: #000000; text-align: center;">
-                                    {{ pendingTasksCount }}
-                                </p>
-                            </div>
-
-                            <div class="text1" style="padding-left: 20px;">
-                                <p style="color: #858383; font-size: 14px; font-weight: bold">
-                                    Nombre de tâche en attente
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="status">
-                        <div class="statut-encours" style="display: flex; padding-bottom: 30px">
-                            <div class="encours" style="width: 50px; height: 50px; border-radius: 50%; background-color: #86FD92">
-                                <p style="color: #000000; text-align: center;">
-                                    {{ inProgressTasksCount }}
-                                </p>
-                            </div>
-
-                            <div class="text1" style="padding-left: 20px;">
-                                <p style="color: #858383; font-size: 14px; font-weight: bold">
-                                    Nombre de tâche en cours
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="status">
-                        <div class="statut-end" style="display: flex; padding-bottom: 20px; margin-bottom: 30px">
-                            <div class="end" style="width: 50px; height: 50px; border-radius: 50%; background-color: #B3E2FC">
-                                <p style="color: #000000; text-align: center;">
-                                    {{ completedTasksCount }}
-                                </p>
-                            </div>
-
-                            <div class="text1" style="padding-left: 20px;">
-                                <p style="color: #858383; font-size: 14px; font-weight: bold">
-                                    Nombre de tâche terminée
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="task-total">
-                    <p style="color: #000000; font-size: 14px;font-weight: bold;text-align: right; padding-right: 20px">
+                <div class="p-2">
+                    <p class="text-sm font-bold text-right text-black">
                         {{ taskCount }} tâche(s) au total
                     </p>
+
                 </div>
             </div>
         </div>
@@ -345,133 +321,5 @@ body {
     margin: 0;
     background-color: rgba(0, 0, 0, 0.05);
     font-family: Monda;
-}
-
-.logoflysoft {
-    margin-left: 20px;
-}
-
-.entete {
-    border: 2px solid #D9D9D9;
-    border-radius: 8px;
-    width: 99%;
-    height: 62px;
-    margin: auto;
-    margin-top: 1%;
-    margin-bottom: 20px;
-    display: flex;
-}
-
-.entete .ico-dash {
-    padding-left: 1%;
-    padding-top: 1%;
-    padding-bottom: 3%;
-}
-
-.entete p {
-    font-size: 16px;
-    color: #000000;
-    padding-left: 15px;
-    font-weight: bold;
-    padding-top: 4px;
-}
-
-.cont {
-    width: 100%;
-    padding-bottom: 20px;
-}
-
-.s_menu {
-    width: 99%;
-    margin: auto;
-    display: flex;
-    justify-content: space-between;
-}
-
-.s_menu .contex {
-    width: 240px;
-    height: 150px;
-    /* box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); */
-    border-radius: 8px;
-    text-align: center;
-    /* background-color: rgb(0, 122, 94); */
-    color: #000000;
-    padding-left: 1%;
-    padding-right: 1%;
-}
-
-.s_menu .contex .nbre_icons {
-    display: flex;
-    justify-content: space-between;
-    flex: 1;
-}
-
-.s_menu .contex .nbre_icons .icon-lucide {
-    font-size: 50px;
-    padding-top: 10%;
-    padding-right: 8%;
-}
-
-.icon-lucide {
-    width: 60px;
-    height: 60px;
-    color: #202020;
-    stroke-width: 1px;
-}
-
-.search-zone {
-    display: flex;
-    justify-content: flex-start;
-    padding-left: 0.5%;
-    padding-bottom: 20px;
-}
-
-.search-form {
-    display: flex;
-}
-
-.search-barrediv {
-
-    display: flex;
-    position: relative;
-}
-
-.icon-search {
-    position: absolute;
-    left: 10px;
-    padding-top: 1%;
-}
-
-.search-barre {
-    height: 45px;
-    width: 730px;
-    border: 1px solid #D9D9D9;
-    border-radius: 8px;
-    padding-left: 50px;
-    /* Espace pour l'icône */
-    box-sizing: border-box;
-    font-size: 18px;
-}
-
-.search-butt {
-    margin-left: 10px;
-}
-
-.searchbtn {
-    /* padding: 5px 10px; */
-    background-color: #000000;
-    color: white;
-    font-weight: bold;
-    /* Texte en gras */
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    height: 45px;
-    width: 200px;
-    font-size: 12px;
-}
-
-.searchbtn:hover {
-    background-color: #0056b3;
 }
 </style>
