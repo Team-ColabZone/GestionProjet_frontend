@@ -802,7 +802,7 @@ export default {
         async fetchPendingTasksCount() {
             try {
                 const token = localStorage.getItem('token');
-                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/pending`, {
+                const response = await axios.get(`$${config.apiBaseUrl}/tasks/${this.projectId}/tasks/pending`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -816,7 +816,7 @@ export default {
         async fetchInProgressTasksCount() {
             try {
                 const token = localStorage.getItem('token');
-                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/in-progress`, {
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/tasks/in-progress`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -830,7 +830,7 @@ export default {
         async fetchCompletedTasksCount() {
             try {
                 const token = localStorage.getItem('token');
-                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/completed`, {
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/tasks/completed`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }

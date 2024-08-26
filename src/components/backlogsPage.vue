@@ -122,8 +122,12 @@ import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs } from 'lucide-v
                         <div class="w-full">
                             <label for="Attribuer" class="block text-gray-700 text-sm font-bold mb-2">Attribuer
                                 a</label>
-                            <input type="text" v-model="Attribuer" required
-                                class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-200">
+                                <select v-model="userAssignId" 
+                                    class="block w-full px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-200 appearance-none">
+                                    <option v-for="member in projectMembers" :key="member.userMember.id">
+                                        {{ member.userMember.email }}</option>
+                                    
+                                </select>
                         </div>
 
                         <div class="w-full relative">
@@ -247,7 +251,7 @@ export default {
             pendingTasksCount: 0,
             tasklateCount: 0,
             projects: [], // Liste des projets
-            selectedProjectId: '', // ID du projet sélectionné
+            // selectedProjectId: '', // ID du projet sélectionné
             userId: '',
             projectId: '',
 
@@ -272,6 +276,9 @@ export default {
             priorities: ['ELEVEE', 'MOYENNE', 'FAIBLE'],
             placeholder: 'Select Priority',
             isPriorityOpen: false,
+            //id du collaborateur
+            userAssignId: '',
+            projectMembers: [],
         };
     },
 
@@ -279,16 +286,18 @@ export default {
         if (this.isConnected()) {
             this.userId = localStorage.getItem('userId');
             this.fetchUserData();
+            this.fetchProjectMembers();
+            this.fetchProjects();
+            this.projectId = localStorage.getItem('projectId');
+            this.fetchPendingTasksCount();
+            this.fetchInProgressTasksCount();
+            this.fetchCompletedTasksCount();
+            this.fetchTotalTasksCount();
         } else {
             this.errorMessage = 'Utilisateur non connecté';
             this.$router.push('/auth'); // Rediriger vers la page de connexion
         }
-        this.fetchProjects();
-        this.projectId = localStorage.getItem('projectId');
-        this.fetchPendingTasksCount();
-        this.fetchInProgressTasksCount();
-        this.fetchCompletedTasksCount();
-        this.fetchTotalTasksCount();
+
     },
 
     methods: {
@@ -342,15 +351,15 @@ export default {
                 this.errorMessage = 'Erreur lors de la récupération des projets : ' + error.response.data.message;
             }
         },
-        selectProject(projectId) {
-            this.selectedProjectId = projectId;
-            localStorage.setItem('projectId', projectId); // Stocker l'ID du projet dans le localStorage
-            this.$router.push('/Home'); // Rediriger vers la page des détails du projet
-        },
+        // selectProject(projectId) {
+        //     this.selectedProjectId = projectId;
+        //     localStorage.setItem('projectId', projectId); // Stocker l'ID du projet dans le localStorage
+        //     this.$router.push('/Home'); // Rediriger vers la page des détails du projet
+        // },
         async fetchPendingTasksCount() {
             try {
                 const token = localStorage.getItem('token');
-                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/pending`, {
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/tasks/pending`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -364,7 +373,7 @@ export default {
         async fetchInProgressTasksCount() {
             try {
                 const token = localStorage.getItem('token');
-                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/in-progress`, {
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/tasks/in-progress`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -378,7 +387,7 @@ export default {
         async fetchCompletedTasksCount() {
             try {
                 const token = localStorage.getItem('token');
-                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/completed`, {
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/tasks/completed`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -455,6 +464,26 @@ export default {
 
             } catch (error) {
                 console.error('Erreur lors de la récupération des informations des l\'utilisateur :', error);
+            }
+        },
+
+        async fetchProjectMembers() {
+            console.log("Id projet selectionné backlogs");
+            console.log(this.projectId)
+            try {
+                console.log(this.projectId)
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`${config.apiBaseUrl}/team-members/project/${this.projectId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                this.projectMembers = response.data;
+                console.log("Bonsoir")
+                console.log("Voici la liste des membre dans le backlogs");
+                console.log(this.projectMembers);
+            } catch (error) {
+                this.errorMessage = 'Erreur lors de la récupération des membres du projet : ' + (error.response ? error.response.data.message : error.message);
             }
         },
 
