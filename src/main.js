@@ -20,6 +20,7 @@ import EnterprisePage from "./components/EnterprisePage.vue";
 import ForgotpasswordPage from "./components/ForgotpasswordPage.vue";
 import UpdatePasswordPage from  "./components/UpdatePasswordPage.vue";
 import authSlides from "../src/components/includ/authSlides.vue";
+import dragDrop from "./components/dragDrop.vue";
 
 const routes = [
   {path: '/authSlides', component: authSlides},
@@ -37,6 +38,7 @@ const routes = [
     { path: '/enterprisePage', component: EnterprisePage },
     { path: '/Forgotpassword', component: ForgotpasswordPage },
     { path: '/Updatepassword', component: UpdatePasswordPage },
+    { path: '/dragDrop', component: dragDrop },
   ]
 
 

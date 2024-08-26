@@ -44,7 +44,7 @@ import { ListTodo, Search, Filter } from 'lucide-vue-next';
                     </div>
                 </div>
 
-                <div class="flex flex-col gap-2 border border-gray-300 rounded-lg px-4 py-10" >
+                <draggable class="flex flex-col gap-2 border border-gray-300 rounded-lg px-4 py-10" group="tasks" :list="pendingTasks" @change="log">
                     <div class="flex flex-col border border-gray-300 py-2 px-3" v-for="task in pendingTasks" :key="task.id">
                         <div class="flex justify-between pb-2">
                         <div class="py-1 px-3 rounded-xl" :class="['priority', getPriorityClass(task.priority)]">Tache</div>
@@ -55,7 +55,7 @@ import { ListTodo, Search, Filter } from 'lucide-vue-next';
                         <span>{{ task.description }}</span>
                     </div>
                     </div>
-                </div>
+                </draggable>
             </div>
 
             <div class="flex flex-col gap-2">
@@ -67,7 +67,7 @@ import { ListTodo, Search, Filter } from 'lucide-vue-next';
                     </div>
                 </div>
 
-                <div class="flex flex-col gap-2 border border-gray-300 rounded-lg px-4 py-10" >
+                <draggable class="flex flex-col gap-2 border border-gray-300 rounded-lg px-4 py-10" group="tasks" :list="inProgressTasks" @change="log">
                     <div class="flex flex-col border border-gray-300 py-2 px-3" v-for="task in inProgressTasks" :key="task.id">
                         <div class="flex justify-between pb-2">
                             <div class="py-1 px-3 rounded-lg" :class="['priority', getPriorityClass(task.priority)]">Tache</div>
@@ -78,7 +78,7 @@ import { ListTodo, Search, Filter } from 'lucide-vue-next';
                             <span>{{ task.description }}</span>
                         </div>
                     </div>
-                </div>
+                </draggable>
             </div>
 
             <div class="flex flex-col gap-2">
@@ -91,7 +91,7 @@ import { ListTodo, Search, Filter } from 'lucide-vue-next';
                     </div>
                 </div>
 
-                <div class="flex flex-col gap-2 border border-gray-300 rounded-lg px-4 py-10" >
+                <draggable class="flex flex-col gap-2 border border-gray-300 rounded-lg px-4 py-10" group="tasks" :list="completedTasks" @change="log">
                     <div class=" border border-gray-300 py-2 px-3" v-for="task in completedTasks" :key="task.id">
                         <div class="flex justify-between pb-2">
                             <div class="py-1 px-3 rounded-lg" :class="['priority', getPriorityClass(task.priority)]">Tache</div>
@@ -102,7 +102,7 @@ import { ListTodo, Search, Filter } from 'lucide-vue-next';
                             <span>{{ task.description }}</span>
                         </div>
                     </div>
-                </div>
+                </draggable>
             </div>
         </div>
     </div>
@@ -111,10 +111,12 @@ import { ListTodo, Search, Filter } from 'lucide-vue-next';
 <script>
 import axios from 'axios';
 import config from "../config";
+import { defineComponent } from 'vue';
+import { VueDraggableNext } from 'vue-draggable-next';
 
-export default {
+export default defineComponent({
     components: {
-
+        draggable:VueDraggableNext,
     },
     data() {
         return {
@@ -312,11 +314,16 @@ export default {
                 default:
                     return '';
             }
-        }
+        },
+
+        //delete the log() in the code and this method before deploying 
+        log(event) {
+            console.log(event);
+        },
 
 
     }
-};
+});
 </script>
 
 <style scoped>
