@@ -34,16 +34,28 @@ import { ListTodo, Search, Filter } from 'lucide-vue-next';
             </div>
         </div>
 
-        <div class=" grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-2">
+        <div class=" grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 mt-2">
             <div class="flex flex-col gap-2">
                 <div class=" flex items-center">
-                    <div class="w-6 h-6 rounded-full bg-yellow-300"></div>
+                    <div class="w-6 h-6 rounded-full bg-orange-200"></div>
                     <p class="font-bold text-sm px-2">EN ATTENTE</p>
                     <div class="w-8 h-6 bg-gray-300 rounded-lg flex items-center justify-center">
                         <p class="text-black text-xs m-0">{{ pendingTasksCount }}</p>
                     </div>
                 </div>
-                <div class=" border border-gray-300 rounded-lg p-4"></div>
+
+                <div class="flex flex-col gap-2 border border-gray-300 rounded-lg px-4 py-10" >
+                    <div class="flex flex-col border border-gray-300 py-2 px-3" v-for="task in pendingTasks" :key="task.id">
+                        <div class="flex justify-between pb-2">
+                        <div class="py-1 px-3 rounded-xl" :class="['priority', getPriorityClass(task.priority)]">Tache</div>
+                        <Ellipsis />
+                    </div>
+                    <div class="flex flex-col pb-2">
+                        <span class="font-medium">{{ task.taskname }}</span>
+                        <span>{{ task.description }}</span>
+                    </div>
+                    </div>
+                </div>
             </div>
 
             <div class="flex flex-col gap-2">
@@ -54,7 +66,19 @@ import { ListTodo, Search, Filter } from 'lucide-vue-next';
                         <p class="text-black text-xs m-0">{{ inProgressTasksCount }}</p>
                     </div>
                 </div>
-                <div class=" border border-gray-300 rounded-lg p-4"></div>
+
+                <div class="flex flex-col gap-2 border border-gray-300 rounded-lg px-4 py-10" >
+                    <div class="flex flex-col border border-gray-300 py-2 px-3" v-for="task in inProgressTasks" :key="task.id">
+                        <div class="flex justify-between pb-2">
+                            <div class="py-1 px-3 rounded-lg" :class="['priority', getPriorityClass(task.priority)]">Tache</div>
+                            <Ellipsis />
+                        </div>
+                        <div class="flex flex-col pb-2">
+                            <span class="font-medium">{{ task.taskname }}</span>
+                            <span>{{ task.description }}</span>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="flex flex-col gap-2">
@@ -66,7 +90,19 @@ import { ListTodo, Search, Filter } from 'lucide-vue-next';
                         </p>
                     </div>
                 </div>
-                <div class=" border border-gray-300 rounded-lg p-4"></div>
+
+                <div class="flex flex-col gap-2 border border-gray-300 rounded-lg px-4 py-10" >
+                    <div class=" border border-gray-300 py-2 px-3" v-for="task in completedTasks" :key="task.id">
+                        <div class="flex justify-between pb-2">
+                            <div class="py-1 px-3 rounded-lg" :class="['priority', getPriorityClass(task.priority)]">Tache</div>
+                            <Ellipsis />
+                        </div>
+                        <div class="flex flex-col pb-2">
+                            <span class="font-medium">{{ task.taskname }}</span>
+                            <span>{{ task.description }}</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -158,13 +194,13 @@ export default {
         async fetchPendingTasksCount() {
             try {
                 const token = localStorage.getItem('token');
-                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/pending`, {
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/tasks/pending`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
                 });
                 this.pendingTasksCount = response.data.length;
-                console.log(this.pendingTasksCount);
+                // console.log(this.pendingTasksCount);
             } catch (error) {
                 console.error('Erreur lors de la récupération du nombre de tâches en attente :', error);
             }
@@ -172,13 +208,14 @@ export default {
         async fetchInProgressTasksCount() {
             try {
                 const token = localStorage.getItem('token');
-                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/in-progress`, {
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/tasks/in-progress`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
                 });
                 this.inProgressTasksCount = response.data.length;
-                console.log(this.inProgressTasksCount);
+                console.log("<><><><><><><><>");
+                // console.log(this.inProgressTasksCount);
             } catch (error) {
                 console.error('Erreur lors de la récupération du nombre de tache en cours :', error);
             }
@@ -186,13 +223,15 @@ export default {
         async fetchCompletedTasksCount() {
             try {
                 const token = localStorage.getItem('token');
-                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/completed`, {
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/tasks/completed`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
                 });
                 this.completedTasksCount = response.data.length;
-                console.log(this.completedTasksCount);
+                console.log(">>>>>>>>>>>>>>>>>>>>>>>>");
+
+                // console.log(this.completedTasksCount);
             } catch (error) {
                 console.error('Erreur lors de la récupération du nombre de taches terminées :', error);
             }
@@ -206,7 +245,8 @@ export default {
                     }
                 });
                 this.taskCount = response.data;
-                console.log(this.taskCount);
+                console.log("<<<<<<<<<<<<<<<<<<<<<<<<");
+                // console.log(this.taskCount);
             } catch (error) {
                 console.error('Erreur lors de la récupération du nombre total de tâches :', error);
             }
@@ -217,13 +257,15 @@ export default {
         async fetchPendingTasks() {
             try {
                 const token = localStorage.getItem('token');
-                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/pending`, {
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/tasks/pending`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
                 });
                 this.pendingTasks = response.data;
                 console.log(this.pendingTasks);
+                console.log("............................");
+
             } catch (error) {
                 console.error('Erreur lors de la récupération des tâches en attente :', error);
             }
@@ -231,13 +273,14 @@ export default {
         async fetchInProgressTasks() {
             try {
                 const token = localStorage.getItem('token');
-                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/in-progress`, {
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/tasks/in-progress`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
                 });
                 this.inProgressTasks = response.data;
                 console.log(this.inProgressTasks);
+                console.log("............................");
             } catch (error) {
                 console.error('Erreur lors de la récupération des tâches en cours :', error);
             }
@@ -245,17 +288,32 @@ export default {
         async fetchCompletedTasks() {
             try {
                 const token = localStorage.getItem('token');
-                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/completed`, {
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/tasks/completed`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
                 });
                 this.completedTasks = response.data;
                 console.log(this.completedTasks);
+                console.log("............................");
             } catch (error) {
                 console.error('Erreur lors de la récupération des tâches terminées :', error);
             }
         },
+
+        getPriorityClass(priority) {
+            switch (priority) {
+                case 'ELEVEE':
+                    return 'bg-red-500';
+                case 'MOYENNE':
+                    return 'bg-blue-500';
+                case 'FAIBLE':
+                    return 'bg-green-500';
+                default:
+                    return '';
+            }
+        }
+
 
     }
 };
