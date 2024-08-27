@@ -36,7 +36,7 @@ import { ListTodo, Search, Filter } from 'lucide-vue-next';
 
         <div class=" grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 mt-2">
             <div class="flex flex-col gap-2">
-                <div class=" flex items-center">
+                <div class="flex items-center">
                     <div class="w-6 h-6 rounded-full bg-orange-200"></div>
                     <p class="font-bold text-sm px-2">EN ATTENTE</p>
                     <div class="w-8 h-6 bg-gray-300 rounded-lg flex items-center justify-center">
@@ -44,33 +44,14 @@ import { ListTodo, Search, Filter } from 'lucide-vue-next';
                     </div>
                 </div>
 
-                <draggable class="flex flex-col gap-2 border border-gray-300 rounded-lg px-4 py-10" group="tasks" :list="pendingTasks" @change="log">
-                    <div class="flex flex-col border border-gray-300 py-2 px-3" v-for="task in pendingTasks" :key="task.id">
+                <draggable class="flex flex-col gap-2 border border-gray-300 rounded-lg px-4 py-10 pendingTasks"
+                    group="tasks" :list="pendingTasks" @change="log" @end="onEnd">
+                    <div class="flex flex-col border border-gray-300 py-2 px-3" v-for="task in pendingTasks"
+                        :key="task.id" @click="storeTaskId(task.id)">
                         <div class="flex justify-between pb-2">
-                        <div class="py-1 px-3 rounded-xl" :class="['priority', getPriorityClass(task.priority)]">Tache</div>
-                        <Ellipsis />
-                    </div>
-                    <div class="flex flex-col pb-2">
-                        <span class="font-medium">{{ task.taskname }}</span>
-                        <span>{{ task.description }}</span>
-                    </div>
-                    </div>
-                </draggable>
-            </div>
-
-            <div class="flex flex-col gap-2">
-                <div class=" flex items-center">
-                    <div class="w-6 h-6 rounded-full bg-green-300"></div>
-                    <p class="font-bold text-sm px-2">EN COURS</p>
-                    <div class="w-8 h-6 bg-gray-300 rounded-lg flex items-center justify-center">
-                        <p class="text-black text-xs m-0">{{ inProgressTasksCount }}</p>
-                    </div>
-                </div>
-
-                <draggable class="flex flex-col gap-2 border border-gray-300 rounded-lg px-4 py-10" group="tasks" :list="inProgressTasks" @change="log">
-                    <div class="flex flex-col border border-gray-300 py-2 px-3" v-for="task in inProgressTasks" :key="task.id">
-                        <div class="flex justify-between pb-2">
-                            <div class="py-1 px-3 rounded-lg" :class="['priority', getPriorityClass(task.priority)]">Tache</div>
+                            <div class="py-1 px-3 rounded-xl" :class="['priority', getPriorityClass(task.priority)]">
+                                Tache
+                            </div>
                             <Ellipsis />
                         </div>
                         <div class="flex flex-col pb-2">
@@ -82,7 +63,34 @@ import { ListTodo, Search, Filter } from 'lucide-vue-next';
             </div>
 
             <div class="flex flex-col gap-2">
-                <div class=" flex items-center">
+                <div class="flex items-center">
+                    <div class="w-6 h-6 rounded-full bg-green-300"></div>
+                    <p class="font-bold text-sm px-2">EN COURS</p>
+                    <div class="w-8 h-6 bg-gray-300 rounded-lg flex items-center justify-center">
+                        <p class="text-black text-xs m-0">{{ inProgressTasksCount }}</p>
+                    </div>
+                </div>
+
+                <draggable class="flex flex-col gap-2 border border-gray-300 rounded-lg px-4 py-10 inProgressTasks"
+                    group="tasks" :list="inProgressTasks" @change="log" @end="onEnd">
+                    <div class="flex flex-col border border-gray-300 py-2 px-3" v-for="task in inProgressTasks"
+                        :key="task.id" @click="storeTaskId(task.id)">
+                        <div class="flex justify-between pb-2">
+                            <div class="py-1 px-3 rounded-lg" :class="['priority', getPriorityClass(task.priority)]">
+                                Tache
+                            </div>
+                            <Ellipsis />
+                        </div>
+                        <div class="flex flex-col pb-2">
+                            <span class="font-medium">{{ task.taskname }}</span>
+                            <span>{{ task.description }}</span>
+                        </div>
+                    </div>
+                </draggable>
+            </div>
+
+            <div class="flex flex-col gap-2">
+                <div class="flex items-center">
                     <div class="w-6 h-6 rounded-full bg-blue-300"></div>
                     <p class="font-bold text-sm px-2">TERMINÉE</p>
                     <div class="w-8 h-6 bg-gray-300 rounded-lg flex items-center justify-center">
@@ -91,10 +99,14 @@ import { ListTodo, Search, Filter } from 'lucide-vue-next';
                     </div>
                 </div>
 
-                <draggable class="flex flex-col gap-2 border border-gray-300 rounded-lg px-4 py-10" group="tasks" :list="completedTasks" @change="log">
-                    <div class=" border border-gray-300 py-2 px-3" v-for="task in completedTasks" :key="task.id">
+                <draggable class="flex flex-col gap-2 border border-gray-300 rounded-lg px-4 py-10 completedTasks"
+                    group="tasks" :list="completedTasks" @change="log" @end="onEnd">
+                    <div class="border border-gray-300 py-2 px-3" v-for="task in completedTasks" :key="task.id"
+                        @click="storeTaskId(task.id)">
                         <div class="flex justify-between pb-2">
-                            <div class="py-1 px-3 rounded-lg" :class="['priority', getPriorityClass(task.priority)]">Tache</div>
+                            <div class="py-1 px-3 rounded-lg" :class="['priority', getPriorityClass(task.priority)]">
+                                Tache
+                            </div>
                             <Ellipsis />
                         </div>
                         <div class="flex flex-col pb-2">
@@ -116,7 +128,7 @@ import { VueDraggableNext } from 'vue-draggable-next';
 
 export default defineComponent({
     components: {
-        draggable:VueDraggableNext,
+        draggable: VueDraggableNext,
     },
     data() {
         return {
@@ -171,6 +183,7 @@ export default defineComponent({
                 this.userData = response.data;
             } catch (error) {
                 this.errorMessage = 'Erreur lors de la récupération des données utilisateur : ' + error.response.data.message;
+                console.log("unable to fetchUserData");
             }
         },
 
@@ -181,6 +194,7 @@ export default defineComponent({
                 console.log(this.userId)
             } catch (error) {
                 this.errorMessage = 'Erreur lors de la récupération des projets : ' + error.response.data.message;
+                console.log("unable to fetchProjects");
             }
         },
         showLateTaskList() {
@@ -216,7 +230,6 @@ export default defineComponent({
                     }
                 });
                 this.inProgressTasksCount = response.data.length;
-                console.log("<><><><><><><><>");
                 // console.log(this.inProgressTasksCount);
             } catch (error) {
                 console.error('Erreur lors de la récupération du nombre de tache en cours :', error);
@@ -231,7 +244,6 @@ export default defineComponent({
                     }
                 });
                 this.completedTasksCount = response.data.length;
-                console.log(">>>>>>>>>>>>>>>>>>>>>>>>");
 
                 // console.log(this.completedTasksCount);
             } catch (error) {
@@ -247,7 +259,6 @@ export default defineComponent({
                     }
                 });
                 this.taskCount = response.data;
-                console.log("<<<<<<<<<<<<<<<<<<<<<<<<");
                 // console.log(this.taskCount);
             } catch (error) {
                 console.error('Erreur lors de la récupération du nombre total de tâches :', error);
@@ -266,7 +277,6 @@ export default defineComponent({
                 });
                 this.pendingTasks = response.data;
                 console.log(this.pendingTasks);
-                console.log("............................");
 
             } catch (error) {
                 console.error('Erreur lors de la récupération des tâches en attente :', error);
@@ -282,7 +292,6 @@ export default defineComponent({
                 });
                 this.inProgressTasks = response.data;
                 console.log(this.inProgressTasks);
-                console.log("............................");
             } catch (error) {
                 console.error('Erreur lors de la récupération des tâches en cours :', error);
             }
@@ -297,18 +306,18 @@ export default defineComponent({
                 });
                 this.completedTasks = response.data;
                 console.log(this.completedTasks);
-                console.log("............................");
             } catch (error) {
                 console.error('Erreur lors de la récupération des tâches terminées :', error);
             }
         },
+
 
         getPriorityClass(priority) {
             switch (priority) {
                 case 'ELEVEE':
                     return 'bg-red-500';
                 case 'MOYENNE':
-                    return 'bg-blue-500';
+                    return 'bg-yellow-500';
                 case 'FAIBLE':
                     return 'bg-green-500';
                 default:
@@ -316,13 +325,53 @@ export default defineComponent({
             }
         },
 
-        //delete the log() in the code and this method before deploying 
-        log(event) {
-            console.log(event);
+        storeTaskId(taskid) {
+            localStorage.setItem('selectedTaskId', taskid);
+            console.log(`Task ID ${taskid} stored in local storage`);
         },
 
+        async onEnd(event) {
+            const movedItemId = localStorage.getItem('selectedTaskId');
+            console.log(`Retrieved Task ID from local storage: ${movedItemId}`);
 
-    }
+            // Log the event.to element to inspect its properties
+            console.log('event.to element:', event.to);
+
+            // Determine the new status based on the target list
+            let newStatus = '';
+            if (event.to.classList.contains('pendingTasks')) {
+                newStatus = 'EN_ATTENTE';
+            } else if (event.to.classList.contains('inProgressTasks')) {
+                newStatus = 'EN_COURS';
+            } else if (event.to.classList.contains('completedTasks')) {
+                newStatus = 'TERMINEE';
+            }
+
+            console.log(`Target list is ${newStatus}`);
+
+            try {
+                const token = localStorage.getItem('token');
+                await axios.patch(`${config.apiBaseUrl}/tasks/${movedItemId}/status`, {
+                    status: newStatus,
+                }, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                });
+                console.log(`Task ${movedItemId} updated to ${newStatus}`);
+            } catch (error) {
+                console.error('Error updating task status:', error);
+            }
+        }
+    },
+
+    //delete the log() in the code and this method before deploying 
+    log(event) {
+        console.log(event);
+    },
+
+
+
 });
 </script>
 
