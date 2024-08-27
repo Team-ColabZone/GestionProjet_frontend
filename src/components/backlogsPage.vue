@@ -17,7 +17,7 @@ import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs } from 'lucide-v
                 <!-- Card 1 -->
                 <div class="contex bg-blue-50 rounded-lg p-4 text-center">
                     <div class="nbre_icons flex justify-between items-center">
-                        <h1 class="text-4xl font-bold">02</h1>
+                        <h1 class="text-4xl font-bold">{{ pendingTasksCount }}</h1>
                         <ListVideo class="icon-lucide text-4xl" />
                     </div>
                     <h3 class="text-sm mt-2">Nombre de tache à faire</h3>
@@ -26,7 +26,7 @@ import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs } from 'lucide-v
                 <!-- Card 2 -->
                 <div class="contex bg-pink-100 rounded-lg p-4 text-center">
                     <div class="nbre_icons flex justify-between items-center">
-                        <h1 class="text-4xl font-bold">05</h1>
+                        <h1 class="text-4xl font-bold">{{ completedTasksCount }}</h1>
                         <ListCheck class="icon-lucide text-4xl" />
                     </div>
                     <h3 class="text-sm mt-2">Nombre de tache terminée</h3>
@@ -35,7 +35,7 @@ import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs } from 'lucide-v
                 <!-- Card 3 -->
                 <div class="contex bg-green-50 rounded-lg p-4 text-center">
                     <div class="nbre_icons flex justify-between items-center">
-                        <h1 class="text-4xl font-bold">03</h1>
+                        <h1 class="text-4xl font-bold">02</h1>
                         <ClockArrowDown class="icon-lucide text-4xl" />
                     </div>
                     <h3 class="text-sm mt-2">Nombre de tache en retard</h3>
@@ -44,7 +44,7 @@ import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs } from 'lucide-v
                 <!-- Card 4 -->
                 <div class="contex bg-blue-100 rounded-lg p-4 text-center">
                     <div class="nbre_icons flex justify-between items-center">
-                        <h1 class="text-4xl font-bold">12</h1>
+                        <h1 class="text-4xl font-bold">{{ taskCount }}</h1>
                         <Logs class="icon-lucide text-4xl" />
                     </div>
                     <h3 class="text-sm mt-2">Nombre de tache</h3>
@@ -122,12 +122,12 @@ import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs } from 'lucide-v
                         <div class="w-full">
                             <label for="Attribuer" class="block text-gray-700 text-sm font-bold mb-2">Attribuer
                                 a</label>
-                                <select v-model="userAssignId" 
-                                    class="block w-full px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-200 appearance-none">
-                                    <option v-for="member in projectMembers" :key="member.userMember.id">
-                                        {{ member.userMember.email }}</option>
-                                    
-                                </select>
+                            <select v-model="userAssignId"
+                                class="block w-full px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-200 appearance-none">
+                                <option v-for="member in projectMembers" :key="member.userId" :value="member.userId">
+                                    {{ member.userMember.email }}</option>
+
+                            </select>
                         </div>
 
                         <div class="w-full relative">
@@ -285,10 +285,10 @@ export default {
     mounted() {
         if (this.isConnected()) {
             this.userId = localStorage.getItem('userId');
+            this.projectId = localStorage.getItem('projectId');
             this.fetchUserData();
             this.fetchProjectMembers();
             this.fetchProjects();
-            this.projectId = localStorage.getItem('projectId');
             this.fetchPendingTasksCount();
             this.fetchInProgressTasksCount();
             this.fetchCompletedTasksCount();
@@ -433,9 +433,12 @@ export default {
                         'Authorization': `Bearer ${token}`
                     }
                 });
-                this.success = true;
-                this.successMessage = response.data.message;
-                console.log("Tache crée avec succes")
+
+                console.log("Tache crée avec succes ");
+                const taskId = response.data.id; // Récupérer l'ID de la tâche créée
+                console.log("Voici l'id de la tache crée");
+                console.log(taskId);
+                console.log(this.userAssignId);
                 // Réinitialiser les champs du formulaire
                 this.taskname = '';
                 this.description = '';
@@ -445,6 +448,21 @@ export default {
                 this.start_date = '';
                 this.end_date = '';
                 this.budget = '';
+                // Assigner la tâche au membre sélectionné
+                await axios.post(`${config.apiBaseUrl}/tasks-assignments`, {
+                    taskId: taskId,
+                    userId: this.userAssignId
+                    
+                }, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                this.success = true;
+                this.successMessage = response.data.message;
+                console.log("tache crée et affectée avec success ")
+                this.userAssignId= '';
             } catch (error) {
                 this.error = true;
                 this.errorMessage = error.response ? error.response.data.message : error.message;
