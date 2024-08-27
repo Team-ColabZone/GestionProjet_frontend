@@ -486,7 +486,7 @@ export default {
             showNotificationPage: false,
             currentPage: 'dashboard',
             selectedButton: 'button4',
-            teamMemberCount: 1,
+            // teamMemberCount: 0,
             taskCount: 0,
             pendingTasksCount: 0,
             inProgressTasksCount: 0,
@@ -538,7 +538,7 @@ export default {
             this.fetchUserData();
             this.fetchProjects();
             this.fetchEntreprises();
-            this.fetchTeamMemberCount();
+            // this.fetchTeamMemberCount();
             this.fetchPendingTasksCount();
             this.fetchInProgressTasksCount();
             this.fetchCompletedTasksCount();
@@ -784,21 +784,21 @@ export default {
             this.$router.push('/Home'); // Actualisation des données du dashboard
         },
 
-        async fetchTeamMemberCount() {
-            try {
-                const token = localStorage.getItem('token');
-                const response = await axios.get(`${config.apiBaseUrl}/team-members/${this.projectId}/team/count`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                this.teamMemberCount = response.data;
-                console.log(this.teamMemberCount);
-                console.log(this.projectId)
-            } catch (error) {
-                console.error('Erreur lors de la récupération du nombre de personnels :', error);
-            }
-        },
+        // async fetchTeamMemberCount() {
+        //     try {
+        //         const token = localStorage.getItem('token');
+        //         const response = await axios.get(`${config.apiBaseUrl}/team-members/${this.projectId}/team/count`, {
+        //             headers: {
+        //                 'Authorization': `Bearer ${token}`
+        //             }
+        //         });
+        //         this.teamMemberCount = response.data;
+        //         console.log(this.teamMemberCount);
+        //         console.log(this.projectId)
+        //     } catch (error) {
+        //         console.error('Erreur lors de la récupération du nombre de personnels :', error);
+        //     }
+        // },
         async fetchPendingTasksCount() {
             try {
                 const token = localStorage.getItem('token');

@@ -46,7 +46,7 @@ import { Users, Gauge, CircleGauge, ClockArrowDown, UserRoundCheck, Logs, Trendi
 
             <div class="stat-box bg-blue-50 rounded-xl p-3">
                 <div class="flex justify-between items-center">
-                    <h1 class="text-4xl">0{{ taskCount }}</h1>
+                    <h1 class="text-4xl">0{{  taskCount  }}</h1>
                     <Logs class="w-10 h-10" />
                 </div>
                 <h3 class="mt-2 text-black text-center">Nombre de tache</h3>
@@ -163,7 +163,7 @@ export default {
             showNotificationPage: false,
             currentPage: 'home',
             selectedButton: 'button4',
-            teamMemberCount: 1,
+            teamMemberCount: 0,
             taskCount: 0,
             pendingTasksCount: 0,
             inProgressTasksCount: 0,
@@ -235,8 +235,13 @@ export default {
 
         async fetchTeamMemberCount() {
             try {
-                const response = await axios.get(`${config.apiBaseUrl}/team-members/${this.projectId}/team/count`);
-                this.teamMemberCount = response.data;
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`${config.apiBaseUrl}/team-members/${this.projectId}/team/count`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                this.teamMemberCount = response.data.length;
                 console.log(this.teamMemberCount);
                 console.log(this.projectId)
             } catch (error) {
@@ -245,7 +250,12 @@ export default {
         },
         async fetchPendingTasksCount() {
             try {
-                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/pending`);
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/tasks/pending`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 this.pendingTasksCount = response.data.length;
                 console.log(this.pendingTasksCount);
             } catch (error) {
@@ -254,7 +264,12 @@ export default {
         },
         async fetchInProgressTasksCount() {
             try {
-                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/in-progress`);
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/tasks/in-progress`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 this.inProgressTasksCount = response.data.length;
                 console.log(this.inProgressTasksCount);
             } catch (error) {
@@ -263,7 +278,12 @@ export default {
         },
         async fetchCompletedTasksCount() {
             try {
-                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/completed`);
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/tasks/completed`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 this.completedTasksCount = response.data.length;
                 console.log(this.completedTasksCount);
             } catch (error) {
@@ -272,7 +292,12 @@ export default {
         },
         async fetchTotalTasksCount() {
             try {
-                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/tasks/count`);
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/tasks/count`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 this.taskCount = response.data;
                 console.log(this.taskCount);
             } catch (error) {
