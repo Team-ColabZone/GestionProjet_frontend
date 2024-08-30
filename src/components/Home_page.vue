@@ -37,66 +37,69 @@
 
                     <!-- Dashboard -->
                     <li class="w-full flex flex-col gap-2">
-                        <button class="flex justify-between items-center w-full rounded"
-                            :class="{ 'bg-gray-100 h-full w-full rounded-lg': currentPage === 'dashboard', }"
-                            @click="showPage('dashboard')">
-                            <div class=" w-4/5 md:w-4/5 ">
-                                <div v-if="firstProjectName" class="flex items-center gap-2 h-14 md:gap-4 pr-2">
-                                    <img :src="firstProjectLogo" alt="Logo" class="h-full border rounded-lg" />
-                                    <h3 class="text-black text-lg font-semibold py-1">
-                                        {{ firstProjectName }}
-                                    </h3>
+                        <div class="relative w-full">
+                            <button class="flex justify-between items-center w-full rounded"
+                                :class="{ 'bg-gray-100 h-full w-full rounded-lg': currentPage === 'dashboard', }"
+                                @click="showPage('dashboard')">
+                                <div class="w-4/5 md:w-4/5">
+                                    <div v-if="firstProjectName" class="flex items-center gap-2 h-14 md:gap-4 pr-2">
+                                        <img :src="firstProjectLogo" alt="Logo" class="h-full border rounded-lg" />
+                                        <h3 class="text-black text-lg font-semibold py-1">
+                                            {{ firstProjectName }}
+                                        </h3>
+                                    </div>
+                                    <div v-else class="flex items-center gap-1 py-1 px-2">
+                                        <Gauge class="h-7" />
+                                        <h3 class="text-black">
+                                            Dashboard
+                                        </h3>
+                                    </div>
                                 </div>
-                                <div v-else class="flex items-center gap-1 py-1 px-2">
-                                    <Gauge class="h-7" />
-                                    <h3 class="text-black">
-                                        Dashboard
-                                    </h3>
-                                </div>
-                            </div>
 
-                            <button @click="toggleProjectList" class="w-1/5 bg-transparent border-none cursor-pointer"
-                                :class="{ 'text-black': currentPage === 'dashboard', 'text-gray-500': currentPage !== 'dashboard', }">
-                                <ChevronUp :class="{
-                                    'chevron-down': !isProjectListVisible,
-                                    'chevron-up': isProjectListVisible,
-                                }" class="w-full h-4 transition-transform" />
+                                <button @click="toggleProjectList"
+                                    class="w-1/5 bg-transparent border-none cursor-pointer"
+                                    :class="{ 'text-black': currentPage === 'dashboard', 'text-gray-500': currentPage !== 'dashboard', }">
+                                    <ChevronUp :class="{
+                                        'chevron-down': !isProjectListVisible,
+                                        'chevron-up': isProjectListVisible,
+                                    }" class="w-full h-4 transition-transform" />
+                                </button>
                             </button>
-                        </button>
 
-                        <div :class="{
-                            block: isProjectListVisible,
-                            hidden: !isProjectListVisible,
-                        }" class="w-full flex flex-col gap-2 p-2 bg-white shadow-sm border border-gray-300 rounded-lg">
-                            <!-- Projects List -->
-                            <div class="h-40 w-full overflow-y-auto">
-                                <div v-for="project in projects" :key="project.id" @click="selectProject(project.id)"
-                                    :class="['flex items-center border-b border-gray-50 cursor-pointer rounded-lg', { 'bg-gray-300': selectedProjectId === project.id, 'bg-gray-100': selectedProjectId !== project.id }]">
-                                    <img :src="project.logo" alt="Project Logo" class="w-12 h-full rounded border">
-                                    <p class="text-left text-black text-ellipsis text-xs md:text-sm p-2">
-                                        <span class="font-medium">{{ project.projectname }}</span><br>
-                                        {{ project.description }}
-                                    </p>
+                            <div :class="{ block: isProjectListVisible, hidden: !isProjectListVisible }"
+                                class="absolute top-full left-0 w-full flex flex-col gap-2 p-2 bg-white shadow-sm border border-gray-300 rounded-lg z-10">
+                                <!-- Projects List -->
+                                <div class="h-40 w-full overflow-x-auto overflow-y-auto">
+                                    <div v-for="project in projects" :key="project.id"
+                                        @click="selectProject(project.id)"
+                                        :class="['flex items-center border-b border-gray-50 cursor-pointer rounded-lg pr-2', { 'bg-gray-300': selectedProjectId === project.id, 'bg-gray-100': selectedProjectId !== project.id }]">
+                                        <img :src="project.logo" alt="Project Logo" class="w-12 h-full rounded border">
+                                        <p class="text-left text-black text-ellipsis text-xs md:text-sm p-2">
+                                            <span class="font-medium">{{ project.projectname }}</span><br>
+                                            {{ project.description }}
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <!-- Action Buttons -->
-                            <div class="w-full pt-2 flex flex-col gap-2 border-t border-gray-200">
-                                <button
-                                    class="addProjectbtn flex justify-between items-center w-full bg-transparent border-none cursor-pointer text-xs"
-                                    @click="showModal1">
-                                    Créer un Projet
-                                    <SquarePlus class="w-4 h-4" />
-                                </button>
+                                <!-- Action Buttons -->
+                                <div class="w-full pt-2 flex flex-col gap-2 border-t border-gray-200">
+                                    <button
+                                        class="addProjectbtn flex justify-between items-center w-full bg-transparent border-none cursor-pointer text-xs"
+                                        @click="showModal1">
+                                        Créer un Projet
+                                        <SquarePlus class="w-4 h-4" />
+                                    </button>
 
-                                <button
-                                    class="addProjectbtn flex justify-between items-center w-full bg-transparent border-none cursor-pointer text-xs"
-                                    @click="ShowInvitation()">
-                                    Nouveau projet invité
-                                    <FolderGit2 class="w-4 h-4" />
-                                </button>
+                                    <button
+                                        class="addProjectbtn flex justify-between items-center w-full bg-transparent border-none cursor-pointer text-xs"
+                                        @click="ShowInvitation()">
+                                        Nouveau projet invité
+                                        <FolderGit2 class="w-4 h-4" />
+                                    </button>
+                                </div>
                             </div>
                         </div>
+
                     </li>
 
                     <!-- Backlogs -->
@@ -153,11 +156,11 @@
                         </button>
                     </li>
 
-                    <!-- Enterprise -->
+                    <!-- Entreprise -->
                     <li class="w-full">
                         <button class="flex justify-between items-center w-full rounded-lg" :class="{
-                            'bg-gray-100 py-1 px-2 rounded-lg': currentPage === 'enterprise',
-                        }" @click="showPage('enterprise')">
+                            'bg-gray-100 py-1 px-2 rounded-lg': currentPage === 'entreprise',
+                        }" @click="showPage('entreprise')">
                             <div class="flex w-4/5 md:w-3/5 items-center gap-1">
                                 <Building2 class="h4" />
                                 <h3 class="text-black">
@@ -165,8 +168,8 @@
                                 </h3>
                             </div>
                             <ArrowRight class="w-1/5 h-4" :class="{
-                                'text-black': currentPage === 'enterprise',
-                                'text-gray-500': currentPage !== 'enterprise',
+                                'text-black': currentPage === 'entreprise',
+                                'text-gray-500': currentPage !== 'entreprise',
                             }" />
                         </button>
                     </li>
@@ -187,8 +190,8 @@
                 <div class="page" v-if="currentPage === 'team'">
                     <teamMemberPage />
                 </div>
-                <div class="page" v-if="currentPage === 'enterprise'">
-                    <enterprisePage />
+                <div class="page" v-if="currentPage === 'entreprise'">
+                    <entreprisePage />
                 </div>
             </div>
         </main>
@@ -292,12 +295,12 @@
                 </div>
             </div>
 
-            <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50" v-if="modalEnterprise">
+            <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50" v-if="modalEntreprise">
                 <div
                     class="bg-white flex flex-col p-8 gap-5 rounded-lg shadow-lg animate__animated animate__fadeInDown w-full max-w-3xl">
                     <div class="flex justify-between">
                         <h1 class="text-center text-2xl font-bold mb-6">Ajouter une Entreprise</h1>
-                        <button @click="hideModalEnterprise">
+                        <button @click="hideModalEntreprise">
                             <X class="text-gray-600 text-2xl" />
                         </button>
                     </div>
@@ -336,7 +339,7 @@
 
                         <div class="w-full h-full md:w-1/2 pl-2">
                             <div class="relative mb-4 md:mt-6">
-                                <input type="file" id="logo" accept="image/*" @change="enterpriseImg"
+                                <input type="file" id="logo" accept="image/*" @change="entrepriseImg"
                                     class="absolute inset-0 opacity-0 cursor-pointer w-1/2 h-full" />
 
                                 <div
@@ -407,15 +410,15 @@
                         <div>
                             <div class="flex justify-between border-b border-gray-200 py-2 px-5">
                                 <span class=" font-medium">Entreprise</span>
-                                <button @click="toggleEnterpriseList"
+                                <button @click="toggleEntrepriseList"
                                     class="w-auto bg-transparent  border border-gray-200 cursor-pointer rounded-full ">
 
                                     <ChevronUp
-                                        :class="{ 'chevron-down': !isEnterprisesListVisible, 'chevron-up': isEnterprisesListVisible }"
+                                        :class="{ 'chevron-down': !isEntreprisesListVisible, 'chevron-up': isEntreprisesListVisible }"
                                         class=" w-full h-5 transition-transform" />
                                 </button>
                             </div>
-                            <div class="w-full h-40 flex flex-col overflow-y-auto" v-if="isEnterprisesListVisible">
+                            <div class="w-full h-40 flex flex-col overflow-y-auto" v-if="isEntreprisesListVisible">
 
                                 <div v-for="entreprise in entreprises" :key="entreprise.id"
                                     @click="selectEntreprise(entreprise.id)"
@@ -436,7 +439,7 @@
 
 
                         <button class="w-full flex gap-4 border-b border-gray-200 py-2 px-5 text-black font-medium"
-                            @click="addEnterprise">
+                            @click="addEntreprise">
                             <Plus class="h-6 border border-gray-200 rounded-full text-blue-500" />
                             <span>Ajouter une Entreprise</span>
                         </button>
@@ -459,7 +462,7 @@ import dashboardPage from './dashboardPage.vue';
 import backlogsPage from './backlogsPage.vue';
 import tasksPage from './tasksPage.vue';
 import teamMemberPage from './teamMemberPage.vue';
-import enterprisePage from "./EnterprisePage.vue";
+import entreprisePage from "./EntreprisePage.vue";
 import config from "../config";
 import axios from 'axios';
 
@@ -469,13 +472,13 @@ export default {
         backlogsPage,
         tasksPage,
         teamMemberPage,
-        enterprisePage,
+        entreprisePage,
     },
     data() {
         return {
             modalProject: false,
             modalIdentity: false,
-            modalEnterprise: false,
+            modalEntreprise: false,
             modalmembers: false,
             showMessagePage: false,
             showNotificationPage: false,
@@ -523,8 +526,8 @@ export default {
             filteredEmails: [],
             userData: {},
             loading: true,
-            isProjectListVisible: false,
-            isEnterprisesListVisible: false,
+            isProjectListVisible: true,
+            isEntreprisesListVisible: false,
             isNavOpen: false,
             isLgScreen: false,
         };
@@ -533,7 +536,7 @@ export default {
         if (this.isConnected()) {
             this.userId = localStorage.getItem('userId');
             this.projectId = localStorage.getItem('projectId');
-            this.enterpriseId = localStorage.getItem('entrepriseId');
+            this.entrepriseId = localStorage.getItem('entrepriseId');
             this.fetchUserData();
             this.fetchProjects();
             this.fetchEntreprises();
@@ -570,8 +573,8 @@ export default {
         hideModalProject() {
             this.modalProject = false;
         },
-        hideModalEnterprise() {
-            this.modalEnterprise = false;
+        hideModalEntreprise() {
+            this.modalEntreprise = false;
         },
 
         hideModalmembers() {
@@ -587,8 +590,8 @@ export default {
         showIdentity() {
             this.modalIdentity = true;
         },
-        addEnterprise() {
-            this.modalEnterprise = true;
+        addEntreprise() {
+            this.modalEntreprise = true;
             this.modalIdentity = false;
         },
         isConnected() {
@@ -611,6 +614,7 @@ export default {
                     start_date: new Date(this.start_date), // Conversion en objet Date
                     end_date: new Date(this.end_date), // Conversion en objet Date
                     budget: this.budget,
+                    entreprise: this.entreprise,
                     projectType: this.projectType,
                     projectPrivacyPolicy: this.projectPrivacyPolicy,
                     downloadUrlLink: this.downloadUrlLink,
@@ -714,7 +718,7 @@ export default {
                 this.success = true;
                 this.successMessage = response.data.message;
 
-                // Send the logo image if the enterprise creation is successful
+                // Send the logo image if the entreprise creation is successful
                 if (this.selectedImage) {
                     await this.uploadLogo(response.data.id);
                 }
@@ -727,17 +731,17 @@ export default {
             }
         },
 
-        async uploadLogo(enterpriseId) {
+        async uploadLogo(entrepriseId) {
             try {
                 const reader = new FileReader();
                 reader.onload = async (e) => {
                     const base64Image = e.target.result;
                     const token = localStorage.getItem('token');
                     console.log('Base64 Image:', base64Image); // Log the base64 image data
-                    await axios.post(`${config.apiBaseUrl}/enterprises/setEnterpriseLogo`, {
+                    await axios.post(`${config.apiBaseUrl}/entreprises/setEntrepriseLogo`, {
                         file: base64Image,
                         fileName: this.selectedImage.name,
-                        id: enterpriseId
+                        id: entrepriseId
                     }, {
                         headers: {
                             'Authorization': `Bearer ${token}`
@@ -751,7 +755,7 @@ export default {
 
         },
 
-        enterpriseImg(event) {
+        entrepriseImg(event) {
             const file = event.target.files[0];
             if (file) {
                 this.selectedImage = file;
@@ -768,7 +772,7 @@ export default {
             this.logoBase64 = ''; // Clear the logo field
             this.selectedImage = "";
             this.selectedImageURL = "";
-            this.hideModalEnterprise(); // Close the modal if applicable
+            this.hideModalEntreprise(); // Close the modal if applicable
         },
 
         async fetchUserData() {
@@ -814,9 +818,9 @@ export default {
         },
 
         setInitialProject() {
-            const noEnterpriseProjects = this.projects.filter(project => !project.enterpriseId);
-            if (noEnterpriseProjects.length > 0) {
-                this.setFirstProject(noEnterpriseProjects[0]);
+            const noEntrepriseProjects = this.projects.filter(project => !project.entrepriseId);
+            if (noEntrepriseProjects.length > 0) {
+                this.setFirstProject(noEntrepriseProjects[0]);
             } else {
                 this.firstProjectName = '';
                 this.firstProjectLogo = '';
@@ -834,9 +838,9 @@ export default {
 
         filterProjects() {
             if (this.selectedEntrepriseId) {
-                this.filteredProjects = this.projects.filter(project => project.enterpriseId === this.selectedEntrepriseId);
+                this.filteredProjects = this.projects.filter(project => project.entrepriseId === this.selectedEntrepriseId);
             } else {
-                this.filteredProjects = this.projects.filter(project => !project.enterpriseId);
+                this.filteredProjects = this.projects.filter(project => !project.entrepriseId);
             }
         },
 
@@ -854,8 +858,8 @@ export default {
             }
         },
 
-        toggleEnterpriseList() {
-            this.isEnterprisesListVisible = !this.isEnterprisesListVisible;
+        toggleEntrepriseList() {
+            this.isEntreprisesListVisible = !this.isEntreprisesListVisible;
         },
 
         async fetchEntreprises() {
@@ -867,19 +871,19 @@ export default {
                     }
                 });
                 this.entreprises = response.data;
-                this.isEnterprisesListVisible = this.entreprises.length > 0;
+                this.isEntreprisesListVisible = this.entreprises.length > 0;
                 console.log(this.userId);
-                console.log("this is the enterprise >>>>>>>>>>>>>>>>>>>>>>>>>.", response.data);
+                console.log("this is the entreprise >>>>>>>>>>>>>>>>>>>>>>>>>.", response.data);
             } catch (error) {
                 this.errorMessage = 'Erreur lors de la récupération des entreprises : ' + (error.response ? error.response.data.message : error.message);
             }
         },
 
-        selectEnterprise(enterpriseId) {
-            this.selectedEnterpriseId = enterpriseId;
-            const enterpriseProjects = this.projects.filter(project => project.enterpriseId === enterpriseId);
-            if (enterpriseProjects.length > 0) {
-                this.setFirstProject(enterpriseProjects[0]);
+        selectEntreprise(entrepriseId) {
+            this.selectedEntrepriseId = entrepriseId;
+            const entrepriseProjects = this.projects.filter(project => project.entrepriseId === entrepriseId);
+            if (entrepriseProjects.length > 0) {
+                this.setFirstProject(entrepriseProjects[0]);
             } else {
                 this.firstProjectName = '';
                 this.firstProjectLogo = '';

@@ -16,7 +16,7 @@ import dashboardPage from './components/dashboardPage.vue';
 import backlogsPage from './components/backlogsPage.vue';
 import tasksPage from './components/tasksPage.vue';
 import teamMemberPage from './components/teamMemberPage.vue';
-import EnterprisePage from "./components/EnterprisePage.vue";
+import EntreprisePage from "./components/EntreprisePage.vue";
 import ForgotpasswordPage from "./components/ForgotpasswordPage.vue";
 import UpdatePasswordPage from  "./components/UpdatePasswordPage.vue";
 import authSlides from "../src/components/includ/authSlides.vue";
@@ -34,7 +34,7 @@ const routes = [
     { path: '/backlogsPage', component: backlogsPage },
     { path: '/tasksPage', component: tasksPage },
     { path: '/teamMemberPage', component: teamMemberPage },
-    { path: '/enterprisePage', component: EnterprisePage },
+    { path: '/entreprisePage', component: EntreprisePage },
     { path: '/Forgotpassword', component: ForgotpasswordPage },
     { path: '/Updatepassword', component: UpdatePasswordPage },
   ]
