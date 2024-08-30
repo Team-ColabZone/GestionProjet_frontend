@@ -54,39 +54,42 @@ import { Users, List, Plus, Search, ChevronUp, Eye } from 'lucide-vue-next';
                     </button>
                 </div>
 
-                <div :class="{ block: isteamMemberListVisible, hidden: !isteamMemberListVisible,}" class="flex-grow" v-if="isteamMemberListVisible">
-                    <table class="min-w-full divide-y divide-gray-200 text-left">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Nom & Profil</th>
-                                <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Email </th>
-                                <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Contact </th>
-                                <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Role </th>
-                                <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Actions </th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            <tr v-for="member in projectMembers" :key="member.userId" class="hover:bg-gray-50">
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center space-x-2">
-
-                                        <img class=" border boreder-black  h-11 w-11  rounded-full mr-5 " src="../assets/images/logoflysoft.png" alt="logo Entreprise" />
-                                    <!--{{ member.userMember.avatar }}-->
-                                    {{ member.userMember.firstname }} {{ member.userMember.lastname }}
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ member.userMember.email }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ member.userMember.phonenumber }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ member.Role.nom }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <button type="button" class="text-black hover:text-green-900" @click="showMemberDetails()">
-                                        <Eye class=" w-full h-6" />
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-
+                <div :class="{ block: isteamMemberListVisible, hidden: !isteamMemberListVisible }" class="flex-grow"
+                    v-if="isteamMemberListVisible">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-gray-200 text-left">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Nom & Profil</th>
+                                    <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Email</th>
+                                    <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Contact</th>
+                                    <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Role</th>
+                                    <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-gray-200">
+                                <tr v-for="member in projectMembers" :key="member.userId" class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center space-x-2">
+                                            <img class="border border-black h-11 w-11 rounded-full mr-5"
+                                                src="../assets/images/logoflysoft.png" alt="logo Entreprise" />
+                                            <!--{{ member.userMember.avatar }}-->
+                                            {{ member.userMember.firstname }} {{ member.userMember.lastname }}
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ member.userMember.email }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ member.userMember.phonenumber }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ member.Role.nom }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <button type="button" class="text-black hover:text-green-900"
+                                            @click="showMemberDetails()">
+                                            <Eye class="w-full h-6" />
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -166,9 +169,8 @@ export default {
             filteredEmails: [],
             roles: [],
             userData: null,
-            isteamMemberListVisible: false,
+            isteamMemberListVisible: true,
             projectMembers: [],//tableau des membres du projet
-
         };
     },
     mounted() {
@@ -315,6 +317,7 @@ export default {
                 console.log("Erreur lors de l'ajout du membre")
             }
         },
+        
         async fetchProjectMembers() {
             console.log("Bonjour: Voici l'id du project seletionné");
             console.log(this.projectId)
@@ -333,7 +336,7 @@ export default {
             } catch (error) {
                 this.errorMessage = 'Erreur lors de la récupération des membres du projet : ' + (error.response ? error.response.data.message : error.message);
             }
-        },
+        }
 
 
     }

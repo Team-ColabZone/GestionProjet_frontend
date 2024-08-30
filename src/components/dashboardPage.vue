@@ -12,52 +12,52 @@ import { Users, Gauge, CircleGauge, ClockArrowDown, UserRoundCheck, Logs, Trendi
 
         <!-- Statistics Section -->
         <div class="flex flex-wrap justify-between gap-4 w-full">
-            <div class="stat-box bg-indigo-100 rounded-xl px-4 pb-0 pt-3">
-                <div class="flex justify-between items-center">
-                    <h1 class="text-4xl">{{ teamMemberCount }}</h1>
-                    <Users class="w-10 h-10" />
+            <div class="stat-box flex flex-col justify-between bg-indigo-100 rounded-xl p-3">
+                <div class="flex justify-between items-center gap-3 md:gap-5">
+                    <h1 class="text-3xl font-medium lg:text-5xl lg:pl-3">{{ teamMemberCount }}</h1>
+                    <Users class="w-10 h-10 font-thin md:h-10 md:w-12" />
                 </div>
-                <h3 class="mt-2 text-black text-center">Nombre de membre</h3>
+                <h3 class="text-xs mt-2">Nombre de membre</h3>
             </div>
 
-            <div class="stat-box bg-pink-100 rounded-xl p-3">
-                <div class="flex justify-between items-center">
-                    <h1 class="text-4xl">20%</h1>
+            <div class="stat-box flex flex-col justify-between bg-pink-100 rounded-xl p-3">
+                <div class="flex justify-between items-center gap-3 md:gap-5 ">
+                    <h1 class="text-3xl font-medium lg:text-5xl lg:pl-3">20%</h1>
                     <CircleGauge class="w-10 h-10" />
                 </div>
-                <h3 class="mt-2 text-black text-center">Pourcentage de réalisation</h3>
+                <h3 class="text-xs mt-2">Pourcentage de réalisation</h3>
             </div>
 
-            <div class="stat-box bg-green-100 rounded-xl p-3">
-                <div class="flex justify-between items-center">
-                    <h1 class="text-4xl">30j/t</h1>
-                    <ClockArrowDown class="w-10 h-10" />
+            <div class="stat-box flex flex-col justify-between bg-green-100 rounded-xl pl-2 py-3 lg:p-3">
+                <div class="flex justify-between items-center gap-3 md:gap-5 px-4">
+                    <h1 class="text-3xl font-medium lg:text-4xl lg:pl-3">30t/j</h1>
+                    <ClockArrowDown class="w-11 h-11" />
                 </div>
-                <h3 class="mt-2 text-black text-center">Taux de tache journaliere</h3>
+                <h3 class="text-xs mt-2">Taux de tache journaliere</h3>
             </div>
 
-            <div class="stat-box bg-pink-50 rounded-xl p-3">
-                <div class="flex justify-between items-center">
-                    <h1 class="text-4xl">01</h1>
+            <div class="stat-box flex flex-col justify-between bg-pink-50 rounded-xl  py-3 lg:p-3">
+                <div class="flex justify-between items-center gap-3 md:gap-5 px-2 lg:px-4">
+                    <h1 class="text-3xl font-medium lg:text-5xl lg:pl-3">01</h1>
                     <UserRoundCheck class="w-10 h-10" />
                 </div>
-                <h3 class="mt-2 text-black text-center">Nombre de membres performant</h3>
+                <h3 class="text-xs mt-2">Nombre de membres performant</h3>
             </div>
 
-            <div class="stat-box bg-blue-50 rounded-xl p-3">
-                <div class="flex justify-between items-center">
-                    <h1 class="text-4xl">0{{  taskCount  }}</h1>
+            <div class="stat-box flex flex-col justify-between bg-blue-50 rounded-xl p-3">
+                <div class="flex justify-between items-center gap-3 md:gap-5">
+                    <h1 class="text-3xl font-medium lg:text-5xl lg:pl-3">0{{  taskCount  }}</h1>
                     <Logs class="w-10 h-10" />
                 </div>
-                <h3 class="mt-2 text-black text-center">Nombre de tache</h3>
+                <h3 class="text-xs mt-2">Nombre de tache</h3>
             </div>
 
-            <div class="stat-box bg-lime-100 rounded-xl p-3">
-                <div class="flex justify-between items-center">
-                    <h1 class="text-4xl">30%</h1>
+            <div class="stat-box flex flex-col justify-between bg-lime-100 rounded-xl p-3">
+                <div class="flex justify-between items-center gap-3 md:gap-5">
+                    <h1 class="text-3xl font-medium lg:text-5xl lg:pl-3">30%</h1>
                     <TrendingUp class="w-10 h-10" />
                 </div>
-                <h3 class="mt-2 text-black text-center">Taux de reactivité</h3>
+                <h3 class="text-xs mt-2">Taux de reactivité</h3>
             </div>
         </div>
 
@@ -105,6 +105,7 @@ import { Users, Gauge, CircleGauge, ClockArrowDown, UserRoundCheck, Logs, Trendi
                         <ChevronUp />
                     </button>
                 </div>
+                <div></div>
             </div>
 
             <!-- Task Overview -->

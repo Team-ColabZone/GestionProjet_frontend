@@ -20,7 +20,6 @@
         </header>
 
         <main class="h-full flex flex-col lg:flex-row gap-1">
-            <!-- Hamburger Menu Button -->
             <button @click="toggleNav" class="lg:hidden p-4">
                 <!-- Icon for 3 bars -->
                 <AlignJustify class="w-6 h-6" />
@@ -37,13 +36,21 @@
                     <!-- Dashboard -->
                     <li class="w-full flex flex-col gap-2">
                         <button class="flex justify-between items-center w-full rounded"
-                            :class="{ 'bg-gray-100 py-1 px-2 rounded-lg': currentPage === 'dashboard', }"
+                            :class="{ 'bg-gray-100 h-full w-full rounded-lg': currentPage === 'dashboard', }"
                             @click="showPage('dashboard')">
-                            <div class="flex w-4/5 md:w-3/5 items-center gap-1">
-                                <Gauge class="h-7" />
-                                <h3 class="text-black">
-                                    Dashboard
-                                </h3>
+                            <div class=" w-4/5 md:w-4/5 ">
+                                <div v-if="firstProjectName" class="flex items-center gap-2 h-14 md:gap-4 pr-2">
+                                    <img :src="firstProjectLogo" alt="Logo" class="h-full border rounded-lg" />
+                                    <h3 class="text-black text-lg font-semibold py-1">
+                                        {{ firstProjectName }}
+                                    </h3>
+                                </div>
+                                <div v-else class="flex items-center gap-1 py-1 px-2">
+                                    <Gauge class="h-7" />
+                                    <h3 class="text-black">
+                                        Dashboard
+                                    </h3>
+                                </div>
                             </div>
 
                             <button @click="toggleProjectList" class="w-1/5 bg-transparent border-none cursor-pointer"
@@ -60,13 +67,15 @@
                             hidden: !isProjectListVisible,
                         }" class="w-full flex flex-col gap-2 p-2 bg-white shadow-sm border border-gray-300 rounded-lg">
                             <!-- Projects List -->
-                            <div v-for="project in projects" :key="project.id" @click="selectProject(project.id)"
-                                class="flex items-center border-b border-gray-300 cursor-pointer bg-gray-100 rounded-lg">
-                                <img src="" alt="#" class="w-12 h-full rounded border">
-                                <p class=" text-left text-black text-xs md:text-sm p-2">
-                                    <span class="font-medium">{{ project.projectname }}</span><br>
-                                    {{ project.description }}
-                                </p>
+                            <div class="h-40 w-full overflow-y-auto">
+                                <div v-for="project in projects" :key="project.id" @click="selectProject(project.id)"
+                                    :class="['flex items-center border-b border-gray-50 cursor-pointer rounded-lg', { 'bg-gray-300': selectedProjectId === project.id, 'bg-gray-100': selectedProjectId !== project.id }]">
+                                    <img :src="project.logo" alt="Project Logo" class="w-12 h-full rounded border">
+                                    <p class="text-left text-black text-ellipsis text-xs md:text-sm p-2">
+                                        <span class="font-medium">{{ project.projectname }}</span><br>
+                                        {{ project.description }}
+                                    </p>
+                                </div>
                             </div>
 
                             <!-- Action Buttons -->
@@ -77,13 +86,6 @@
                                     Créer un Projet
                                     <SquarePlus class="w-4 h-4" />
                                 </button>
-
-                                <!-- <button
-                                    class="addEntreprisebtn flex justify-between items-center w-full bg-transparent border-none cursor-pointer text-xs"
-                                    @click="addEnterprise">
-                                    Créer une Entreprise
-                                    <Building2 class="w-4 h-4" />
-                                </button> -->
 
                                 <button
                                     class="addProjectbtn flex justify-between items-center w-full bg-transparent border-none cursor-pointer text-xs"
@@ -240,26 +242,16 @@
 
                             <div class="mb-4">
                                 <label for="projectPrivacyPolicy"
-                                    class="block text-gray-700 text-sm font-bold mb-2">politique de confidentialite
+                                    class="block text-gray-700 text-sm font-bold mb-2">politique
+                                    de confidentialite
                                     :</label>
                                 <textarea id="projectPrivacyPolicy" v-model="projectPrivacyPolicy" cols="30" rows="3"
                                     class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300"></textarea>
                             </div>
                         </div>
-
                         <div class="w-full md:w-1/2 pl-2">
-                            <!-- <div class="mb-4">
-                                    <label for="image" class="block text-gray-700 text-sm font-bold mb-2">Project Logo
-                                        :</label>
-                                    <input type="file" id="image" accept="image/*" @change="onFileSelected"
-                                        class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300"
-                                        placeholder="Ajouter un logo">
-                                    <img v-if="selectedImage" :src="selectedImageURL" alt="Aperçu de l'image"
-                                        class="mt-2 rounded">
-                                </div> -->
-                                
-                                <div class="relative mb-4">
-                                <input type="file" id="logo" accept="image/*" @change="onFileSelected"
+                            <div class="relative mb-4">
+                                <input type="file" id="logo" accept="image/*" @change="projectImg"
                                     class="absolute inset-0 opacity-0 cursor-pointer w-1/2 h-full" />
 
                                 <div
@@ -299,8 +291,7 @@
             </div>
 
             <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50" v-if="modalEnterprise">
-                <div
-                    class="bg-white flex flex-col p-8 gap-5 rounded-lg shadow-lg animate__animated animate__fadeInDown w-full max-w-3xl">
+                <div class="bg-white flex flex-col p-8 gap-5 rounded-lg shadow-lg animate__animated animate__fadeInDown w-full max-w-3xl ">
                     <div class="flex justify-between">
                         <h1 class="text-center text-2xl font-bold mb-6">Ajouter une Entreprise</h1>
                         <button @click="hideModalEnterprise">
@@ -341,8 +332,8 @@
                         </div>
 
                         <div class="w-full h-full md:w-1/2 pl-2">
-                            <div class="relative mb-4">
-                                <input type="file" id="logo" accept="image/*" @change="onFileSelected"
+                            <div class="relative mb-4 md:mt-6">
+                                <input type="file" id="logo" accept="image/*" @change="enterpriseImg"
                                     class="absolute inset-0 opacity-0 cursor-pointer w-1/2 h-full" />
 
                                 <div
@@ -365,7 +356,7 @@
 
                         <div class="flex justify-end w-full ">
                             <button
-                                class="w-2/5 bg-black text-white p-3 rounded hover:bg-gray-600 focus:outline-none focus:ring focus:ring-blue-300"
+                                class="w-2/5 bg-black text-white p-3 rounded hover:bg-gray-600 focus:outline-none focus:ring focus:ring-gray-700"
                                 type="submit">
                                 Ajouter
                             </button>
@@ -374,7 +365,8 @@
                 </div>
             </div>
 
-            <div class="fixed inset-0 bg-black/50 flex items-start justify-end z-50 pt-12 pr-5" v-if="modalIdentity">
+            <div class="fixed inset-0 bg-black/50 flex items-start justify-end z-50 pt-12 px-2 md:pr-5"
+                v-if="modalIdentity">
                 <div
                     class="bg-white flex flex-col p-6 gap-5 rounded-lg shadow-lg animate__animated animate__fadeInDown w-full max-w-lg">
                     <div class="flex justify-between font-medium">
@@ -409,33 +401,35 @@
                     </div>
 
                     <div class="border border-gray-200 rounded-xl">
-                        <div class="flex justify-between border-b border-gray-200 py-2 px-5">
-                            <span class=" font-medium">Entreprise</span>
-                            <button @click="toggleEnterpriseList"
-                                class="w-auto bg-transparent  border border-gray-200 cursor-pointer rounded-full ">
+                        <div>
+                            <div class="flex justify-between border-b border-gray-200 py-2 px-5">
+                                <span class=" font-medium">Entreprise</span>
+                                <button @click="toggleEnterpriseList"
+                                    class="w-auto bg-transparent  border border-gray-200 cursor-pointer rounded-full ">
 
-                                <ChevronUp
-                                    :class="{ 'chevron-down': !isEnterprisesListVisible, 'chevron-up': isEnterprisesListVisible }"
-                                    class=" w-full h-5 transition-transform" />
-                            </button>
-                        </div>
+                                    <ChevronUp
+                                        :class="{ 'chevron-down': !isEnterprisesListVisible, 'chevron-up': isEnterprisesListVisible }"
+                                        class=" w-full h-5 transition-transform" />
+                                </button>
+                            </div>
+                            <div class="w-full h-40 flex flex-col overflow-y-auto" v-if="isEnterprisesListVisible">
 
-                        <div class="w-full flex flex-col" v-if="isEnterprisesListVisible">
-
-                            <div v-for="entreprise in entreprises" :key="entreprise.id" @click="selectEntreprise(entreprise.id)"
-                                class=" flex items-center border-b border-gray-200 py-1 px-2 gap-4">
-
-                                <div class="w-10 h-10">
-                                    <img class=" border boreder-black  rounded-full "
-                                        src="../assets/images/logoflysoft.png" alt="logo Entreprise" />
+                                <div v-for="entreprise in entreprises" :key="entreprise.id"
+                                    @click="selectEntreprise(entreprise.id)"
+                                    class="flex items-center border-b border-gray-200 py-1 px-2 gap-4 cursor-pointer">
+                                    <div class="w-10 h-10">
+                                        <img class="border w-10 h-10 border-black rounded-full" :src="entreprise.logo"
+                                            alt="logo Entreprise" />
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <span class="font-medium truncate">{{ entreprise.name }}</span>
+                                        <span class="text-xs">{{ entreprise.email }}</span>
+                                    </div>
                                 </div>
 
-                                <div class="flex flex-col ">
-                                    <span class="font-medium">{{ entreprise.name }}</span>
-                                    <span class="text-xs">{{ entreprise.email }}</span>
-                                </div>
                             </div>
                         </div>
+
 
 
                         <button class="w-full flex gap-4 border-b border-gray-200 py-2 px-5 text-black font-medium"
@@ -453,10 +447,8 @@
 
                 </div>
             </div>
-
         </div>
     </div>
-
 </template>
 
 <script>
@@ -480,7 +472,7 @@ export default {
         return {
             modalProject: false,
             modalIdentity: false,
-            modalEnterprise: false,
+            modalEnterprise: true,
             modalmembers: false,
             showMessagePage: false,
             showNotificationPage: false,
@@ -515,18 +507,21 @@ export default {
 
             // userData: {},
             userId: '',
-            projects: [
-            ], // Liste des projets
+            projects: [], // Liste des projets
+            firstProjectName: '',
+            firstProjectLogo: '',
             entreprises: [], // Liste des entreprises
             selectedProjectId: '', // ID du projet sélectionné
             projectId: '',
+            entrepriseId: '',
+            filteredProjects: [],
+            selectedEntrepriseId: null,
             roleId: '', // This should be fetched from the system
             filteredEmails: [],
             userData: {},
             loading: true,
             isProjectListVisible: false,
-            isEnterprisesListVisible: true,
-
+            isEnterprisesListVisible: false,
             isNavOpen: false,
             isLgScreen: false,
         };
@@ -535,6 +530,7 @@ export default {
         if (this.isConnected()) {
             this.userId = localStorage.getItem('userId');
             this.projectId = localStorage.getItem('projectId');
+            this.enterpriseId = localStorage.getItem('entrepriseId');
             this.fetchUserData();
             this.fetchProjects();
             this.fetchEntreprises();
@@ -550,7 +546,6 @@ export default {
 
         this.handleResize();
         window.addEventListener("resize", this.handleResize);
-
 
 
     },
@@ -625,15 +620,16 @@ export default {
                 this.success = true;
                 this.modalmembers = true;
                 this.successMessage = response.data.message;
+
+                console.log('Project creation response:', response.data);
+
+                //saves image if there were added
+                if (this.selectedImage) {
+                    await this.uploadImage(response.data.id);
+                }
+
                 // Réinitialiser les champs du formulaire
-                this.projectname = '';
-                this.description = '';
-                this.projectType = '';
-                this.projectPrivacyPolicy = '';
-                this.downloadUrlLink = '';
-                this.start_date = '';
-                this.end_date = '';
-                this.budget = '';
+                this.clearProjectFormField();
             } catch (error) {
                 this.error = true;
                 this.errorMessage = error.response ? error.response.data.message : error.message;
@@ -649,6 +645,52 @@ export default {
         selectEmail(email) {
             this.email = email;
             this.filteredEmails = [];
+        },
+
+        clearProjectFormField() {
+            this.projectname = '';
+            this.description = '';
+            this.projectType = '';
+            this.projectPrivacyPolicy = '';
+            this.downloadUrlLink = '';
+            this.start_date = '';
+            this.end_date = '';
+            this.budget = '';
+            this.logo = '';
+            this.selectedImage = "";
+            this.selectedImageURL = "";
+            this.hideModalProject();
+        },
+
+        async uploadImage(projectId) {
+            try {
+                const reader = new FileReader();
+                reader.onload = async (e) => {
+                    const base64Image = e.target.result;
+                    const token = localStorage.getItem('token');
+                    console.log('Base64 Image:', base64Image); // Log the base64 image data
+                    await axios.post(`${config.apiBaseUrl}/projects/setProjectLogo`, {
+                        file: base64Image,
+                        fileName: this.selectedImage.name,
+                        id: projectId
+                    }, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                };
+                reader.readAsDataURL(this.selectedImage);
+            } catch (error) {
+                console.error('Image upload failed:', error);
+            }
+        },
+
+        projectImg(event) {
+            const file = event.target.files[0];
+            if (file) {
+                this.selectedImage = file;
+                this.selectedImageURL = URL.createObjectURL(file);
+            }
         },
 
         async createNewEntreprise() {
@@ -670,11 +712,11 @@ export default {
                 this.successMessage = response.data.message;
 
                 // Send the logo image if the enterprise creation is successful
-                if (response.data.success && this.logoBase64) {
-                    await this.uploadLogo(response.data.email);
+                if (this.selectedImage) {
+                    await this.uploadLogo(response.data.id);
                 }
                 // Réinitialiser les champs du formulaire
-                this.clearFormFields();
+                this.clearEntrepriseFormFields();
                 console.log("Entreprise crée avec succes");
             } catch (error) {
                 this.error = true;
@@ -682,42 +724,47 @@ export default {
             }
         },
 
-        async uploadLogo(email) {
+        async uploadLogo(enterpriseId) {
             try {
-                const token = localStorage.getItem('token');
-                const logoResponse = await axios.post(`${config.apiBaseUrl}/uploadLogo`, {
-                    email: email,
-                    logo: this.logoBase64
-                }, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                console.log("Logo uploaded successfully:", logoResponse.data.message);
+                const reader = new FileReader();
+                reader.onload = async (e) => {
+                    const base64Image = e.target.result;
+                    const token = localStorage.getItem('token');
+                    console.log('Base64 Image:', base64Image); // Log the base64 image data
+                    await axios.post(`${config.apiBaseUrl}/enterprises/setEnterpriseLogo`, {
+                        file: base64Image,
+                        fileName: this.selectedImage.name,
+                        id: enterpriseId
+                    }, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                };
+                reader.readAsDataURL(this.selectedImage);
             } catch (error) {
-                console.error("Error uploading logo:", error.response ? error.response.data.message : error.message);
+                console.error('Image upload failed:', error);
             }
+
         },
 
-        onFileSelected(event) {
+        enterpriseImg(event) {
             const file = event.target.files[0];
             if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    this.selectedImageURL = e.target.result;
-                    this.encodedLogo = e.target.result.split(',')[1];
-                };
-                reader.readAsDataURL(file);
+                this.selectedImage = file;
+                this.selectedImageURL = URL.createObjectURL(file);
             }
         },
 
-        clearFormFields() {
+        clearEntrepriseFormFields() {
             this.name = '';
             this.description = '';
             this.email = '';
             this.phoneNumber = '';
             this.pobox = '';
             this.logoBase64 = ''; // Clear the logo field
+            this.selectedImage = "";
+            this.selectedImageURL = "";
             this.hideModalEnterprise(); // Close the modal if applicable
         },
 
@@ -740,14 +787,20 @@ export default {
 
         async fetchProjects() {
             try {
-                const token = localStorage.getItem('token'); // ou une autre méthode pour récupérer le token
+                const token = localStorage.getItem('token'); // or another method to retrieve the token
                 const response = await axios.get(`${config.apiBaseUrl}/projects/user/${this.userId}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
                 });
                 this.projects = response.data;
-                // console.log(this.userId);
+                const savedProject = JSON.parse(localStorage.getItem('currentProject'));
+                if (savedProject) {
+                    this.setFirstProject(savedProject);
+                } else if (this.projects.length > 0) {
+                    this.setFirstProject(this.projects[0]);
+                }
+                console.log("project data collected >>>>>>>>>>>>>>>>>>>>>>>>> ", response.data);
             } catch (error) {
                 this.errorMessage = 'Erreur lors de la récupération des projets : ' + (error.response ? error.response.data.message : error.message);
             }
@@ -757,48 +810,80 @@ export default {
             this.isProjectListVisible = !this.isProjectListVisible;
         },
 
+        setInitialProject() {
+            const noEnterpriseProjects = this.projects.filter(project => !project.enterpriseId);
+            if (noEnterpriseProjects.length > 0) {
+                this.setFirstProject(noEnterpriseProjects[0]);
+            } else {
+                this.firstProjectName = '';
+                this.firstProjectLogo = '';
+            }
+            this.filterProjects();
+
+        },
+
+        setFirstProject(project) {
+            this.firstProjectName = project.projectname;
+            this.firstProjectLogo = project.logo; // Assuming the project object has a 'logo' property
+            this.projects = this.projects.filter(p => p.id !== project.id);
+            localStorage.setItem('currentProject', JSON.stringify(project));
+        },
+
+        filterProjects() {
+            if (this.selectedEntrepriseId) {
+                this.filteredProjects = this.projects.filter(project => project.enterpriseId === this.selectedEntrepriseId);
+            } else {
+                this.filteredProjects = this.projects.filter(project => !project.enterpriseId);
+            }
+        },
+
+        selectProject(projectId) {
+            const selectedProject = this.projects.find(p => p.id === projectId);
+            if (selectedProject) {
+                this.projects.push({
+                    id: this.selectedProjectId,
+                    projectname: this.firstProjectName,
+                    logo: this.firstProjectLogo
+                });
+                this.setFirstProject(selectedProject);
+                this.selectedProjectId = projectId;
+                localStorage.setItem('projectId', projectId);
+            }
+        },
+
         toggleEnterpriseList() {
             this.isEnterprisesListVisible = !this.isEnterprisesListVisible;
         },
 
         async fetchEntreprises() {
             try {
-                const token = localStorage.getItem('token'); // ou une autre méthode pour récupérer le token
+                const token = localStorage.getItem('token'); // or another method to retrieve the token
                 const response = await axios.get(`${config.apiBaseUrl}/entreprises/user/${this.userId}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
                 });
                 this.entreprises = response.data;
+                this.isEnterprisesListVisible = this.entreprises.length > 0;
                 console.log(this.userId);
+                console.log("this is the enterprise >>>>>>>>>>>>>>>>>>>>>>>>>.", response.data);
             } catch (error) {
                 this.errorMessage = 'Erreur lors de la récupération des entreprises : ' + (error.response ? error.response.data.message : error.message);
             }
         },
 
-        selectProject(projectId) {
-            this.selectedProjectId = projectId;
-            localStorage.setItem('projectId', projectId); // Stocker l'ID du projet dans le localStorage
-            console.log("Bonjour");
-            console.log(this.projectId)
-            this.$router.push('/Home'); // Actualisation des données du dashboard
+        selectEnterprise(enterpriseId) {
+            this.selectedEnterpriseId = enterpriseId;
+            const enterpriseProjects = this.projects.filter(project => project.enterpriseId === enterpriseId);
+            if (enterpriseProjects.length > 0) {
+                this.setFirstProject(enterpriseProjects[0]);
+            } else {
+                this.firstProjectName = '';
+                this.firstProjectLogo = '';
+            }
+            this.filterProjects();
         },
 
-        // async fetchTeamMemberCount() {
-        //     try {
-        //         const token = localStorage.getItem('token');
-        //         const response = await axios.get(`${config.apiBaseUrl}/team-members/${this.projectId}/team/count`, {
-        //             headers: {
-        //                 'Authorization': `Bearer ${token}`
-        //             }
-        //         });
-        //         this.teamMemberCount = response.data;
-        //         console.log(this.teamMemberCount);
-        //         console.log(this.projectId)
-        //     } catch (error) {
-        //         console.error('Erreur lors de la récupération du nombre de personnels :', error);
-        //     }
-        // },
         async fetchPendingTasksCount() {
             try {
                 const token = localStorage.getItem('token');
@@ -858,15 +943,17 @@ export default {
         async logout() {
             try {
                 // const token = localStorage.getItem('token');
-                // await axios.post(`${config.apiBaseUrl}/logout`, {}, {
-                //     headers: {
-                //         'Authorization': `Bearer ${token}`
-                //     }
-                // });
-                localStorage.removeItem('token');
-                this.$router.push('/auth'); // Redirect to login page after logout
+                // if (token) {
+                //     await axios.post(`${config.apiBaseUrl}/logout`, {}, {
+                //         headers: {
+                //             'Authorization': `Bearer ${token}`
+                //         }
+                //     });
+                // }
+                localStorage.clear();
+                this.$router.push('/auth'); // Redirect to login page
             } catch (error) {
-                this.errorMessage = 'Erreur lors de la déconnexion : ' + error.response.data.message;
+                console.error('Error logging out:', error);
             }
         }
     }

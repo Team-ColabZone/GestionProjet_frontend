@@ -13,39 +13,39 @@ import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs } from 'lucide-v
 
         <!-- Stat Cards Section -->
         <div class="cont">
-            <div class="s_menu grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="flex flex-wrap justify-between gap-4 w-full">
                 <!-- Card 1 -->
                 <div class="contex bg-blue-50 rounded-lg p-4 text-center">
-                    <div class="nbre_icons flex justify-between items-center">
-                        <h1 class="text-4xl font-bold">{{ pendingTasksCount }}</h1>
-                        <ListVideo class="icon-lucide text-4xl" />
+                    <div class="nbre_icons flex justify-center items-center gap-3 md:gap-5">
+                        <span class="text-4xl font-medium lg:text-6xl">{{ pendingTasksCount }}</span>
+                        <ListVideo class=" w-10 h-9 md:h-10 md:w-12"  />
                     </div>
                     <h3 class="text-sm mt-2">Nombre de tache à faire</h3>
                 </div>
 
                 <!-- Card 2 -->
                 <div class="contex bg-pink-100 rounded-lg p-4 text-center">
-                    <div class="nbre_icons flex justify-between items-center">
-                        <h1 class="text-4xl font-bold">{{ completedTasksCount }}</h1>
-                        <ListCheck class="icon-lucide text-4xl" />
+                    <div class="nbre_icons flex justify-center items-center gap-3 md:gap-5">
+                        <span class="text-4xl font-medium lg:text-6xl">{{ completedTasksCount }}</span>
+                        <ListCheck class=" w-10 h-9 md:h-10 md:w-12" />
                     </div>
                     <h3 class="text-sm mt-2">Nombre de tache terminée</h3>
                 </div>
 
                 <!-- Card 3 -->
                 <div class="contex bg-green-50 rounded-lg p-4 text-center">
-                    <div class="nbre_icons flex justify-between items-center">
-                        <h1 class="text-4xl font-bold">02</h1>
-                        <ClockArrowDown class="icon-lucide text-4xl" />
+                    <div class="nbre_icons flex justify-center items-center gap-3 md:gap-5">
+                        <span class="text-4xl font-medium lg:text-6xl">02</span>
+                        <ClockArrowDown class=" w-10 h-9 md:h-10 md:w-12"  />
                     </div>
                     <h3 class="text-sm mt-2">Nombre de tache en retard</h3>
                 </div>
 
                 <!-- Card 4 -->
                 <div class="contex bg-blue-100 rounded-lg p-4 text-center">
-                    <div class="nbre_icons flex justify-between items-center">
-                        <h1 class="text-4xl font-bold">{{ taskCount }}</h1>
-                        <Logs class="icon-lucide text-4xl" />
+                    <div class="nbre_icons flex justify-center items-center gap-3 md:gap-5">
+                        <span class="text-4xl font-medium lg:text-6xl">{{ taskCount }}</span>
+                        <Logs class=" w-10 h-9 md:h-10 md:w-12" />
                     </div>
                     <h3 class="text-sm mt-2">Nombre de tache</h3>
                 </div>
@@ -69,7 +69,7 @@ import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs } from 'lucide-v
         </div>
 
         <!-- Task List Section -->
-        <div class="body-milieu mt-8 flex-grow flex">
+        <div class="mt-8 flex-grow flex">
             <div class="tache-late border border-gray-300 rounded-lg p-4 w-full flex flex-col">
                 <div class="title-div1 flex justify-between items-center border-b border-gray-300 pb-2 mb-4">
                     <div class="flex items-center">
@@ -140,7 +140,6 @@ import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs } from 'lucide-v
 
                                     <option value="EN_ATTENTE">En Attente</option>
                                     <option value="EN_COURS">En Cours</option>
-                                    <option value="TERMINEE">Terminée</option>
                                 </select>
                             </div>
 
@@ -270,7 +269,7 @@ export default {
 
             isDropdown1Open: false,
             selectedStatus: 'Select Status',
-            statuses: ['EN_ATTENTE', 'EN_COURS', 'TERMINEE'],
+            statuses: ['EN_ATTENTE', 'EN_COURS'],
 
             selectedPriority: '',
             priorities: ['ELEVEE', 'MOYENNE', 'FAIBLE'],
