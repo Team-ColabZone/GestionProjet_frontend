@@ -22,7 +22,7 @@ import { Users, Gauge, CircleGauge, ClockArrowDown, UserRoundCheck, Logs, Trendi
 
             <div class="stat-box bg-pink-100 rounded-xl p-3">
                 <div class="flex justify-between items-center">
-                    <h1 class="text-4xl">20%</h1>
+                    <h1 class="text-4xl">{{ (completedTasksCount / taskCount * 100).toFixed(2) }}%</h1>
                     <CircleGauge class="w-10 h-10" />
                 </div>
                 <h3 class="mt-2 text-black text-center">Pourcentage de réalisation</h3>
@@ -46,7 +46,7 @@ import { Users, Gauge, CircleGauge, ClockArrowDown, UserRoundCheck, Logs, Trendi
 
             <div class="stat-box bg-blue-50 rounded-xl p-3">
                 <div class="flex justify-between items-center">
-                    <h1 class="text-4xl">0{{  taskCount  }}</h1>
+                    <h1 class="text-4xl">0{{ taskCount }}</h1>
                     <Logs class="w-10 h-10" />
                 </div>
                 <h3 class="mt-2 text-black text-center">Nombre de tache</h3>
@@ -54,7 +54,7 @@ import { Users, Gauge, CircleGauge, ClockArrowDown, UserRoundCheck, Logs, Trendi
 
             <div class="stat-box bg-lime-100 rounded-xl p-3">
                 <div class="flex justify-between items-center">
-                    <h1 class="text-4xl">30%</h1>
+                    <h1 class="text-4xl">20%</h1>
                     <TrendingUp class="w-10 h-10" />
                 </div>
                 <h3 class="mt-2 text-black text-center">Taux de reactivité</h3>
@@ -182,13 +182,14 @@ export default {
     mounted() {
         if (this.isConnected()) {
             this.userId = localStorage.getItem('userId');
+            this.projectId = localStorage.getItem('projectId');
             this.fetchUserData();
         } else {
             this.errorMessage = 'Utilisateur non connecté';
             this.$router.push('/auth'); // Rediriger vers la page de connexion
         }
         this.fetchProjects();
-        this.projectId = localStorage.getItem('projectId');
+
         this.fetchTeamMemberCount();
         this.fetchPendingTasksCount();
         this.fetchInProgressTasksCount();
@@ -217,11 +218,16 @@ export default {
 
         async fetchProjects() {
             try {
-                const response = await axios.get(`${config.apiBaseUrl}/projects/user/:userId`);
+                const token = localStorage.getItem('token'); // ou une autre méthode pour récupérer le token
+                const response = await axios.get(`${config.apiBaseUrl}/projects/user/${this.userId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 this.projects = response.data;
-                console.log(this.userId)
+                // console.log(this.userId);
             } catch (error) {
-                this.errorMessage = 'Erreur lors de la récupération des projets : ' + error.response.data.message;
+                this.errorMessage = 'Erreur lors de la récupération des projets : ' + (error.response ? error.response.data.message : error.message);
             }
         },
         toggleProjectList() {

@@ -35,7 +35,7 @@ import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs } from 'lucide-v
                 <!-- Card 3 -->
                 <div class="contex bg-green-50 rounded-lg p-4 text-center">
                     <div class="nbre_icons flex justify-between items-center">
-                        <h1 class="text-4xl font-bold">02</h1>
+                        <h1 class="text-4xl font-bold">{{ tasklateCount }}</h1>
                         <ClockArrowDown class="icon-lucide text-4xl" />
                     </div>
                     <h3 class="text-sm mt-2">Nombre de tache en retard</h3>
@@ -293,6 +293,7 @@ export default {
             this.fetchInProgressTasksCount();
             this.fetchCompletedTasksCount();
             this.fetchTotalTasksCount();
+            this.fetchTasksLateCount();
         } else {
             this.errorMessage = 'Utilisateur non connecté';
             this.$router.push('/auth'); // Rediriger vers la page de connexion
@@ -504,6 +505,22 @@ export default {
                 this.errorMessage = 'Erreur lors de la récupération des membres du projet : ' + (error.response ? error.response.data.message : error.message);
             }
         },
+        async fetchTasksLateCount() {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/allTasksLate/${this.projectId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                this.tasklateCount = response.data.length;
+                console.log("Voici le nombre de tache en retard:")
+                console.log(this.tasklateCount);
+            } catch (error) {
+                console.error('Erreur lors de la récupération du nombre de taches en retard :', error);
+            }
+        },
+
 
     }
 };
