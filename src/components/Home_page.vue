@@ -20,13 +20,15 @@
         </header>
 
         <main class="h-full flex flex-col lg:flex-row gap-1">
+            <!-- Hamburger Menu Button -->
             <button @click="toggleNav" class="lg:hidden p-4">
                 <!-- Icon for 3 bars -->
                 <AlignJustify class="w-6 h-6" />
             </button>
 
             <!-- Sidebar Navigation -->
-            <nav :class="{ 'fixed inset-0 bg-white z-50 flex flex-col items-start p-4 transform translate-x-0': isNavOpen, 'hidden': !isNavOpen && !isLgScreen, 'absolute w-full lg:w-1/6 bg-white shadow-lg h-auto lg:h-full lg:block lg:relative': isLgScreen, }">
+            <nav
+                :class="{ 'fixed inset-0 bg-white z-50 flex flex-col items-start p-4 transform translate-x-0': isNavOpen, 'hidden': !isNavOpen && !isLgScreen, 'absolute w-full lg:w-1/6 bg-white shadow-lg h-auto lg:h-full lg:block lg:relative': isLgScreen, }">
                 <ul class="w-full p-3 flex flex-col h-full gap-5">
                     <!-- Close Button for the Nav (Visible on small screens) -->
                     <button @click="toggleNav" class="self-end lg:hidden text-gray-600 text-2xl">
@@ -291,7 +293,8 @@
             </div>
 
             <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50" v-if="modalEnterprise">
-                <div class="bg-white flex flex-col p-8 gap-5 rounded-lg shadow-lg animate__animated animate__fadeInDown w-full max-w-3xl ">
+                <div
+                    class="bg-white flex flex-col p-8 gap-5 rounded-lg shadow-lg animate__animated animate__fadeInDown w-full max-w-3xl">
                     <div class="flex justify-between">
                         <h1 class="text-center text-2xl font-bold mb-6">Ajouter une Entreprise</h1>
                         <button @click="hideModalEnterprise">
@@ -472,7 +475,7 @@ export default {
         return {
             modalProject: false,
             modalIdentity: false,
-            modalEnterprise: true,
+            modalEnterprise: false,
             modalmembers: false,
             showMessagePage: false,
             showNotificationPage: false,

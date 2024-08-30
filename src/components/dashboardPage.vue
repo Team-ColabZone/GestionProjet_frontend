@@ -30,7 +30,7 @@ import { Users, Gauge, CircleGauge, ClockArrowDown, UserRoundCheck, Logs, Trendi
 
             <div class="stat-box flex flex-col justify-between bg-green-100 rounded-xl pl-2 py-3 lg:p-3">
                 <div class="flex justify-between items-center gap-3 md:gap-5 px-4">
-                    <h1 class="text-3xl font-medium lg:text-4xl lg:pl-3">30t/j</h1>
+                    <h1 id="taskRate" class="text-3xl font-medium lg:text-5xl lg:pl-3">{{ taskRate }}t/j</h1>
                     <ClockArrowDown class="w-11 h-11" />
                 </div>
                 <h3 class="text-xs mt-2">Taux de tache journaliere</h3>
@@ -46,7 +46,7 @@ import { Users, Gauge, CircleGauge, ClockArrowDown, UserRoundCheck, Logs, Trendi
 
             <div class="stat-box flex flex-col justify-between bg-blue-50 rounded-xl p-3">
                 <div class="flex justify-between items-center gap-3 md:gap-5">
-                    <h1 class="text-3xl font-medium lg:text-5xl lg:pl-3">0{{  taskCount  }}</h1>
+                    <h1 class="text-3xl font-medium lg:text-5xl lg:pl-3">0{{ taskCount }}</h1>
                     <Logs class="w-10 h-10" />
                 </div>
                 <h3 class="text-xs mt-2">Nombre de tache</h3>
@@ -169,6 +169,7 @@ export default {
             pendingTasksCount: 0,
             inProgressTasksCount: 0,
             completedTasksCount: 0,
+            taskRate: 0,
             projects: [
                 { id: 1, projectname: 'Projet A', description: 'Description du Projet A' },
                 { id: 2, projectname: 'Projet B', description: 'Description du Projet B' },
@@ -195,6 +196,7 @@ export default {
         this.fetchInProgressTasksCount();
         this.fetchCompletedTasksCount();
         this.fetchTotalTasksCount();
+        this.fetchTaskRate();
     },
     methods: {
         isConnected() {
@@ -232,6 +234,18 @@ export default {
             this.selectedProjectId = projectId;
             localStorage.setItem('projectId', projectId); // Stocker l'ID du projet dans le localStorage
             this.$router.push('/accueilPage'); // Rediriger vers la page des détails du projet
+        },
+        async fetchTaskRate() {
+            try {
+                const response = await fetch(`http://localhost:3001/tasks/tauxTasksDay/${this.projectId}`);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                this.taskRate = data.taskRate; // Adjust based on the actual structure of your response
+            } catch (error) {
+                console.error('Error fetching task rate:', error);
+            }
         },
 
         async fetchTeamMemberCount() {
