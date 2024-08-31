@@ -20,13 +20,13 @@ import { ListTodo, Search, Filter } from 'lucide-vue-next';
                 </div>
                 <div class=" ml-4">
                     <input type="submit" value="Rechercher"
-                        class=" bg-black text-white font-bold py-2 px-6 rounded-lg cursor-pointer hover:bg-blue-700" />
+                        class=" bg-black text-white font-bold py-2 px-6 rounded-lg cursor-pointer hover:bg-gray-700" />
                 </div>
             </form>
 
             <div class="filter mt-4 sm:mt-0 sm:ml-4">
                 <button
-                    class="filterchbtn flex items-center justify-center w-full sm:w-auto bg-black text-white font-bold py-2 px-4 rounded-lg cursor-pointer hover:bg-blue-700"
+                    class="filterchbtn flex items-center justify-center w-full sm:w-auto bg-black text-white font-bold py-2 px-4 rounded-lg cursor-pointer hover:bg-gray-700"
                     @click="showFilter()">
                     <Filter class="mr-2 w-6 h-6" />
                     <p>Voir les filtres</p>
@@ -35,7 +35,7 @@ import { ListTodo, Search, Filter } from 'lucide-vue-next';
         </div>
 
         <div class=" grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 mt-2">
-            <div class="flex flex-col gap-2">
+            <div class="h-full flex flex-col gap-2">
                 <div class="flex items-center">
                     <div class="w-6 h-6 rounded-full bg-orange-200"></div>
                     <p class="font-bold text-sm px-2">EN ATTENTE</p>
@@ -44,7 +44,7 @@ import { ListTodo, Search, Filter } from 'lucide-vue-next';
                     </div>
                 </div>
 
-                <draggable class="flex flex-col gap-2 border border-gray-300 rounded-lg px-4 py-10 pendingTasks"
+                <draggable class="h-80 overflow-y-auto flex flex-col gap-2 border border-gray-300 rounded-lg px-4 py-10 pendingTasks"
                     group="tasks" :list="pendingTasks" @change="log" @end="onEnd">
                     <div class="flex flex-col border border-gray-300 py-2 px-3" v-for="task in pendingTasks"
                         :key="task.id" @click="storeTaskId(task.id)">
@@ -57,6 +57,7 @@ import { ListTodo, Search, Filter } from 'lucide-vue-next';
                         <div class="flex flex-col pb-2">
                             <span class="font-medium">{{ task.taskname }}</span>
                             <span>{{ task.description }}</span>
+                            <span>Budget: {{task.budget}}Frs</span>
                         </div>
                     </div>
                 </draggable>
@@ -71,7 +72,7 @@ import { ListTodo, Search, Filter } from 'lucide-vue-next';
                     </div>
                 </div>
 
-                <draggable class="flex flex-col gap-2 border border-gray-300 rounded-lg px-4 py-10 inProgressTasks"
+                <draggable class="h-80 overflow-y-auto flex flex-col gap-2 border border-gray-300 rounded-lg px-4 py-10 inProgressTasks"
                     group="tasks" :list="inProgressTasks" @change="log" @end="onEnd">
                     <div class="flex flex-col border border-gray-300 py-2 px-3" v-for="task in inProgressTasks"
                         :key="task.id" @click="storeTaskId(task.id)">
@@ -84,6 +85,7 @@ import { ListTodo, Search, Filter } from 'lucide-vue-next';
                         <div class="flex flex-col pb-2">
                             <span class="font-medium">{{ task.taskname }}</span>
                             <span>{{ task.description }}</span>
+                            <span>Budget: {{task.budget}}Frs</span>
                         </div>
                     </div>
                 </draggable>
@@ -99,7 +101,7 @@ import { ListTodo, Search, Filter } from 'lucide-vue-next';
                     </div>
                 </div>
 
-                <draggable class="flex flex-col gap-2 border border-gray-300 rounded-lg px-4 py-10 completedTasks"
+                <draggable class="h-80 overflow-y-auto flex flex-col gap-2 border border-gray-300 rounded-lg px-4 py-10 completedTasks"
                     group="tasks" :list="completedTasks" @change="log" @end="onEnd">
                     <div class="border border-gray-300 py-2 px-3" v-for="task in completedTasks" :key="task.id"
                         @click="storeTaskId(task.id)">
@@ -112,6 +114,7 @@ import { ListTodo, Search, Filter } from 'lucide-vue-next';
                         <div class="flex flex-col pb-2">
                             <span class="font-medium">{{ task.taskname }}</span>
                             <span>{{ task.description }}</span>
+                            <span>Budget: {{task.budget}}Frs</span>
                         </div>
                     </div>
                 </draggable>
@@ -157,7 +160,6 @@ export default defineComponent({
             this.$router.push('/auth'); // Rediriger vers la page de connexion
         }
         this.fetchProjects();
-        this.projectId = localStorage.getItem('projectId');
         this.fetchPendingTasksCount();
         this.fetchInProgressTasksCount();
         this.fetchCompletedTasksCount();
@@ -332,10 +334,10 @@ export default defineComponent({
 
         async onEnd(event) {
             const movedItemId = localStorage.getItem('selectedTaskId');
-            console.log(`Retrieved Task ID from local storage: ${movedItemId}`);
+            // console.log(`Retrieved Task ID from local storage: ${movedItemId}`);
 
             // Log the event.to element to inspect its properties
-            console.log('event.to element:', event.to);
+            // console.log('event.to element:', event.to);
 
             // Determine the new status based on the target list
             let newStatus = '';
@@ -347,7 +349,7 @@ export default defineComponent({
                 newStatus = 'TERMINEE';
             }
 
-            console.log(`Target list is ${newStatus}`);
+            // console.log(`Target list is ${newStatus}`);
 
             try {
                 const token = localStorage.getItem('token');
@@ -358,7 +360,7 @@ export default defineComponent({
                         'Authorization': `Bearer ${token}`,
                     },
                 });
-                console.log(`Task ${movedItemId} updated to ${newStatus}`);
+                // console.log(`Task ${movedItemId} updated to ${newStatus}`);
             } catch (error) {
                 console.error('Error updating task status:', error);
             }

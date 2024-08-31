@@ -13,21 +13,21 @@ import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs } from 'lucide-v
 
         <!-- Stat Cards Section -->
         <div class="cont">
-            <div class="s_menu grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="flex flex-wrap justify-between gap-4 w-full">
                 <!-- Card 1 -->
                 <div class="contex bg-blue-50 rounded-lg p-4 text-center">
-                    <div class="nbre_icons flex justify-between items-center">
-                        <h1 class="text-4xl font-bold">{{ pendingTasksCount }}</h1>
-                        <ListVideo class="icon-lucide text-4xl" />
+                    <div class="nbre_icons flex justify-center items-center gap-3 md:gap-5">
+                        <span class="text-4xl font-medium lg:text-6xl">{{ pendingTasksCount }}</span>
+                        <ListVideo class=" w-10 h-9 md:h-10 md:w-12"  />
                     </div>
                     <h3 class="text-sm mt-2">Nombre de tache à faire</h3>
                 </div>
 
                 <!-- Card 2 -->
                 <div class="contex bg-pink-100 rounded-lg p-4 text-center">
-                    <div class="nbre_icons flex justify-between items-center">
-                        <h1 class="text-4xl font-bold">{{ completedTasksCount }}</h1>
-                        <ListCheck class="icon-lucide text-4xl" />
+                    <div class="nbre_icons flex justify-center items-center gap-3 md:gap-5">
+                        <span class="text-4xl font-medium lg:text-6xl">{{ completedTasksCount }}</span>
+                        <ListCheck class=" w-10 h-9 md:h-10 md:w-12" />
                     </div>
                     <h3 class="text-sm mt-2">Nombre de tache terminée</h3>
                 </div>
@@ -43,9 +43,9 @@ import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs } from 'lucide-v
 
                 <!-- Card 4 -->
                 <div class="contex bg-blue-100 rounded-lg p-4 text-center">
-                    <div class="nbre_icons flex justify-between items-center">
-                        <h1 class="text-4xl font-bold">{{ taskCount }}</h1>
-                        <Logs class="icon-lucide text-4xl" />
+                    <div class="nbre_icons flex justify-center items-center gap-3 md:gap-5">
+                        <span class="text-4xl font-medium lg:text-6xl">{{ taskCount }}</span>
+                        <Logs class=" w-10 h-9 md:h-10 md:w-12" />
                     </div>
                     <h3 class="text-sm mt-2">Nombre de tache</h3>
                 </div>
@@ -69,7 +69,7 @@ import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs } from 'lucide-v
         </div>
 
         <!-- Task List Section -->
-        <div class="body-milieu mt-8 flex-grow flex">
+        <div class="mt-8 flex-grow flex">
             <div class="tache-late border border-gray-300 rounded-lg p-4 w-full flex flex-col">
                 <div class="title-div1 flex justify-between items-center border-b border-gray-300 pb-2 mb-4">
                     <div class="flex items-center">
@@ -83,13 +83,29 @@ import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs } from 'lucide-v
                     </button>
                 </div>
 
-                <div :class="{ 'taskLate-list': true, 'visible': isTaskListLateVisible }" class="list-late flex-grow">
-                    <div class="list-late-title flex justify-between px-4">
-                        <p class="text-sm font-bold">Nom de la tache</p>
-                        <p class="text-sm font-bold">Responsable(s)</p>
-                        <p class="text-sm font-bold">Statut</p>
-                    </div>
+                <div  class="list-late flex-grow">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-gray-200 text-left">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Nom de la tache</th>
+                                    <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Responsable(s)</th>
+                                    <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Statut</th>
+    
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-gray-200">
+                                <tr v-for="tasklate in taskslate" :key="tasklate.id" class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ tasklate.taskname }} </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ tasklate.budget }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ tasklate.status }}</td>
+                                    
+                                </tr>
+                            </tbody>
+                        </table>
+       
                 </div>
+            </div>
             </div>
         </div>
 
@@ -140,7 +156,6 @@ import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs } from 'lucide-v
 
                                     <option value="EN_ATTENTE">En Attente</option>
                                     <option value="EN_COURS">En Cours</option>
-                                    <option value="TERMINEE">Terminée</option>
                                 </select>
                             </div>
 
@@ -270,7 +285,7 @@ export default {
 
             isDropdown1Open: false,
             selectedStatus: 'Select Status',
-            statuses: ['EN_ATTENTE', 'EN_COURS', 'TERMINEE'],
+            statuses: ['EN_ATTENTE', 'EN_COURS'],
 
             selectedPriority: '',
             priorities: ['ELEVEE', 'MOYENNE', 'FAIBLE'],
@@ -279,6 +294,7 @@ export default {
             //id du collaborateur
             userAssignId: '',
             projectMembers: [],
+            taskslate :[],
         };
     },
 
@@ -294,6 +310,7 @@ export default {
             this.fetchCompletedTasksCount();
             this.fetchTotalTasksCount();
             this.fetchTasksLateCount();
+            this.fetchTasksLate();
         } else {
             this.errorMessage = 'Utilisateur non connecté';
             this.$router.push('/auth'); // Rediriger vers la page de connexion
@@ -520,6 +537,22 @@ export default {
                 console.error('Erreur lors de la récupération du nombre de taches en retard :', error);
             }
         },
+        async fetchTasksLate() {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/allTasksLate/${this.projectId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                this.taskslate = response.data;
+                console.log("Voici la liste des taches  en retard:")
+                console.log(this.taskslate);
+            } catch (error) {
+                console.error('Erreur lors de la récupération du nombre de taches en retard :', error);
+            }
+        },
+
 
 
     }
