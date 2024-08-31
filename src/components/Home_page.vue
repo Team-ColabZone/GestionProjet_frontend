@@ -39,30 +39,25 @@
                     <li class="w-full flex flex-col gap-2">
                         <div class="relative w-full">
                             <button class="flex justify-between items-center w-full rounded"
-                                :class="{ 'bg-gray-100 h-full w-full rounded-lg': currentPage === 'dashboard', }"
+                                :class="{ 'bg-gray-100 h-full w-full rounded-lg': currentPage === 'dashboard' }"
                                 @click="showPage('dashboard')">
                                 <div class="w-4/5 md:w-4/5">
                                     <div v-if="firstProjectName" class="flex items-center gap-2 h-14 md:gap-4 pr-2">
                                         <img :src="firstProjectLogo" alt="Logo" class="h-full border rounded-lg" />
-                                        <h3 class="text-black text-lg font-semibold py-1">
-                                            {{ firstProjectName }}
-                                        </h3>
+                                        <h3 class="text-black text-lg font-semibold py-1">{{ firstProjectName }}</h3>
                                     </div>
                                     <div v-else class="flex items-center gap-1 py-1 px-2">
                                         <Gauge class="h-7" />
-                                        <h3 class="text-black">
-                                            Dashboard
-                                        </h3>
+                                        <h3 class="text-black">Dashboard</h3>
                                     </div>
                                 </div>
 
                                 <button @click="toggleProjectList"
                                     class="w-1/5 bg-transparent border-none cursor-pointer"
-                                    :class="{ 'text-black': currentPage === 'dashboard', 'text-gray-500': currentPage !== 'dashboard', }">
-                                    <ChevronUp :class="{
-                                        'chevron-down': !isProjectListVisible,
-                                        'chevron-up': isProjectListVisible,
-                                    }" class="w-full h-4 transition-transform" />
+                                    :class="{ 'text-black': currentPage === 'dashboard', 'text-gray-500': currentPage !== 'dashboard' }">
+                                    <ChevronUp
+                                        :class="{ 'chevron-down': !isProjectListVisible, 'chevron-up': isProjectListVisible }"
+                                        class="w-full h-4 transition-transform" />
                                 </button>
                             </button>
 
@@ -70,12 +65,15 @@
                                 class="absolute top-full left-0 w-full flex flex-col gap-2 p-2 bg-white shadow-sm border border-gray-300 rounded-lg z-10">
                                 <!-- Projects List -->
                                 <div class="h-40 w-full overflow-x-auto overflow-y-auto">
-                                    <div v-for="project in projects" :key="project.id"
-                                        @click="selectProject(project.id)"
-                                        :class="['flex items-center border-b border-gray-50 cursor-pointer rounded-lg pr-2', { 'bg-gray-300': selectedProjectId === project.id, 'bg-gray-100': selectedProjectId !== project.id }]">
-                                        <img :src="project.logo" alt="Project Logo" class="w-12 h-full rounded border">
+                                    <div v-for="project in filteredProjects" :key="project.id"
+                                        @click="selectProject(project.id)" :class="[
+                                            'flex items-center border-b border-gray-50 cursor-pointer rounded-lg pr-2',
+                                            { 'bg-gray-300': selectedProjectId === project.id, 'bg-gray-100': selectedProjectId !== project.id }
+                                        ]">
+                                        <img :src="project.logo" alt="Project Logo"
+                                            class="w-12 h-full rounded border" />
                                         <p class="text-left text-black text-ellipsis text-xs md:text-sm p-2">
-                                            <span class="font-medium">{{ project.projectname }}</span><br>
+                                            <span class="font-medium">{{ project.projectname }}</span><br />
                                             {{ project.description }}
                                         </p>
                                     </div>
@@ -99,7 +97,6 @@
                                 </div>
                             </div>
                         </div>
-
                     </li>
 
                     <!-- Backlogs -->
@@ -520,18 +517,28 @@ export default {
             selectedProjectId: '', // ID du projet sélectionné
             projectId: '',
             entrepriseId: '',
-            filteredProjects: [],
+            // filteredProjects: [],
             selectedEntrepriseId: null,
             roleId: '', // This should be fetched from the system
             filteredEmails: [],
             userData: {},
             loading: true,
-            isProjectListVisible: true,
+            isProjectListVisible: false,
             isEntreprisesListVisible: false,
             isNavOpen: false,
             isLgScreen: false,
         };
     },
+
+    computed: {
+        filteredProjects() {
+            if (this.selectedEntrepriseId) {
+                return this.projects.filter(project => project.entrepriseId === this.selectedEntrepriseId);
+            }
+            return this.projects.filter(project => !project.entrepriseId);
+        },
+    },
+
     mounted() {
         if (this.isConnected()) {
             this.userId = localStorage.getItem('userId');
@@ -807,7 +814,7 @@ export default {
                 } else if (this.projects.length > 0) {
                     this.setFirstProject(this.projects[0]);
                 }
-                console.log("project data collected >>>>>>>>>>>>>>>>>>>>>>>>> ", response.data);
+                this.filterProjects();
             } catch (error) {
                 this.errorMessage = 'Erreur lors de la récupération des projets : ' + (error.response ? error.response.data.message : error.message);
             }
@@ -872,8 +879,6 @@ export default {
                 });
                 this.entreprises = response.data;
                 this.isEntreprisesListVisible = this.entreprises.length > 0;
-                console.log(this.userId);
-                console.log("this is the entreprise >>>>>>>>>>>>>>>>>>>>>>>>>.", response.data);
             } catch (error) {
                 this.errorMessage = 'Erreur lors de la récupération des entreprises : ' + (error.response ? error.response.data.message : error.message);
             }
@@ -881,6 +886,7 @@ export default {
 
         selectEntreprise(entrepriseId) {
             this.selectedEntrepriseId = entrepriseId;
+            localStorage.setItem('selectedEntrepriseId', entrepriseId);
             const entrepriseProjects = this.projects.filter(project => project.entrepriseId === entrepriseId);
             if (entrepriseProjects.length > 0) {
                 this.setFirstProject(entrepriseProjects[0]);
