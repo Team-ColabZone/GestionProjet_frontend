@@ -4,23 +4,23 @@ import { ListTodo, Search, Filter } from 'lucide-vue-next';
 
 
 <template>
-    <div class=" h-full w-full flex flex-col gap-4 p-2">
+    <div class="h-full w-full flex flex-col gap-4 p-2">
         <div class="flex items-center h-10 w-full gap-4 px-3 border rounded-lg">
-            <ListTodo class="" />
+            <ListTodo />
             <p class="text-lg">Tâches</p>
         </div>
 
         <div class="flex flex-col sm:flex-row justify-between">
-            <form class=" flex flex-1">
+            <form class="flex flex-1">
                 <div class="relative flex items-center w-full sm:w-3/4">
                     <Search class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                     <input type="search" id="search-input"
-                        class=" pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:border-gray-500 text-base"
+                        class="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:border-gray-500 text-base"
                         placeholder="Rechercher..." />
                 </div>
-                <div class=" ml-4">
+                <div class="ml-4">
                     <input type="submit" value="Rechercher"
-                        class=" bg-black text-white font-bold py-2 px-6 rounded-lg cursor-pointer hover:bg-gray-700" />
+                        class="bg-black text-white font-bold py-2 px-6 rounded-lg cursor-pointer hover:bg-gray-700" />
                 </div>
             </form>
 
@@ -34,7 +34,7 @@ import { ListTodo, Search, Filter } from 'lucide-vue-next';
             </div>
         </div>
 
-        <div class=" grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 mt-2">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 mt-2">
             <div class="h-full flex flex-col gap-2">
                 <div class="flex items-center">
                     <div class="w-6 h-6 rounded-full bg-orange-200"></div>
@@ -44,7 +44,8 @@ import { ListTodo, Search, Filter } from 'lucide-vue-next';
                     </div>
                 </div>
 
-                <draggable class="h-80 overflow-y-auto flex flex-col gap-2 border border-gray-300 rounded-lg px-4 py-10 pendingTasks"
+                <draggable
+                    class="h-80 overflow-y-auto flex flex-col gap-2 border border-gray-300 rounded-lg px-4 py-10 pendingTasks"
                     group="tasks" :list="pendingTasks" @change="log" @end="onEnd">
                     <div class="flex flex-col border border-gray-300 py-2 px-3" v-for="task in pendingTasks"
                         :key="task.id" @click="storeTaskId(task.id)">
@@ -57,7 +58,7 @@ import { ListTodo, Search, Filter } from 'lucide-vue-next';
                         <div class="flex flex-col pb-2">
                             <span class="font-medium">{{ task.taskname }}</span>
                             <span>{{ task.description }}</span>
-                            <span>Budget: {{task.budget}}Frs</span>
+                            <span>Budget: {{ task.budget }}Frs</span>
                         </div>
                     </div>
                 </draggable>
@@ -72,7 +73,8 @@ import { ListTodo, Search, Filter } from 'lucide-vue-next';
                     </div>
                 </div>
 
-                <draggable class="h-80 overflow-y-auto flex flex-col gap-2 border border-gray-300 rounded-lg px-4 py-10 inProgressTasks"
+                <draggable
+                    class="h-80 overflow-y-auto flex flex-col gap-2 border border-gray-300 rounded-lg px-4 py-10 inProgressTasks"
                     group="tasks" :list="inProgressTasks" @change="log" @end="onEnd">
                     <div class="flex flex-col border border-gray-300 py-2 px-3" v-for="task in inProgressTasks"
                         :key="task.id" @click="storeTaskId(task.id)">
@@ -85,7 +87,7 @@ import { ListTodo, Search, Filter } from 'lucide-vue-next';
                         <div class="flex flex-col pb-2">
                             <span class="font-medium">{{ task.taskname }}</span>
                             <span>{{ task.description }}</span>
-                            <span>Budget: {{task.budget}}Frs</span>
+                            <span>Budget: {{ task.budget }}Frs</span>
                         </div>
                     </div>
                 </draggable>
@@ -101,7 +103,8 @@ import { ListTodo, Search, Filter } from 'lucide-vue-next';
                     </div>
                 </div>
 
-                <draggable class="h-80 overflow-y-auto flex flex-col gap-2 border border-gray-300 rounded-lg px-4 py-10 completedTasks"
+                <draggable
+                    class="h-80 overflow-y-auto flex flex-col gap-2 border border-gray-300 rounded-lg px-4 py-10 completedTasks"
                     group="tasks" :list="completedTasks" @change="log" @end="onEnd">
                     <div class="border border-gray-300 py-2 px-3" v-for="task in completedTasks" :key="task.id"
                         @click="storeTaskId(task.id)">
@@ -114,7 +117,7 @@ import { ListTodo, Search, Filter } from 'lucide-vue-next';
                         <div class="flex flex-col pb-2">
                             <span class="font-medium">{{ task.taskname }}</span>
                             <span>{{ task.description }}</span>
-                            <span>Budget: {{task.budget}}Frs</span>
+                            <span>Budget: {{ task.budget }}Frs</span>
                         </div>
                     </div>
                 </draggable>
@@ -140,7 +143,7 @@ export default defineComponent({
             completedTasksCount: 0,
             inProgressTasksCount: 0,
             projects: [], // Liste des projets
-            selectedProjectId: '', // ID du projet sélectionné
+            selectedProjectId: '',
             userId: '',
             projectId: '',
             userData: null,
@@ -181,7 +184,12 @@ export default defineComponent({
         },
         async fetchUserData() {
             try {
-                const response = await axios.get(`${config.apiBaseUrl}/users/${this.userId}`);
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`${config.apiBaseUrl}/users/${this.userId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 this.userData = response.data;
             } catch (error) {
                 this.errorMessage = 'Erreur lors de la récupération des données utilisateur : ' + error.response.data.message;
@@ -191,7 +199,12 @@ export default defineComponent({
 
         async fetchProjects() {
             try {
-                const response = await axios.get(`${config.apiBaseUrl}/projects/user/${this.userId}`);
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`${config.apiBaseUrl}/projects/user/${this.userId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 this.projects = response.data;
                 console.log(this.userId)
             } catch (error) {
@@ -208,7 +221,6 @@ export default defineComponent({
             this.$router.push('/accueilPage'); // Rediriger vers la page des détails du projet
         },
 
-
         async fetchPendingTasksCount() {
             try {
                 const token = localStorage.getItem('token');
@@ -218,7 +230,6 @@ export default defineComponent({
                     }
                 });
                 this.pendingTasksCount = response.data.length;
-                // console.log(this.pendingTasksCount);
             } catch (error) {
                 console.error('Erreur lors de la récupération du nombre de tâches en attente :', error);
             }
@@ -232,7 +243,6 @@ export default defineComponent({
                     }
                 });
                 this.inProgressTasksCount = response.data.length;
-                // console.log(this.inProgressTasksCount);
             } catch (error) {
                 console.error('Erreur lors de la récupération du nombre de tache en cours :', error);
             }
@@ -246,8 +256,6 @@ export default defineComponent({
                     }
                 });
                 this.completedTasksCount = response.data.length;
-
-                // console.log(this.completedTasksCount);
             } catch (error) {
                 console.error('Erreur lors de la récupération du nombre de taches terminées :', error);
             }
@@ -261,13 +269,10 @@ export default defineComponent({
                     }
                 });
                 this.taskCount = response.data;
-                // console.log(this.taskCount);
             } catch (error) {
                 console.error('Erreur lors de la récupération du nombre total de tâches :', error);
             }
         },
-
-        //Methode pour recupérer les taches en fonction des statut
 
         async fetchPendingTasks() {
             try {
@@ -279,7 +284,6 @@ export default defineComponent({
                 });
                 this.pendingTasks = response.data;
                 console.log(this.pendingTasks);
-
             } catch (error) {
                 console.error('Erreur lors de la récupération des tâches en attente :', error);
             }
@@ -313,7 +317,6 @@ export default defineComponent({
             }
         },
 
-
         getPriorityClass(priority) {
             switch (priority) {
                 case 'ELEVEE':
@@ -334,12 +337,11 @@ export default defineComponent({
 
         async onEnd(event) {
             const movedItemId = localStorage.getItem('selectedTaskId');
-            // console.log(`Retrieved Task ID from local storage: ${movedItemId}`);
+            if (!movedItemId) {
+                console.error('No task ID found in local storage');
+                return;
+            }
 
-            // Log the event.to element to inspect its properties
-            // console.log('event.to element:', event.to);
-
-            // Determine the new status based on the target list
             let newStatus = '';
             if (event.to.classList.contains('pendingTasks')) {
                 newStatus = 'EN_ATTENTE';
@@ -348,8 +350,6 @@ export default defineComponent({
             } else if (event.to.classList.contains('completedTasks')) {
                 newStatus = 'TERMINEE';
             }
-
-            // console.log(`Target list is ${newStatus}`);
 
             try {
                 const token = localStorage.getItem('token');
@@ -360,20 +360,18 @@ export default defineComponent({
                         'Authorization': `Bearer ${token}`,
                     },
                 });
-                // console.log(`Task ${movedItemId} updated to ${newStatus}`);
+                this.fetchPendingTasks();
+                this.fetchInProgressTasks();
+                this.fetchCompletedTasks();
             } catch (error) {
                 console.error('Error updating task status:', error);
             }
         }
     },
 
-    //delete the log() in the code and this method before deploying 
     log(event) {
         console.log(event);
     },
-
-
-
 });
 </script>
 

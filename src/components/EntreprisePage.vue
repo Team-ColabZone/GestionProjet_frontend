@@ -2,7 +2,7 @@
     <div class="flex flex-col gap-4 w-full h-full p-2">
         <div class="w-full flex items-center gap-2 p-2 border corder-gray-200 rounded">
             <Building2 />
-            <span>Enterprises</span>
+            <span>Entreprises</span>
         </div>
 
         <div class="flex w-full gap-8">
@@ -34,13 +34,13 @@
                         <building2 class="task text-xl text-black mr-2" />
                         <p class="text-black text-sm font-bold">Listes des entreprise</p>
                     </div>
-                    <button @click="toggleteamEnterpriseList()" class="flex gap-1  text-black px-3 py-2 rounded-lg">
-                        <ChevronUp :class="{ 'chevron-down': !isEnterpriseListVisible, 'chevron-up': isEnterpriseListVisible,
+                    <button @click="toggleteamEntrepriseList()" class="flex gap-1  text-black px-3 py-2 rounded-lg">
+                        <ChevronUp :class="{ 'chevron-down': !isEntrepriseListVisible, 'chevron-up': isEntrepriseListVisible,
                         }" class="w-full h-6 transition-transform" />
                     </button>
                 </div>
 
-                <div :class="{ block: isEnterpriseListVisible, hidden: !isEnterpriseListVisible,}" class="flex-grow" v-if="isEnterpriseListVisible">
+                <div :class="{ block: isEntrepriseListVisible, hidden: !isEntrepriseListVisible,}" class="flex-grow" v-if="isEntrepriseListVisible">
                     <table class="min-w-full divide-y divide-gray-200 text-left">
                         <thead class="bg-gray-50">
                             <tr>
@@ -82,12 +82,12 @@ export default{
     mounted() {
         this.fetchEntreprises();
         this.userId = localStorage.getItem('userId');
-        this.enterpriseId = localStorage.getItem('enterpriseId');
+        this.entrepriseId = localStorage.getItem('entrepriseId');
     },
     data() {
         return {
-            isEnterpriseListVisible: true,
-            enterpriseId: '',
+            isEntrepriseListVisible: true,
+            entrepriseId: '',
             entreprises: [], // Liste des entreprises
         }
     },
@@ -96,8 +96,8 @@ export default{
             this.modalVisible = true
         },
         
-        toggleteamEnterpriseList() {
-            this.isEnterpriseListVisible =!this.isEnterpriseListVisible
+        toggleteamEntrepriseList() {
+            this.isEntrepriseListVisible =!this.isEntrepriseListVisible
         },
 
         async fetchEntreprises() {

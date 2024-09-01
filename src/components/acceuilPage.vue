@@ -368,9 +368,6 @@ body {
     font-family: Monda;
 }
 
-
-
-
 .s_menu {
     width: 99%;
     margin: auto;
@@ -387,10 +384,8 @@ body {
 .s_menu .contex {
     width: 240px;
     height: 150px;
-    /* box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); */
     border-radius: 8px;
     text-align: center;
-    /* background-color: rgb(0, 122, 94); */
     color: #000000;
     padding-left: 1%;
     padding-right: 1%;
@@ -429,7 +424,6 @@ body {
     display: flex;
     overflow-y: auto;
     font-family: Monda;
-    /* background-color: rgba(0, 0, 0, 0.05); */
     background-color: white;
 }
 
@@ -473,7 +467,6 @@ body {
     border: 1px solid #D9D9D9;
     border-radius: 8px;
     padding-left: 50px;
-    /* Espace pour l'icône */
     box-sizing: border-box;
     font-size: 18px;
 }
@@ -505,17 +498,14 @@ body {
 
 }
 
-
 .search-butt {
     margin-left: 10px;
 }
 
 .searchbtn {
-    /* padding: 5px 10px; */
     background-color: #000000;
     color: white;
     font-weight: bold;
-    /* Texte en gras */
     border: none;
     border-radius: 8px;
     cursor: pointer;
@@ -554,14 +544,6 @@ body {
     display: block;
 }
 
-/* .ext {
-    background-color: white;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-    margin-left: 2%;
-    padding: 10px 20px !important;
-    display: flex;
-} */
-
 .side_barre {
     width: 18%;
     background-color: white;
@@ -588,7 +570,6 @@ body {
 .extra {
     width: 100%;
     height: 100vh;
-    /* Hauteur fixe du conteneur */
     overflow-y: auto;
     margin: auto !important;
 }
@@ -596,7 +577,6 @@ body {
 .page {
     background-color: transparent;
     width: 100%;
-    /* margin-right: 5%; */
 }
 
 .entete {
@@ -619,8 +599,6 @@ body {
     top: 0%;
     left: 0%;
     height: 100vh;
-    /* 
-    margin: 0 13%; */
 }
 
 .close {
@@ -649,7 +627,6 @@ form {
 form .inp-field {
     display: block;
     width: 100%;
-    /* margin-bottom: 10px; */
 }
 
 form .inp-field h2 {
@@ -669,7 +646,6 @@ form .inp-field textarea {
     border-radius: 8px;
     padding-left: 20px;
     padding-right: 20px;
-    /* width: 90%; */
 }
 
 form .inp-field input {
@@ -709,29 +685,16 @@ form .inp-field input {
     padding-bottom: 3%;
 }
 
-/* h3 {
-    color: #202020;
-} */
-
-/* p {
-    color: rgba(0, 0, 0, 0.2);
-    font-size: 12px;
-} */
-
-/*Scroll bar css*/
 .container::-webkit-scrollbar {
     width: 0.1em;
-    /* Largeur de la barre de défilement */
 }
 
 .extra::-webkit-scrollbar {
     width: 0.1em;
-    /* Largeur de la barre de défilement */
 }
 
 .extra::-webkit-scrollbar-thumb {
     background-color: transparent;
-    /* Couleur de la poignée de défilement */
 }
 
 .notif label {
@@ -764,10 +727,8 @@ button.active {
 
 .container::-webkit-scrollbar-thumb {
     background-color: transparent;
-    /* Couleur de la poignée de défilement */
 }
 
-/*nav barre*/
 ul {
     list-style-type: none;
     margin: 0;
@@ -778,17 +739,6 @@ ul {
     display: inline;
     margin-right: 10px;
 }
-
-/* .dMois li:hover {
-    background: transparent !important;
-
-}
-
-.dMois li {
-    transition: all 0.3s;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-
-} */
 
 li:hover {
     cursor: pointer;
@@ -889,47 +839,8 @@ li:hover {
     padding-bottom: 20px;
 }
 
-/* .cont1 {
-    width: 100%;
-    display: block;
-    flex-wrap: nowrap;
-    background-color: #202020;
-    overflow: hidden;
-} */
-/* 
-.cont2 {
-    width: 100%;
-    background-color: white;
-    padding: 15px 0;
-}
-
-.cont2 label {
-    font-size: 25px;
-    font-weight: bold;
-    width: 30%;
-    text-align: right;
-    color: #202020;
-}
-
-.cont2 textarea {
-    width: 60%;
-    height: 25px;
-    border: 1px solid #202020a9;
-}
-
-.cont2 .btn {
-    width: 30%;
-    height: 30px;
-    border: none;
-    background-color: #007A5E;
-    color: white;
-    font-size: 18px;
-} */
-
 form div {
     width: 80%;
-    /* display: flex;
-    justify-content: space-between; */
     margin-top: 20px;
 }
 

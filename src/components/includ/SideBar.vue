@@ -19,7 +19,6 @@ import {  SquarePlus, ListTodo, Users, Gauge } from 'lucide-vue-next';
                         <Gauge />
                         <h3>Dashboard</h3>
                         <i class="fas fa-chevron-up fleche"></i>
-
                     </router-link>
                 </li>
                 <li>
