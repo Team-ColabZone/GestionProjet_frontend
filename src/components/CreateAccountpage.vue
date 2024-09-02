@@ -53,17 +53,25 @@
                         </div>
                     </div>
 
-                    <button type="submit"
-                        class="bg-black hover:bg-gray-800 text-white py-3 rounded-lg">S'inscrire</button>
+                    <button @click="showLoader" type="submit"
+                        class="bg-black hover:bg-gray-800 text-white py-3 rounded-lg">
+                        <span v-if="!loading">
+                            S'inscrire
+                        </span>
+                        <div v-else class="flex justify-center">
+                            <span
+                                class="inline-block w-6 h-6 border-4 border-gray-400 border-t-black border-b-black rounded-full animate-spin"></span>
+                        </div>
+                    </button>
                 </form>
 
                 <div class="text-center">
                     <span class="block text-black">Avez-vous déjà un Compte? <router-link to="/auth"
-                        class="text-blue-600">Connexion</router-link>
+                            class="text-blue-600">Connexion</router-link>
                     </span>
                     <span class="block text-black">En continuant vous agréer la <router-link to="/Privacy"
-                        class="text-blue-600">Politique de Confidentialité</router-link> et les <router-link
-                        to="/Privacy" class="text-blue-600">Conditions d'utilisations</router-link>
+                            class="text-blue-600">Politique de Confidentialité</router-link> et les <router-link
+                            to="/Privacy" class="text-blue-600">Conditions d'utilisations</router-link>
                     </span>
                 </div>
             </div>
@@ -98,6 +106,7 @@ export default {
                 phonenumber: null,
                 password: null,
             },
+            loading: false,
             // successMessage: '',
             // errorMessage: ''
         };
@@ -160,6 +169,7 @@ export default {
             this.validatePhoneNumber();
             this.validatePassword();
 
+            this.loading = true;
             if (Object.values(this.errors).every((error) => error === '')) {
                 try {
                     const response = await axios.post(`${config.apiBaseUrl}/users`, {
@@ -172,8 +182,14 @@ export default {
                     console.log('Account created:', response.data);
                     this.$router.push('/auth');
                 } catch (error) {
+                    this.loading = false;
                     console.error('Error creating account:', error);
+                    this.loading = false;
+                } finally {
+                    this.loading = false;
                 }
+            } else {
+                this.loading = false;
             }
         },
         resetForm() {

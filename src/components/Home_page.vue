@@ -282,10 +282,15 @@
                         </div>
 
                         <div class="flex justify-end w-full ">
-                            <button
-                                class="w-2/5 bg-black text-white p-3 rounded hover:bg-gray-600 focus:outline-none focus:ring focus:ring-blue-300"
+                            <button class="w-2/5 bg-black text-white p-3 rounded hover:bg-gray-600 focus:outline-none focus:ring focus:ring-blue-300"
                                 type="submit">
-                                Enregistrer le projet
+                                <span v-if="!projectLoading">
+                                    Enregistrer le projet
+                                </span>
+                                <div v-else class="flex justify-center">
+                                    <span
+                                        class="inline-block w-6 h-6 border-4 border-gray-400 border-t-black border-b-black rounded-full animate-spin"></span>
+                                </div>
                             </button>
                         </div>
                     </form>
@@ -358,10 +363,15 @@
                         </div>
 
                         <div class="flex justify-end w-full ">
-                            <button
-                                class="w-2/5 bg-black text-white p-3 rounded hover:bg-gray-600 focus:outline-none focus:ring focus:ring-gray-700"
+                            <button class="w-2/5 bg-black text-white p-3 rounded hover:bg-gray-600 focus:outline-none focus:ring focus:ring-gray-700"
                                 type="submit">
-                                Ajouter
+                                <span v-if="!enterpriseLoading">
+                                    Ajouter
+                                </span>
+                                <div v-else class="flex justify-center">
+                                    <span
+                                        class="inline-block w-6 h-6 border-4 border-gray-400 border-t-black border-b-black rounded-full animate-spin"></span>
+                                </div>
                             </button>
                         </div>
                     </form>
@@ -441,9 +451,15 @@
                             <span>Ajouter une Entreprise</span>
                         </button>
 
-                        <button class="w-full flex gap-4 py-2 px-5 text-black font-medium" @click="logout">
-                            <Power class="h-5" />
-                            <span>Déconnexion</span>
+                        <button @click="logout">
+                            <div v-if="!logoutLoader" class="w-full flex gap-4 py-2 px-5 text-black font-medium">
+                                <Power class="h-5" />
+                                <span>Déconnexion</span>
+                            </div>
+                            <div v-else class="flex justify-center">
+                                <span
+                                    class="inline-block w-6 h-6 border-4 border-gray-400 border-t-black border-b-black rounded-full animate-spin"></span>
+                            </div>
                         </button>
 
                     </div>
@@ -479,6 +495,9 @@ export default {
             modalmembers: false,
             showMessagePage: false,
             showNotificationPage: false,
+            enterpriseLoading:false,
+            projectLoading:false,
+            logoutLoader: false,
             currentPage: 'dashboard',
             selectedButton: 'button4',
             // teamMemberCount: 0,
@@ -613,6 +632,7 @@ export default {
         },
 
         async createNewProject() {
+            this.projectLoading = true;
             try {
                 const token = localStorage.getItem('token');
                 const response = await axios.post(`${config.apiBaseUrl}/projects`, {
@@ -647,6 +667,7 @@ export default {
             } catch (error) {
                 this.error = true;
                 this.errorMessage = error.response ? error.response.data.message : error.message;
+                this.projectLoading = false;
             }
         },
 
@@ -708,6 +729,7 @@ export default {
         },
 
         async createNewEntreprise() {
+            this.enterpriseLoading = true;
             try {
                 const token = localStorage.getItem('token');
                 const response = await axios.post(`${config.apiBaseUrl}/entreprises`, {
@@ -735,6 +757,7 @@ export default {
             } catch (error) {
                 this.error = true;
                 this.errorMessage = error.response ? error.response.data.message : error.message;
+                this.enterpriseLoading = false;
             }
         },
 
@@ -759,7 +782,6 @@ export default {
             } catch (error) {
                 console.error('Image upload failed:', error);
             }
-
         },
 
         entrepriseImg(event) {
@@ -954,6 +976,7 @@ export default {
             }
         },
         async logout() {
+            this.logoutLoader = true;
             try {
                 // const token = localStorage.getItem('token');
                 // if (token) {
@@ -967,6 +990,7 @@ export default {
                 this.$router.push('/auth'); // Redirect to login page
             } catch (error) {
                 console.error('Error logging out:', error);
+                this.logoutLoader = true;
             }
         }
     }

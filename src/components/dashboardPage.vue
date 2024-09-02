@@ -199,6 +199,7 @@ export default {
         this.fetchCompletedTasksCount();
         this.fetchTotalTasksCount();
         this.fetchTaskRate();
+        // this.fetchTaskRate();
         // this.fetchTaskRate1();
         this.fetchReactivityRate();
         this.fetchRealisationRate();
@@ -260,6 +261,12 @@ export default {
         //         // const data = await response.json();
         //         this.taskRate = response.data; // Adjust based on the actual structure of your response
         //         console.log(this.taskRate)
+        //         const response = await fetch(`http://localhost:3001/tasks/tauxTasksDay/${this.projectId}`);
+        //         if (!response.ok) {
+        //             throw new Error('Network response was not ok');
+        //         }
+        //         const data = await response.json();
+        //         this.taskRate = data.taskRate; // Adjust based on the actual structure of your response
         //     } catch (error) {
         //         console.error('Error fetching task rate:', error);
         //     }
@@ -351,6 +358,21 @@ export default {
                 console.error('Erreur lors de la recupération du taux de tache journaliere:', error);
             }
         },
+        // async fetchTaskRate1() {
+        //     try {
+        //         const token = localStorage.getItem('token');
+        //         const response = await axios.get(`${config.apiBaseUrl}/tasks/tauxTasksDay/${this.projectId}`, {
+        //             headers: {
+        //                 'Authorization': `Bearer ${token}`
+        //             }
+        //         });
+        //         this.taskRate1 = response.data;
+        //         console.log("Voici le taux de tache journaliere: ")
+        //         console.log(this.taskRate1);
+        //     } catch (error) {
+        //         console.error('Erreur lors de la recupération du taux de tache journaliere:', error);
+        //     }
+        // },
         async fetchReactivityRate() {
             try {
                 const token = localStorage.getItem('token');

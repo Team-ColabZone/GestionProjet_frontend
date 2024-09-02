@@ -510,11 +510,11 @@ export default defineComponent({
         showLateTaskList() {
             this.isTaskListLateVisible = !this.isTaskListLateVisible;
         },
-        selectProject(projectId) {
-            this.selectedProjectId = projectId;
-            localStorage.setItem('projectId', projectId); // Stocker l'ID du projet dans le localStorage
-            this.$router.push('/accueilPage'); // Rediriger vers la page des détails du projet
-        },
+        // selectTask(taskId) {
+        //     this.selectedTaskId = taskId;
+        //     localStorage.setItem('taskId', taskId); // Stocker l'ID du projet dans le localStorage
+        //     this.$router.push('/accueilPage'); // Rediriger vers la page des détails du projet
+        // },
 
         async fetchPendingTasksCount() {
             try {
