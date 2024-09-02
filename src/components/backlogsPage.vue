@@ -19,7 +19,7 @@ import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs } from 'lucide-v
                     <div class="nbre_icons flex justify-between items-center">
                         <h1 class="text-4xl font-bold">{{ pendingTasksCount }}</h1>
                         <!-- <span class="text-4xl font-medium lg:text-6xl">{{ pendingTasksCount }}</span> -->
-                        <ListVideo class=" w-10 h-9 md:h-10 md:w-12"  />
+                        <ListVideo class=" w-10 h-9 md:h-10 md:w-12" />
                     </div>
                     <h3 class="text-sm mt-2">Nombre de tache à faire</h3>
                 </div>
@@ -85,15 +85,17 @@ import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs } from 'lucide-v
                     </button>
                 </div>
 
-                <div  class="list-late flex-grow">
+                <div class="list-late flex-grow">
                     <div class="overflow-x-auto">
                         <table class="min-w-full divide-gray-200 text-left">
                             <thead class="bg-gray-50">
                                 <tr>
-                                    <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Nom de la tache</th>
-                                    <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Responsable(s)</th>
+                                    <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Nom de la tache
+                                    </th>
+                                    <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Responsable(s)
+                                    </th>
                                     <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Statut</th>
-    
+
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-gray-200">
@@ -101,13 +103,13 @@ import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs } from 'lucide-v
                                     <td class="px-6 py-4 whitespace-nowrap">{{ tasklate.taskname }} </td>
                                     <td class="px-6 py-4 whitespace-nowrap">{{ tasklate.budget }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">{{ tasklate.status }}</td>
-                                    
+
                                 </tr>
                             </tbody>
                         </table>
-       
+
+                    </div>
                 </div>
-            </div>
             </div>
         </div>
 
@@ -122,7 +124,13 @@ import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs } from 'lucide-v
                 <div class="flex justify-between">
                     <h1 class="text-center text-2xl text-gray-800 ">AJOUTER UNE TACHE</h1>
                     <button class="w-1/4 px-3 bg-black text-white rounded hover:bg-gray-600 " @click="createNewTask()">
-                        Ajouter
+                        <span v-if="!enterpriseLoading">
+                            Ajouter
+                        </span>
+                        <div v-else class="flex justify-center">
+                            <span
+                                class="inline-block w-6 h-6 border-4 border-gray-400 border-t-black border-b-black rounded-full animate-spin"></span>
+                        </div>
                     </button>
                 </div>
 
@@ -296,7 +304,7 @@ export default {
             //id du collaborateur
             userAssignId: '',
             projectMembers: [],
-            taskslate :[],
+            taskslate: [],
         };
     },
 
@@ -472,7 +480,7 @@ export default {
                 await axios.post(`${config.apiBaseUrl}/tasks-assignments`, {
                     taskId: taskId,
                     userId: this.userAssignId
-                    
+
                 }, {
                     headers: {
                         'Authorization': `Bearer ${token}`
@@ -482,7 +490,7 @@ export default {
                 this.success = true;
                 this.successMessage = response.data.message;
                 console.log("tache crée et affectée avec success ")
-                this.userAssignId= '';
+                this.userAssignId = '';
             } catch (error) {
                 this.error = true;
                 this.errorMessage = error.response ? error.response.data.message : error.message;
