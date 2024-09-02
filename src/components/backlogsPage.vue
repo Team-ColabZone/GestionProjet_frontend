@@ -16,8 +16,9 @@ import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs } from 'lucide-v
             <div class="flex flex-wrap justify-between gap-4 w-full">
                 <!-- Card 1 -->
                 <div class="contex bg-blue-50 rounded-lg p-4 text-center">
-                    <div class="nbre_icons flex justify-center items-center gap-3 md:gap-5">
-                        <span class="text-4xl font-medium lg:text-6xl">{{ pendingTasksCount }}</span>
+                    <div class="nbre_icons flex justify-between items-center">
+                        <h1 class="text-4xl font-bold">{{ pendingTasksCount }}</h1>
+                        <!-- <span class="text-4xl font-medium lg:text-6xl">{{ pendingTasksCount }}</span> -->
                         <ListVideo class=" w-10 h-9 md:h-10 md:w-12"  />
                     </div>
                     <h3 class="text-sm mt-2">Nombre de tache à faire</h3>
@@ -25,8 +26,8 @@ import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs } from 'lucide-v
 
                 <!-- Card 2 -->
                 <div class="contex bg-pink-100 rounded-lg p-4 text-center">
-                    <div class="nbre_icons flex justify-center items-center gap-3 md:gap-5">
-                        <span class="text-4xl font-medium lg:text-6xl">{{ completedTasksCount }}</span>
+                    <div class="nbre_icons flex justify-between items-center">
+                        <h1 class="text-4xl font-bold">{{ completedTasksCount }}</h1>
                         <ListCheck class=" w-10 h-9 md:h-10 md:w-12" />
                     </div>
                     <h3 class="text-sm mt-2">Nombre de tache terminée</h3>
@@ -36,15 +37,16 @@ import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs } from 'lucide-v
                 <div class="contex bg-green-50 rounded-lg p-4 text-center">
                     <div class="nbre_icons flex justify-between items-center">
                         <h1 class="text-4xl font-bold">{{ tasklateCount }}</h1>
-                        <ClockArrowDown class="icon-lucide text-4xl" />
+                        <ClockArrowDown class="w-10 h-9 md:h-10 md:w-12" />
                     </div>
                     <h3 class="text-sm mt-2">Nombre de tache en retard</h3>
                 </div>
 
                 <!-- Card 4 -->
                 <div class="contex bg-blue-100 rounded-lg p-4 text-center">
-                    <div class="nbre_icons flex justify-center items-center gap-3 md:gap-5">
-                        <span class="text-4xl font-medium lg:text-6xl">{{ taskCount }}</span>
+                    <div class="nbre_icons flex justify-between items-center">
+                        <h1 class="text-4xl font-bold">{{ taskCount }}</h1>
+                        <!-- <span class="text-4xl font-medium lg:text-6xl">{{ taskCount }}</span> -->
                         <Logs class=" w-10 h-9 md:h-10 md:w-12" />
                     </div>
                     <h3 class="text-sm mt-2">Nombre de tache</h3>

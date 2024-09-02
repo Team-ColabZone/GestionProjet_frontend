@@ -47,7 +47,7 @@
                                 <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Nom de l'entreprise</th>
                                 <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Email </th>
                                 <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Adresse </th>
-                                <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Date Ajout </th>
+                                <!-- <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Date Ajout </th> -->
                                 <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Actions </th>
                             </tr>
                         </thead>
@@ -55,7 +55,7 @@
                             <tr v-for="entreprise in entreprises" :key="entreprise.id" class="hover:bg-gray-50">
                                 <td class="px-6 py-4 whitespace-nowrap">{{ entreprise.name }}asd</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ entreprise.email }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ entreprise.adress }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ entreprise.pobox }}</td>
                                 <!-- <td class="px-6 py-4 whitespace-nowrap">{{ member.Role.nom }}</td> -->
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <button type="button" class="text-black hover:text-green-900" @click="showMemberDetails()">
@@ -80,9 +80,9 @@ export default{
     components: {
     },
     mounted() {
-        this.fetchEntreprises();
         this.userId = localStorage.getItem('userId');
         this.entrepriseId = localStorage.getItem('entrepriseId');
+        this.fetchEntreprises();
     },
     data() {
         return {

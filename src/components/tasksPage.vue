@@ -1,5 +1,5 @@
 <script setup>
-import { ListTodo, Search, Filter } from 'lucide-vue-next';
+import { ListTodo, Search, Filter,Ellipsis } from 'lucide-vue-next';
 </script>
 
 
@@ -58,7 +58,7 @@ import { ListTodo, Search, Filter } from 'lucide-vue-next';
                         <div class="flex flex-col pb-2">
                             <span class="font-medium">{{ task.taskname }}</span>
                             <span>{{ task.description }}</span>
-                            <span>Budget: {{ task.budget }}Frs</span>
+                            <span class="font-bold">Budget: {{ task.budget }}Frs</span>
                         </div>
                     </div>
                 </draggable>
@@ -87,7 +87,7 @@ import { ListTodo, Search, Filter } from 'lucide-vue-next';
                         <div class="flex flex-col pb-2">
                             <span class="font-medium">{{ task.taskname }}</span>
                             <span>{{ task.description }}</span>
-                            <span>Budget: {{ task.budget }}Frs</span>
+                            <span class="font-bold">Budget: {{ task.budget }}Frs</span>
                         </div>
                     </div>
                 </draggable>
@@ -117,7 +117,7 @@ import { ListTodo, Search, Filter } from 'lucide-vue-next';
                         <div class="flex flex-col pb-2">
                             <span class="font-medium">{{ task.taskname }}</span>
                             <span>{{ task.description }}</span>
-                            <span>Budget: {{ task.budget }}Frs</span>
+                            <span class="font-bold">Budget: {{ task.budget }}Frs</span>
                         </div>
                     </div>
                 </draggable>
@@ -145,6 +145,7 @@ export default defineComponent({
             projects: [], // Liste des projets
             selectedProjectId: '',
             userId: '',
+            taskId:'',
             projectId: '',
             userData: null,
             isTaskListLateVisible: false,
@@ -157,6 +158,7 @@ export default defineComponent({
         if (this.isConnected()) {
             this.userId = localStorage.getItem('userId');
             this.projectId = localStorage.getItem('projectId');
+            this.taskId = localStorage.getItem('selectedTaskId');
             this.fetchUserData();
         } else {
             this.errorMessage = 'Utilisateur non connecté';
@@ -372,8 +374,55 @@ export default defineComponent({
     log(event) {
         console.log(event);
     },
+    
+    async deleteTask() {
+            try {
+                const token = localStorage.getItem('token');
+                console.log("Voici l'id de la tache:");
+                console.log(this.movedItemId);
+                const response = await axios.delete(`${config.apiBaseUrl}/tasks/${this.taskId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                this.taskDelete = response.data;
+                console.log("Tache supprimer avec succes");
+                //Mise a jour de la liste de tache
+                this.fetchPendingTasks();
+                this.fetchInProgressTasks();
+                this.fetchCompletedTasks();
+            } catch (error) {
+                console.error('Erreur lors de la suppression de la tache :', error);
+            }
+        },
+
+        async editTask() {
+            try {
+                const token = localStorage.getItem('token');
+                console.log("Voici l'id de la tache:");
+                console.log(this.movedItemId);
+                const response = await axios.delete(`${config.apiBaseUrl}/tasks/${this.taskId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                this.taskDelete = response.data;
+                console.log("Tache supprimer avec succes");
+                //Mise a jour de la liste de tache
+                this.fetchPendingTasks();
+                this.fetchInProgressTasks();
+                this.fetchCompletedTasks();
+            } catch (error) {
+                console.error('Erreur lors de la suppression de la tache :', error);
+            }
+        },
+
+
 });
 </script>
+
+
+
 
 <style scoped>
 @import url(https://fonts.googleapis.com/css2?family=Monda:wght@100;200;300;400;500;600;700&display=swap);
