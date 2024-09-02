@@ -1,7 +1,7 @@
 <template>
     <div class="splash-screen">
       <h1 class="animate__animated animate__fadeInDown">PROJECT MANAGEMENT</h1>
-      <h2 class="animate__animated animate__fadeInUp">Flysoft-Eng</h2>
+      <h2 class="animate__animated animate__fadeInUp">CollabZone</h2>
   
     </div>
   </template>

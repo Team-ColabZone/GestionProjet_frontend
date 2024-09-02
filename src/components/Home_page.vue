@@ -621,7 +621,7 @@ export default {
                     start_date: new Date(this.start_date), // Conversion en objet Date
                     end_date: new Date(this.end_date), // Conversion en objet Date
                     budget: this.budget,
-                    entreprise: this.entreprise,
+                    entrepriseId: this.entrepriseId,
                     projectType: this.projectType,
                     projectPrivacyPolicy: this.projectPrivacyPolicy,
                     downloadUrlLink: this.downloadUrlLink,
@@ -759,7 +759,6 @@ export default {
             } catch (error) {
                 console.error('Image upload failed:', error);
             }
-
         },
 
         entrepriseImg(event) {

@@ -8,7 +8,8 @@
         <!-- Form Element -->
         <div class="lg:w-1/3 w-full h-full lg:h-full bg-white flex flex-col justify-between p-6">
             <div class="w-full flex justify-end text-right">
-                <img class="w-24 h-24 mx-auto lg:mx-0 lg:mr-4" src="../assets/images/logoflysoft.png" alt="logo Entreprise" />
+                <img class="w-24 h-24 mx-auto lg:mx-0 lg:mr-4" src="../assets/images/logoflysoft.png"
+                    alt="logo Entreprise" />
             </div>
 
             <!-- Login Form -->
@@ -31,7 +32,14 @@
                     </div>
                 </div>
 
-                <button type="submit" class="bg-black text-white py-3 rounded-lg hover:bg-gray-800">Se connecter</button>
+                <button @click="showLoader" type="submit" class="bg-black text-white py-3 rounded-lg hover:bg-gray-800">
+                    <span v-if="!loading">
+                        Se connecter
+                    </span>
+                    <div v-else class="flex justify-center">
+                        <span class="inline-block w-6 h-6 border-4 border-gray-400 border-t-black border-b-black rounded-full animate-spin"></span>
+                    </div>
+                </button>
             </form>
 
             <div class="text-center mt-6">
@@ -59,11 +67,14 @@ export default {
             email: '',
             password: '',
             errorMessage: '',
+            hover: false,
+            loading: false,
         };
     },
 
     methods: {
         async login() {
+            this.loading = true;
             try {
                 // Make a POST request to the /auth/login endpoint on the local server (http://localhost:3001)
                 const response = await axios.post(`${config.apiBaseUrl}/auth/login`, {
@@ -81,6 +92,7 @@ export default {
             } catch (error) {
                 this.errorMessage = 'Échec de la connexion : ' + error.response.data.message;
                 alert('Echec de la connexion');
+                this.loading = false;
             }
         },
         async getUserInfo() {
@@ -104,6 +116,12 @@ export default {
 </script>
 
 <style scoped>
+/* @keyframes spin {
+to {
+transform: rotate(360deg);
+}
+} */
+
 @media (max-width: 800px) {
     .small_screens {
         display: none;
