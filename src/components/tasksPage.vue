@@ -1,5 +1,5 @@
 <script setup>
-import { ListTodo, Search, Filter,Ellipsis } from 'lucide-vue-next';
+import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
 </script>
 
 
@@ -53,8 +53,24 @@ import { ListTodo, Search, Filter,Ellipsis } from 'lucide-vue-next';
                             <div class="py-1 px-3 rounded-xl" :class="['priority', getPriorityClass(task.priority)]">
                                 Tache
                             </div>
-                            <Ellipsis />
+                            <div class="relative">
+                                <button @click="toggleMenu(task.id)">
+                                    <Ellipsis class="hover:bg-green-200 cursor-pointer" />
+                                </button>
+                                <div :class="{ block: task.showMenu, hidden: !task.showMenu }" v-if="task.showMenu"
+                                    class="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded-lg shadow-lg">
+                                    <ul>
+                                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer"><button
+                                                @click="fetchTaskDetailsView()">Voir détails</button></li>
+                                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer"><button
+                                                @click="fetchTaskDetails()">Modifier</button></li>
+                                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer"><button
+                                                @click="deleteTask()">Supprimer</button></li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
+
                         <div class="flex flex-col pb-2">
                             <span class="font-medium">{{ task.taskname }}</span>
                             <span>{{ task.description }}</span>
@@ -82,7 +98,22 @@ import { ListTodo, Search, Filter,Ellipsis } from 'lucide-vue-next';
                             <div class="py-1 px-3 rounded-lg" :class="['priority', getPriorityClass(task.priority)]">
                                 Tache
                             </div>
-                            <Ellipsis />
+                            <div class="relative">
+                                <button @click="toggleMenu(task.id)">
+                                    <Ellipsis class="hover:bg-green-200 cursor-pointer" />
+                                </button>
+                                <div :class="{ block: task.showMenu, hidden: !task.showMenu }" v-if="task.showMenu"
+                                    class="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded-lg shadow-lg">
+                                    <ul>
+                                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer"><button
+                                                @click="fetchTaskDetailsView()">Voir détails</button></li>
+                                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer"><button
+                                                @click="fetchTaskDetails()">Modifier</button></li>
+                                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer"><button
+                                                @click="deleteTask()">Supprimer</button></li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
                         <div class="flex flex-col pb-2">
                             <span class="font-medium">{{ task.taskname }}</span>
@@ -112,7 +143,22 @@ import { ListTodo, Search, Filter,Ellipsis } from 'lucide-vue-next';
                             <div class="py-1 px-3 rounded-lg" :class="['priority', getPriorityClass(task.priority)]">
                                 Tache
                             </div>
-                            <Ellipsis />
+                            <div class="relative">
+                                <button @click="toggleMenu(task.id)">
+                                    <Ellipsis class="hover:bg-green-200 cursor-pointer" />
+                                </button>
+                                <div :class="{ block: task.showMenu, hidden: !task.showMenu }" v-if="task.showMenu"
+                                    class="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded-lg shadow-lg">
+                                    <ul>
+                                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer"><button
+                                                @click="fetchTaskDetailsView()">Voir détails</button></li>
+                                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer"><button
+                                                @click="fetchTaskDetails()">Modifier</button></li>
+                                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer"><button
+                                                @click="deleteTask()">Supprimer</button></li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
                         <div class="flex flex-col pb-2">
                             <span class="font-medium">{{ task.taskname }}</span>
@@ -124,6 +170,239 @@ import { ListTodo, Search, Filter,Ellipsis } from 'lucide-vue-next';
             </div>
         </div>
     </div>
+    <!--formulaire de modification d'une tache-->
+    <modal class="fixed inset-0 backdrop-blur-sm flex justify-end z-50" v-if="modalEditTasks">
+        <button @click="closeEditTask()" class="self-start p-6">
+            <X class="text-black text-2xl" />
+        </button>
+
+        <div
+            class="flex flex-col bg-white p-6 gap-5 rounded-lg shadow-lg animate__animated animate__fadeInDown w-full max-w-4xl h-full">
+
+            <div class="flex justify-between">
+                <h1 class="text-center text-2xl text-gray-800 ">MODIFIER UNE TACHE</h1>
+                <button class="w-1/4 px-3 bg-black text-white rounded hover:bg-gray-600 " @click="editTask()">
+                    Modifier
+                </button>
+            </div>
+
+            <form @submit.prevent="editTask" class="flex flex-col gap-4">
+                <div class="flex flex-col gap-4 border-t border-b border-gray-300">
+                    <input type="text" id="name" placeholder="Titre de la tache" v-model="taskname" required
+                        class="w-full p-2 focus:outline-none focus:ring focus:ring-gray-200">
+
+                    <textarea id="description" placeholder="Veuillez saisir une description de la tache"
+                        v-model="description" cols="30" rows="3"
+                        class="w-full p-2 focus:outline-none focus:ring focus:ring-gray-200"></textarea>
+                </div>
+
+                <div class="w-full flex flex-col md:flex-row gap-5">
+                    <div class="w-full">
+                        <label for="Attribuer" class="block text-gray-700 text-sm font-bold mb-2">Attribuer
+                            a</label>
+                        <select v-model="userAssignId"
+                            class="block w-full px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-200 appearance-none">
+                            <option v-for="member in projectMembers" :key="member.userId" :value="member.userId">
+                                {{ member.userMember.email }}</option>
+
+                        </select>
+                    </div>
+
+                    <div class="w-full relative">
+                        <div class="mb-2 w-full">
+                            <label for="Status" class="block text-gray-700 text-sm font-bold mb-2">Statut de la
+                                tache
+                            </label>
+                            <select v-model="status" required
+                                class="block w-full px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-200 appearance-none">
+
+                                <option value="EN_ATTENTE">En Attente</option>
+                                <option value="EN_COURS">En Cours</option>
+                            </select>
+                        </div>
+
+                        <!-- <span class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                                <ChevronDown
+                                    :class="{ 'chevron-down': isDropdown1Open, 'chevron-up': !isDropdown1Open }"
+                                    class="w-5 h-5 text-gray-500" />
+                            </span> -->
+                    </div>
+                </div>
+
+                <div class="flex flex-col md:flex-row gap-5">
+                    <div class="w-full md:w-1/2">
+                        <div class="mb-4">
+                            <label for="Planing" class="block text-gray-700 text-sm font-bold mb-2">
+                                Planning début et fin
+                            </label>
+                            <div class="flex w-full gap-2">
+                                <input type="text" v-model="start_date" required
+                                    class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-200">
+                                <input type="text" v-model="end_date" required
+                                    class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-200">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="w-full md:w-1/2 relative">
+                        <div class="mb-4 w-full">
+                            <label for="Priorité" class="block text-gray-700 text-sm font-bold mb-2">
+                                Priorité de la tache
+                            </label>
+                            <select v-model="priority"
+                                class="block w-full px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-200 appearance-none">
+                                <option value="FAIBLE">Faible</option>
+                                <option value="MOYENNE">Moyenne</option>
+                                <option value="ELEVEE">Elevée</option>
+                            </select>
+                        </div>
+                        <!-- <span class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                                <ChevronDown :class="{ 'chevron-down': isPriorityOpen, 'chevron-up': !isPriorityOpen }"
+                                    class="w-5 h-5 text-gray-500" />
+                            </span> -->
+                    </div>
+
+                </div>
+
+                <div class="w-full flex flex-col md:flex-row gap-5">
+                    <div class="w-full md:w-1/2">
+                        <label for="Budjet" class="block text-gray-700 text-sm font-bold mb-2">
+                            Budget de la tache
+                        </label>
+                        <input type="text" v-model="budget" required
+                            class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-200">
+                    </div>
+
+                    <!-- <div class="flex flex-col md:flex-row gap-5">
+                             -->
+
+                    <div class="w-full md:w-1/2">
+                        <label for="Type" class="block text-gray-700 text-sm font-bold mb-2">Type de tache</label>
+                        <input type="text" v-model="taskType"
+                            class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-300">
+                    </div>
+                    <!-- </div> -->
+
+
+                </div>
+                <div class="w-full flex flex-col md:flex-row gap-5">
+
+                    <div class="w-full md:w-1/2">
+                        <label for="piece" class="block text-gray-700 text-sm font-bold mb-2">Piece jointe</label>
+                        <input type="file"
+                            class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-300">
+                    </div>
+
+                </div>
+
+                <div class="w-full flex flex-col md:flex-row gap-5">
+                    <div class="w-full md:w-1/2 flex items-center gap-5">
+                        <div class="w-12 h-12 rounded-full overflow-hidden border-2 border-gray-300 flex-shrink-0">
+                            <img src="../assets/images/logoflysoft.png" alt="Photo de l'utilisateur"
+                                class="w-full h-full object-cover">
+                        </div>
+                        <input type="text" placeholder="Ajouter un commentaire à la tâche"
+                            class="w-full h-full border border-150 rounded focus:outline-none focus:ring focus:ring-gray-300 pl-5"
+                            v-model="content">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </modal>
+
+    <!--Modal pour afficher le details de la tache-->
+
+    <modal class="fixed inset-0 backdrop-blur-sm flex justify-end z-50" v-if="modalDetailTasks">
+        <button @click="closeDetailsTask()" class="self-start p-6">
+            <X class="text-black text-2xl" />
+        </button>
+
+        <div
+            class="flex flex-col bg-white p-6 gap-5 rounded-lg shadow-lg animate__animated animate__fadeInDown w-full max-w-4xl h-full">
+
+            <div class="flex justify-between">
+                <h1 class="text-center text-2xl text-gray-800 ">DETAILS DE LA TACHE</h1>
+            </div>
+
+            <div class="flex flex-col gap-4 border-t border-b border-gray-300">
+                <p class=" text-gray-700 text-sm font-bold mb-2">Nom de la tache:</p>
+                <p type="text" class="w-full p-2 focus:outline-none focus:ring focus:ring-gray-200">{{ taskname }}</p>
+                <p class=" text-gray-700 text-sm font-bold mb-2">Description:</p>
+                <p class="w-full p-2 focus:outline-none focus:ring focus:ring-gray-200">{{ description }}</p>
+            </div>
+
+            <div class="w-full flex flex-col md:flex-row gap-5">
+                <div class="w-full">
+                    <p for="Attribuer" class="block text-gray-700 text-sm font-bold mb-2">Responsable(s)
+                    </p>
+
+                    <ul class="block ">
+                        <li v-for="member in projectMembers" :key="member.userId" :value="member.userId">
+                            {{ member.userMember.email }}</li>
+                    </ul>
+                </div>
+
+                <div class="w-full relative">
+                    <div class="mb-2 w-full">
+                        <p for="Status" class="block text-gray-700 text-sm font-bold mb-2">Statut de la
+                            tache
+                        </p>
+                        <p class="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-200">{{ status }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-col md:flex-row gap-5">
+                <div class="w-full md:w-1/2">
+                    <div class="mb-4">
+                        <label for="Planing" class="block text-gray-700 text-sm font-bold mb-2">
+                            Planning début et fin
+                        </label>
+
+                        <div class="flex w-full gap-2">
+                            <p class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-200">{{
+                                start_date }}</p>
+                            <p class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-200">{{
+                                end_date }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="w-full md:w-1/2 relative">
+                    <div class="mb-4 w-full">
+                        <p for="Priorité" class="block text-gray-700 text-sm font-bold mb-2"> Priorité de la tache </p>
+                        <p
+                            class="block w-full px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-200">
+                            {{ priority }}
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="w-full flex flex-col md:flex-row gap-5">
+                <div class="w-full md:w-1/2">
+                    <p class="block text-gray-700 text-sm font-bold mb-2">
+                        Budget de la tache
+                    </p>
+                    <p class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-200">{{ budget }}
+                    </p>
+                </div>
+
+                <!-- <div class="flex flex-col md:flex-row gap-5">
+                             -->
+
+                <div class="w-full md:w-1/2">
+                    <p class="block text-gray-700 text-sm font-bold mb-2">Type de tache</p>
+                    <p class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-300">{{ taskType
+                        }}</p>
+                </div>
+                <!-- </div> -->
+            </div>
+
+        </div>
+    </modal>
+
 </template>
 
 <script>
@@ -145,20 +424,35 @@ export default defineComponent({
             projects: [], // Liste des projets
             selectedProjectId: '',
             userId: '',
-            taskId:'',
+            taskId: '',
             projectId: '',
             userData: null,
             isTaskListLateVisible: false,
             pendingTasks: [],
             inProgressTasks: [],
             completedTasks: [],
+
+            taskname: '',
+            description: '',
+            start_date: '',
+            end_date: '',
+            status: '',
+            budget: '',
+            taskType: '',
+            priority: '',
+            projectMembers: [],
+            modalEditTasks: false,
+            showMenu: false,
+            modalDetailTasks: false,
+            taskDetails: [] // details de la tache
+
         };
     },
     mounted() {
         if (this.isConnected()) {
             this.userId = localStorage.getItem('userId');
             this.projectId = localStorage.getItem('projectId');
-            this.taskId = localStorage.getItem('selectedTaskId');
+            this.movedItemId = localStorage.getItem('selectedTaskId');
             this.fetchUserData();
         } else {
             this.errorMessage = 'Utilisateur non connecté';
@@ -177,7 +471,6 @@ export default defineComponent({
         isConnected() {
             return localStorage.getItem('token') !== null;
         },
-
         selectButton(button) {
             this.selectedButton = button;
         },
@@ -368,19 +661,23 @@ export default defineComponent({
             } catch (error) {
                 console.error('Error updating task status:', error);
             }
-        }
-    },
-
-    log(event) {
-        console.log(event);
-    },
-    
-    async deleteTask() {
+        },
+        toggleMenu(taskId) {
+            const allTasks = [...this.pendingTasks, ...this.inProgressTasks, ...this.completedTasks];
+            allTasks.forEach(task => {
+                if (task.id === taskId) {
+                    task.showMenu = !task.showMenu;
+                } else {
+                    task.showMenu = false; // Fermer les autres menus
+                }
+            });
+        },
+        async deleteTask() {
             try {
                 const token = localStorage.getItem('token');
                 console.log("Voici l'id de la tache:");
                 console.log(this.movedItemId);
-                const response = await axios.delete(`${config.apiBaseUrl}/tasks/${this.taskId}`, {
+                const response = await axios.delete(`${config.apiBaseUrl}/tasks/${this.movedItemId}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -391,31 +688,160 @@ export default defineComponent({
                 this.fetchPendingTasks();
                 this.fetchInProgressTasks();
                 this.fetchCompletedTasks();
+                this.showMenu = false;
+                //methode pour recharger la page
+                window.location.reload();
+
             } catch (error) {
                 console.error('Erreur lors de la suppression de la tache :', error);
             }
+        },
+        closeEditTask() {
+            this.modalEditTasks = false;
+        },
+        closeDetailsTask() {
+            this.modalDetailTasks = false;
+        },
+        //details d'une tache
+        async fetchTaskDetails() {
+            try {
+                const token = localStorage.getItem('token');
+                console.log(this.movedItemId)
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.movedItemId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                this.taskDetails = response.data;
+                console.log("Voici les details de la tache selectionné:")
+                console.log(this.taskDetails);
+                this.showMenu = false;
+                this.openEditTaskModal();
+            } catch (error) {
+                console.error('Erreur lors de la récupération des détails de la tâche :', error);
+            }
+        },
+        openViewTaskModal() {
+            this.showMenu = false;
+            this.taskname = this.taskDetails.taskname;
+            this.description = this.taskDetails.description;
+            this.userAssignId = this.taskDetails.userAssignId;
+            this.status = this.taskDetails.status;
+            this.start_date = this.formatDate(this.taskDetails.start_date);
+            this.end_date = this.formatDate(this.taskDetails.end_date);
+            this.priority = this.taskDetails.priority;
+            this.budget = this.taskDetails.budget;
+            this.taskType = this.taskDetails.taskType;
+            this.modalDetailTasks = true;
+
+        },
+        //Voir les details de la tache
+        async fetchTaskDetailsView() {
+            try {
+                const token = localStorage.getItem('token');
+                console.log(this.movedItemId)
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.movedItemId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                this.taskDetails = response.data;
+                console.log("Voici les details de la tache selectionné:")
+                console.log(this.taskDetails);
+                this.openViewTaskModal();
+                this.showMenu = false;
+            } catch (error) {
+                console.error('Erreur lors de la récupération des détails de la tâche :', error);
+            }
+        },
+        formatDate(date) {
+            const d = new Date(date);
+            const day = String(d.getDate()).padStart(2, '0');
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const year = d.getFullYear();
+            return `${day}/${month}/${year}`;
+        },
+        openEditTaskModal() {
+            this.taskname = this.taskDetails.taskname;
+            this.description = this.taskDetails.description;
+            this.userAssignId = this.taskDetails.userAssignId;
+            this.status = this.taskDetails.status;
+            this.start_date = this.formatDate(this.taskDetails.start_date);
+            this.end_date = this.formatDate(this.taskDetails.end_date);
+            this.priority = this.taskDetails.priority;
+            this.budget = this.taskDetails.budget;
+            this.taskType = this.taskDetails.taskType;
+            this.modalEditTasks = true;
+
+        },
+        toISODate(dateString) {
+            const [day, month, year] = dateString.split('/');
+            return new Date(year, month - 1, day).toISOString();
         },
 
         async editTask() {
             try {
                 const token = localStorage.getItem('token');
-                console.log("Voici l'id de la tache:");
-                console.log(this.movedItemId);
-                const response = await axios.delete(`${config.apiBaseUrl}/tasks/${this.taskId}`, {
+                // console.log("Voici l'id de la tache:");
+                // console.log(this.movedItemId);
+                const response = await axios.patch(`${config.apiBaseUrl}/tasks/${this.movedItemId}`, {
+                    // Les données de la tâche à mettre à jour
+                    taskname: this.taskname,
+                    description: this.description,
+                    userAssignId: this.userAssignId,
+                    status: this.status,
+                    start_date: this.toISODate(this.start_date), // Conversion en format ISO-8601
+                    end_date: this.toISODate(this.end_date), // Conversion en format ISO-8601
+                    priority: this.priority,
+                    budget: this.budget,
+                    taskType: this.taskType
+                }, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
                 });
-                this.taskDelete = response.data;
-                console.log("Tache supprimer avec succes");
-                //Mise a jour de la liste de tache
+
+                this.taskEdit = response.data;
+                console.log(this.taskEdit)
+                console.log("Tache modifiée avec succès");
                 this.fetchPendingTasks();
                 this.fetchInProgressTasks();
                 this.fetchCompletedTasks();
+                this.modalEditTasks = false;
+                //methode pour recharger la page
+                window.location.reload();
+
             } catch (error) {
-                console.error('Erreur lors de la suppression de la tache :', error);
+                console.error('Erreur lors de la modification de la tâche :', error);
             }
         },
+
+        async fetchProjectMembers() {
+            console.log("Id projet selectionné backlogs");
+            console.log(this.projectId)
+            try {
+                console.log(this.projectId)
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`${config.apiBaseUrl}/team-members/project/${this.projectId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                this.projectMembers = response.data;
+                console.log("Bonsoir")
+                console.log("Voici la liste des membre dans le backlogs");
+                console.log(this.projectMembers);
+            } catch (error) {
+                this.errorMessage = 'Erreur lors de la récupération des membres du projet : ' + (error.response ? error.response.data.message : error.message);
+            }
+        },
+
+    },
+
+    log(event) {
+        console.log(event);
+    },
+
 
 
 });

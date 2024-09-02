@@ -169,7 +169,7 @@ export default {
             filteredEmails: [],
             roles: [],
             userData: null,
-            isteamMemberListVisible: true,
+            isteamMemberListVisible: false,
             projectMembers: [],//tableau des membres du projet
         };
     },

@@ -22,8 +22,7 @@ import { Users, Gauge, CircleGauge, ClockArrowDown, UserRoundCheck, Logs, Trendi
 
             <div class="stat-box flex flex-col justify-between bg-pink-100 rounded-xl p-3">
                 <div class="flex justify-between items-center gap-3 md:gap-5 ">
-                    <h1 class="text-3xl font-medium lg:text-5xl lg:pl-3">{{ (completedTasksCount / taskCount *
-                        100).toFixed(0) }}%</h1>
+                    <h1 class="text-3xl font-medium lg:text-5xl lg:pl-3">{{ (realisationRate) }}%</h1>
                     <CircleGauge class="w-10 h-10" />
                 </div>
                 <h3 class="text-xs mt-2">Pourcentage de réalisation</h3>
@@ -31,7 +30,7 @@ import { Users, Gauge, CircleGauge, ClockArrowDown, UserRoundCheck, Logs, Trendi
 
             <div class="stat-box flex flex-col justify-between bg-green-100 rounded-xl pl-2 py-3 lg:p-3">
                 <div class="flex justify-between items-center ">
-                    <h1 id="taskRate" class="text-2xl font-medium lg:text-4xl lg:pl-3">{{ (taskRate1).toFixed(2) }}t/j</h1>
+                    <h1 id="taskRate" class="text-2xl font-medium lg:text-4xl lg:pl-3">{{ (taskRate).toFixed(2) }}t/j</h1>
                     <ClockArrowDown class="w-10 h-10" />
                 </div>
                 <h3 class="text-xs mt-2">Taux de tache journaliere</h3>
@@ -177,8 +176,9 @@ export default {
             projectId: '',
             userData: null,
             isProjectListVisible: false,
-            taskRate1: 0,
+            // taskRate1: 0,
             reactivityRate: 0,
+            realisationRate: 0,
 
         };
     },
@@ -199,8 +199,10 @@ export default {
         this.fetchCompletedTasksCount();
         this.fetchTotalTasksCount();
         this.fetchTaskRate();
-        this.fetchTaskRate1();
+        // this.fetchTaskRate1();
         this.fetchReactivityRate();
+        this.fetchRealisationRate();
+        
     },
     methods: {
         isConnected() {
@@ -244,18 +246,24 @@ export default {
             localStorage.setItem('projectId', projectId); // Stocker l'ID du projet dans le localStorage
             this.$router.push('/accueilPage'); // Rediriger vers la page des détails du projet
         },
-        async fetchTaskRate() {
-            try {
-                const response = await fetch(`http://localhost:3001/tasks/tauxTasksDay/${this.projectId}`);
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                const data = await response.json();
-                this.taskRate = data.taskRate; // Adjust based on the actual structure of your response
-            } catch (error) {
-                console.error('Error fetching task rate:', error);
-            }
-        },
+        // async fetchTaskRate() {
+        //     try {
+        //         const token = localStorage.getItem('token');
+        //         const response = await axios.get(`${config.apiBaseUrl}/tasks/tauxTasksDay/${this.projectId}`, {
+        //             headers: {
+        //                 'Authorization': `Bearer ${token}`
+        //             }
+        //         });
+        //         if (!response.ok) {
+        //             throw new Error('Network response was not ok');
+        //         }
+        //         // const data = await response.json();
+        //         this.taskRate = response.data; // Adjust based on the actual structure of your response
+        //         console.log(this.taskRate)
+        //     } catch (error) {
+        //         console.error('Error fetching task rate:', error);
+        //     }
+        // },
 
         async fetchTeamMemberCount() {
             try {
@@ -328,7 +336,7 @@ export default {
                 console.error('Erreur lors de la récupération du nombre total de tâches :', error);
             }
         },
-        async fetchTaskRate1() {
+        async fetchTaskRate() {
             try {
                 const token = localStorage.getItem('token');
                 const response = await axios.get(`${config.apiBaseUrl}/tasks/tauxTasksDay/${this.projectId}`, {
@@ -336,9 +344,9 @@ export default {
                         'Authorization': `Bearer ${token}`
                     }
                 });
-                this.taskRate1 = response.data;
+                this.taskRate = response.data;
                 console.log("Voici le taux de tache journaliere: ")
-                console.log(this.taskRate1);
+                console.log(this.taskRate);
             } catch (error) {
                 console.error('Erreur lors de la recupération du taux de tache journaliere:', error);
             }
@@ -353,7 +361,22 @@ export default {
                 });
                 this.reactivityRate = response.data;
                 console.log("Voici le taux de tache reactivité des membres: ")
-                console.log(this.taskRate1);
+                console.log(this.reactivityRate);
+            } catch (error) {
+                console.error('Erreur lors de la recupération du taux de reactivté:', error);
+            }
+        },
+        async fetchRealisationRate() {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/tauxRealisation/${this.projectId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                this.realisationRate = response.data;
+                console.log("Voici le pourcentage de realisation de la tache: ")
+                console.log(this.realisationRate);
             } catch (error) {
                 console.error('Erreur lors de la recupération du taux de reactivté:', error);
             }
