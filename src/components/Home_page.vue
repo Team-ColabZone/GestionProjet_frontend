@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col w-full h-screen  bg-white monda-font animate__animated animate__fadeInDown">
+    <div class="flex flex-col w-full h-screen  bg-white monda-font ">
         <header class="h-auto flex justify-between items-center w-full px-4 border-b border-gray-200 ">
             <img src="../assets/images/logoflysoft.png" alt="logo Entreprise" class="h-11">
 
@@ -65,12 +65,12 @@
                                 class="absolute top-full left-0 w-full flex flex-col gap-2 p-2 bg-white shadow-sm border border-gray-300 rounded-lg z-10">
                                 <!-- Projects List -->
                                 <div class="h-40 w-full overflow-x-auto overflow-y-auto">
-                                    <div v-for="project in filteredProjects" :key="project.id"
+                                    <div v-for="project in displayedProjects" :key="project.id"
                                         @click="selectProject(project.id)" :class="[
                                             'flex items-center border-b border-gray-50 cursor-pointer rounded-lg pr-2',
                                             { 'bg-gray-300': selectedProjectId === project.id, 'bg-gray-100': selectedProjectId !== project.id }
                                         ]">
-                                        <img :src="project.logo" alt="Project Logo"
+                                        <img :src="project.projectlogo" alt="Project Logo"
                                             class="w-12 h-full rounded border" />
                                         <p class="text-left text-black text-ellipsis text-xs md:text-sm p-2">
                                             <span class="font-medium">{{ project.projectname }}</span><br />
@@ -282,7 +282,8 @@
                         </div>
 
                         <div class="flex justify-end w-full ">
-                            <button class="w-2/5 bg-black text-white p-3 rounded hover:bg-gray-600 focus:outline-none focus:ring focus:ring-blue-300"
+                            <button
+                                class="w-2/5 bg-black text-white p-3 rounded hover:bg-gray-600 focus:outline-none focus:ring focus:ring-blue-300"
                                 type="submit">
                                 <span v-if="!projectLoading">
                                     Enregistrer le projet
@@ -363,7 +364,8 @@
                         </div>
 
                         <div class="flex justify-end w-full ">
-                            <button class="w-2/5 bg-black text-white p-3 rounded hover:bg-gray-600 focus:outline-none focus:ring focus:ring-gray-700"
+                            <button
+                                class="w-2/5 bg-black text-white p-3 rounded hover:bg-gray-600 focus:outline-none focus:ring focus:ring-gray-700"
                                 type="submit">
                                 <span v-if="!enterpriseLoading">
                                     Ajouter
@@ -495,8 +497,8 @@ export default {
             modalmembers: false,
             showMessagePage: false,
             showNotificationPage: false,
-            enterpriseLoading:false,
-            projectLoading:false,
+            enterpriseLoading: false,
+            projectLoading: false,
             logoutLoader: false,
             currentPage: 'dashboard',
             selectedButton: 'button4',
@@ -537,6 +539,7 @@ export default {
             projectId: '',
             entrepriseId: '',
             // filteredProjects: [],
+            displayedProjects: [],
             selectedEntrepriseId: null,
             roleId: '', // This should be fetched from the system
             filteredEmails: [],
@@ -546,23 +549,25 @@ export default {
             isEntreprisesListVisible: false,
             isNavOpen: false,
             isLgScreen: false,
+            projectsEntreprise: [],//liste des projets par Entreprises
         };
     },
 
-    computed: {
-        filteredProjects() {
-            if (this.selectedEntrepriseId) {
-                return this.projects.filter(project => project.entrepriseId === this.selectedEntrepriseId);
-            }
-            return this.projects.filter(project => !project.entrepriseId);
-        },
-    },
+    // computed: {
+    //     filteredProjects() {
+    //         if (this.selectedEntrepriseId) {
+    //             return this.projects.filter(project => project.entrepriseId === this.selectedEntrepriseId);
+    //         }
+    //         return this.projects.filter(project => !project.entrepriseId);
+    //     },
+    // },
 
     mounted() {
         if (this.isConnected()) {
             this.userId = localStorage.getItem('userId');
             this.projectId = localStorage.getItem('projectId');
-            this.entrepriseId = localStorage.getItem('entrepriseId');
+            this.entrepriseId = localStorage.getItem('selectedEntrepriseId');
+            this.selectedEntrepriseId = localStorage.getItem('selectedEntrepriseId'); 
             this.fetchUserData();
             this.fetchProjects();
             this.fetchEntreprises();
@@ -571,6 +576,7 @@ export default {
             this.fetchInProgressTasksCount();
             this.fetchCompletedTasksCount();
             this.fetchTotalTasksCount();
+            this.fetchProjectsByEntreprise();
         } else {
             this.errorMessage = 'Utilisateur non connecté';
             this.$router.push('/auth'); // Rediriger vers la page de connexion
@@ -727,7 +733,26 @@ export default {
                 this.selectedImageURL = URL.createObjectURL(file);
             }
         },
+        updateDisplayedProjects() {
+            console.log("bonjour>>>>>>>>>>>>>>>>>>>>>>>");
+            console.log("Début de updateDisplayedProjects");
+            console.log("selectedEntrepriseId:", this.selectedEntrepriseId);
+            console.log("projectsEntreprise:", this.projectsEntreprise);
 
+            if (this.selectedEntrepriseId) {
+                console.log("voici l'id de l'entreprise selectionnée>>>>>>>>>>>>: ");
+                console.log(this.selectedEntrepriseId);
+                // Filtrer les projets de l'entreprise sélectionnée
+                this.displayedProjects = this.projectsEntreprise.filter(project => project.entrepriseId === this.selectedEntrepriseId);
+                console.log("Projets de l'entreprise sélectionnée: £££££££££££££££££££££££ ");
+                console.log(this.displayedProjects);
+            } else {
+                // Filtrer les projets sans entreprise
+                this.displayedProjects = this.projects.filter(project => !project.entrepriseId);
+                console.log("Voici les projets personnels de l'utilisateur connecté:");
+                console.log(this.displayedProjects);
+            }
+        },
         async createNewEntreprise() {
             this.enterpriseLoading = true;
             try {
@@ -836,7 +861,8 @@ export default {
                 } else if (this.projects.length > 0) {
                     this.setFirstProject(this.projects[0]);
                 }
-                this.filterProjects();
+                // this.filterProjects();
+                this.updateDisplayedProjects();
             } catch (error) {
                 this.errorMessage = 'Erreur lors de la récupération des projets : ' + (error.response ? error.response.data.message : error.message);
             }
@@ -863,6 +889,7 @@ export default {
             this.firstProjectLogo = project.logo; // Assuming the project object has a 'logo' property
             this.projects = this.projects.filter(p => p.id !== project.id);
             localStorage.setItem('currentProject', JSON.stringify(project));
+            localStorage.setItem('projectId', project.id); // Ajouter cette ligne pour stocker l'ID du projet
         },
 
         filterProjects() {
@@ -879,11 +906,16 @@ export default {
                 this.projects.push({
                     id: this.selectedProjectId,
                     projectname: this.firstProjectName,
-                    logo: this.firstProjectLogo
+                    projectlogo: this.firstProjectLogo
                 });
                 this.setFirstProject(selectedProject);
                 this.selectedProjectId = projectId;
+                console.log("Voici l'id du projet selectionné: ")
+                console.log(this.selectedProjectId);
                 localStorage.setItem('projectId', projectId);
+                this.isProjectListVisible = false;
+                window.location.reload();
+
             }
         },
 
@@ -908,16 +940,20 @@ export default {
 
         selectEntreprise(entrepriseId) {
             this.selectedEntrepriseId = entrepriseId;
+            console.log("Entreprise sélectionnée ID:", this.selectedEntrepriseId);
             localStorage.setItem('selectedEntrepriseId', entrepriseId);
-            const entrepriseProjects = this.projects.filter(project => project.entrepriseId === entrepriseId);
+            this.updateDisplayedProjects(); // Mettre à jour les projets affichés
+            const entrepriseProjects = this.displayedProjects;
             if (entrepriseProjects.length > 0) {
                 this.setFirstProject(entrepriseProjects[0]);
             } else {
                 this.firstProjectName = '';
                 this.firstProjectLogo = '';
             }
-            this.filterProjects();
+            this.modalIdentity = false;
+            window.location.reload();
         },
+
 
         async fetchPendingTasksCount() {
             try {
@@ -991,6 +1027,29 @@ export default {
             } catch (error) {
                 console.error('Error logging out:', error);
                 this.logoutLoader = true;
+            }
+        },
+        async fetchProjectsByEntreprise() {
+            try {
+                const token = localStorage.getItem('token'); // or another method to retrieve the token
+                const response = await axios.get(`${config.apiBaseUrl}/projects/byEntreprise/${this.entrepriseId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                this.projectsEntreprise = response.data;
+                console.log("Projects d'entreprise méthode fetchProjectsByEntreprise :<<<<<<<<");
+                console.log(this.projectsEntreprise);
+                const savedProject = JSON.parse(localStorage.getItem('currentProject'));
+
+                if (savedProject) {
+                    this.setFirstProject(savedProject);
+                } else if (this.projectsEntreprise.length > 0) {
+                    this.setFirstProject(this.projectsEntreprise[0]);
+                }
+                this.updateDisplayedProjects();
+            } catch (error) {
+                this.errorMessage = 'Erreur lors de la récupération des projets d entreprise : ' + (error.response ? error.response.data.message : error.message);
             }
         }
     }
