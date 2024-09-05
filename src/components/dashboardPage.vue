@@ -28,7 +28,7 @@ import { Users, Gauge, CircleGauge, ClockArrowDown, UserRoundCheck, Logs, Trendi
                 <h3 class="text-xs mt-2">Pourcentage de réalisation</h3>
             </div>
 
-            <div class="stat-box flex flex-col justify-between bg-green-100 rounded-xl pl-2 py-3 lg:p-3">
+            <div class="stat-box flex flex-col justify-between bg-green-100 rounded-xl px-1 py-3 lg:p-3">
                 <div class="flex justify-between items-center ">
                     <h1 id="taskRate" class="text-2xl font-medium lg:text-4xl lg:pl-3">{{ (taskRate).toFixed(2) }}t/j</h1>
                     <ClockArrowDown class="w-10 h-10" />
@@ -41,7 +41,7 @@ import { Users, Gauge, CircleGauge, ClockArrowDown, UserRoundCheck, Logs, Trendi
                     <h1 class="text-3xl font-medium lg:text-5xl lg:pl-3">01</h1>
                     <UserRoundCheck class="w-10 h-10" />
                 </div>
-                <h3 class="text-xs mt-2">Nombre de membres performant</h3>
+                <h3 class="text-xs pl-2 md:mt-2">Nombre de membres performant</h3>
             </div>
 
             <div class="stat-box flex flex-col justify-between bg-blue-50 rounded-xl p-3">
@@ -73,11 +73,11 @@ import { Users, Gauge, CircleGauge, ClockArrowDown, UserRoundCheck, Logs, Trendi
                 <input type="submit" value="Rechercher"
                     class="w-1/4 h-11 bg-black text-white  rounded-lg hover:bg-slate-600 focus:outline-none" />
             </form>
-            <div class="w-full md:w-1/2 flex items-center justify-center text-red-500 mt-4 md:mt-0">error message</div>
+            <div class="w-full hidden md:w-1/2 md:flex items-center justify-center text-red-500 mt-4 md:mt-0">error message</div>
         </div>
 
         <!-- Task Sections -->
-        <div class="flex gap-4 w-full h-full">
+        <div class="flex flex-wrap md:flex-nowrap gap-4 w-full h-full">
             <!-- Current Tasks -->
             <div class="task-box w-full lg:w-1/2">
                 <div class="flex justify-between items-center border-b border-gray-300 p-2">
@@ -247,30 +247,6 @@ export default {
             localStorage.setItem('projectId', projectId); // Stocker l'ID du projet dans le localStorage
             this.$router.push('/accueilPage'); // Rediriger vers la page des détails du projet
         },
-        // async fetchTaskRate() {
-        //     try {
-        //         const token = localStorage.getItem('token');
-        //         const response = await axios.get(`${config.apiBaseUrl}/tasks/tauxTasksDay/${this.projectId}`, {
-        //             headers: {
-        //                 'Authorization': `Bearer ${token}`
-        //             }
-        //         });
-        //         if (!response.ok) {
-        //             throw new Error('Network response was not ok');
-        //         }
-        //         // const data = await response.json();
-        //         this.taskRate = response.data; // Adjust based on the actual structure of your response
-        //         console.log(this.taskRate)
-        //         const response = await fetch(`http://localhost:3001/tasks/tauxTasksDay/${this.projectId}`);
-        //         if (!response.ok) {
-        //             throw new Error('Network response was not ok');
-        //         }
-        //         const data = await response.json();
-        //         this.taskRate = data.taskRate; // Adjust based on the actual structure of your response
-        //     } catch (error) {
-        //         console.error('Error fetching task rate:', error);
-        //     }
-        // },
 
         async fetchTeamMemberCount() {
             try {
@@ -358,21 +334,6 @@ export default {
                 console.error('Erreur lors de la recupération du taux de tache journaliere:', error);
             }
         },
-        // async fetchTaskRate1() {
-        //     try {
-        //         const token = localStorage.getItem('token');
-        //         const response = await axios.get(`${config.apiBaseUrl}/tasks/tauxTasksDay/${this.projectId}`, {
-        //             headers: {
-        //                 'Authorization': `Bearer ${token}`
-        //             }
-        //         });
-        //         this.taskRate1 = response.data;
-        //         console.log("Voici le taux de tache journaliere: ")
-        //         console.log(this.taskRate1);
-        //     } catch (error) {
-        //         console.error('Erreur lors de la recupération du taux de tache journaliere:', error);
-        //     }
-        // },
         async fetchReactivityRate() {
             try {
                 const token = localStorage.getItem('token');

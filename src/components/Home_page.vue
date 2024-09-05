@@ -141,7 +141,7 @@
                             'bg-gray-100 py-1 px-2 rounded-lg': currentPage === 'team',
                         }" @click="showPage('team')">
                             <div class="flex w-4/5 md:w-3/5 items-center gap-1">
-                                <Users class="vue h4" />
+                                <Users class="h4" />
                                 <h3 class="text-black">
                                     Membres
                                 </h3>
@@ -282,7 +282,8 @@
                         </div>
 
                         <div class="flex justify-end w-full ">
-                            <button class="w-2/5 bg-black text-white p-3 rounded hover:bg-gray-600 focus:outline-none focus:ring focus:ring-blue-300"
+                            <button
+                                class="w-2/5 bg-black text-white p-3 rounded hover:bg-gray-600 focus:outline-none focus:ring focus:ring-blue-300"
                                 type="submit">
                                 <span v-if="!projectLoading">
                                     Enregistrer le projet
@@ -363,7 +364,8 @@
                         </div>
 
                         <div class="flex justify-end w-full ">
-                            <button class="w-2/5 bg-black text-white p-3 rounded hover:bg-gray-600 focus:outline-none focus:ring focus:ring-gray-700"
+                            <button
+                                class="w-2/5 bg-black text-white p-3 rounded hover:bg-gray-600 focus:outline-none focus:ring focus:ring-gray-700"
                                 type="submit">
                                 <span v-if="!enterpriseLoading">
                                     Ajouter
@@ -408,7 +410,7 @@
                             '' }}</span>
 
                         <!-- Manage Account button -->
-                        <button class="border border-gray-200 text-blue-600 px-5 rounded-2xl">
+                        <button class="border border-gray-200 text-blue-600 px-5 rounded-2xl" @click="accountdata">
                             Gérer votre compte
                         </button>
                     </div>
@@ -466,6 +468,76 @@
 
                 </div>
             </div>
+
+            <div class="fixed inset-0 backdrop-blur-sm flex justify-end z-50" v-if="modalModifyData">
+                <button @click="closeModifyData" class="self-start p-6">
+                    <span class="text-black text-2xl">×</span>
+                </button>
+
+                <div
+                    class="flex flex-col bg-white p-6 gap-5 rounded-lg shadow-lg animate__animated animate__fadeInDown w-full max-w-4xl h-full">
+                    <div class="flex justify-between">
+                        <h1 class="text-center text-2xl text-black">COMPTE</h1>
+                        <button class="px-3 bg-black text-white rounded hover:bg-gray-600"
+                            @click="modifyProfile">sauvegarder</button>
+                    </div>
+
+                    <form @submit.prevent="modifyProfile" class="flex flex-col gap-4">
+                        <div
+                            class="flex flex-row gap-4 border-t border-b border-gray-300 py-3 justify-between items-center">
+                            <div class="flex flex-col gap-3 items-center md:flex-row">
+                                <img :src="profileImageUrl" alt="Profile Image"
+                                    class="w-16 h-16 rounded-full border" />
+                                <span>PHOTO DE PROFIL</span>
+                            </div>
+
+                            <div class="flex gap-4">
+                                <input type="file" ref="fileInput" @change="changeProfileImage" class="hidden">
+                                <button type="button"
+                                    class="px-3 bg-white text-black border border-gray-100 rounded hover:bg-gray-600"
+                                    @click="triggerFileInput">Modifier</button>
+                                <button type="button"
+                                    class="px-3 py-1 bg-gray-300 text-black rounded hover:bg-gray-600"
+                                    @click="removeProfileImage">Supprimer</button>
+                            </div>
+                        </div>
+
+                        <div class="w-full flex md:flex-row gap-5 md:gap-14">
+                            <div class="w-full">
+                                <label for="firstName"
+                                    class="block text-gray-700 text-sm font-bold mb-2">Nom</label>
+                                <input type="text" v-model="firstName"
+                                    class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-200" />
+                            </div>
+
+                            <div class="w-full">
+                                <label for="lastName"
+                                    class="block text-gray-700 text-sm font-bold mb-2">Prenom</label>
+                                <input type="text" v-model="lastName"
+                                    class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-200" />
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col md:flex-row gap-5 md:gap-14">
+                            <div class="w-full md:w-1/2">
+                                <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email</label>
+                                <input type="text" v-model="email"
+                                    class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-200" />
+                            </div>
+
+                            <div class="w-full md:w-1/2 relative">
+                                <label for="phoneNumber" class="block text-gray-700 text-sm font-bold mb-2">Numéro
+                                    de téléphone</label>
+                                <input type="text" v-model="phoneNumber"
+                                    class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-200" />
+                            </div>
+                        </div>
+
+                        <router-link to="/Updatepassword" class="w-full text-right text-blue-600">MODIFIER VOTRE MOT
+                            DE PASSE</router-link>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -493,10 +565,11 @@ export default {
             modalIdentity: false,
             modalEntreprise: false,
             modalmembers: false,
+            modalModifyData: false,
             showMessagePage: false,
             showNotificationPage: false,
-            enterpriseLoading:false,
-            projectLoading:false,
+            enterpriseLoading: false,
+            projectLoading: false,
             logoutLoader: false,
             currentPage: 'dashboard',
             selectedButton: 'button4',
@@ -546,6 +619,12 @@ export default {
             isEntreprisesListVisible: false,
             isNavOpen: false,
             isLgScreen: false,
+
+            //profile modifier
+            firstName: '',
+            lastName: '',
+            password: '',
+            profileImageUrl: '',
         };
     },
 
@@ -582,7 +661,6 @@ export default {
 
     },
     methods: {
-
         toggleNav() {
             this.isNavOpen = !this.isNavOpen;
         },
@@ -654,7 +732,7 @@ export default {
                 this.success = true;
                 this.modalmembers = true;
                 this.successMessage = response.data.message;
-
+                // this.projectId = response.data.id;
                 console.log('Project creation response:', response.data);
 
                 //saves image if there were added
@@ -703,8 +781,9 @@ export default {
                 reader.onload = async (e) => {
                     const base64Image = e.target.result;
                     const token = localStorage.getItem('token');
-                    console.log('Base64 Image:', base64Image); // Log the base64 image data
-                    await axios.post(`${config.apiBaseUrl}/projects/setProjectLogo`, {
+                    // console.log('here is the project image logoId',projectId);
+                    //     console.log('Base64 Image:', base64Image); // Log the base64 image data
+                    const response = await axios.post(`${config.apiBaseUrl}/projects/setProjectLogo`, {
                         file: base64Image,
                         fileName: this.selectedImage.name,
                         id: projectId
@@ -713,8 +792,12 @@ export default {
                             'Authorization': `Bearer ${token}`
                         }
                     });
+
+                    this.successMessage = response.data.message;
+                    console.log('the response is:', response.data);
                 };
                 reader.readAsDataURL(this.selectedImage);
+
             } catch (error) {
                 console.error('Image upload failed:', error);
             }
@@ -812,8 +895,13 @@ export default {
                         'Authorization': `Bearer ${token}`
                     }
                 });
-                console.log(this.userData);
-                this.userData = response.data;
+                console.log("this the user Data", response.data);
+                const profile = response.data;
+                this.firstName = profile.firstname;
+                this.lastName = profile.lastname;
+                this.email = profile.email;
+                this.phoneNumber = profile.phonenumber;
+                this.profileImageUrl = profile.avatar;
             } catch (error) {
                 this.errorMessage = 'Erreur lors de la récupération des données utilisateur : ' + error.response.data.message;
             } finally {
@@ -830,6 +918,8 @@ export default {
                     }
                 });
                 this.projects = response.data;
+                console.log(",>,..,.,..,,..<><><><>.,.,:", response.data);
+
                 const savedProject = JSON.parse(localStorage.getItem('currentProject'));
                 if (savedProject) {
                     this.setFirstProject(savedProject);
@@ -917,6 +1007,83 @@ export default {
                 this.firstProjectLogo = '';
             }
             this.filterProjects();
+        },
+
+        accountdata() {
+            this.modalModifyData = true;
+            this.modalIdentity = false;
+        },
+
+        closeModifyData() {
+            this.modalModifyData = false;
+        },
+
+        async modifyProfile() {
+            try {
+                const token = localStorage.getItem('token');
+                let profileImageBase64 = null;
+
+                if (this.selectedImage) {
+                    profileImageBase64 = await this.convertToBase64(this.selectedImage);
+                }
+                console.log(profileImageBase64);
+
+
+                const imageResponse = await axios.post(`${config.apiBaseUrl}/users/setAvatar`, {
+                    email: this.email,
+                    file: profileImageBase64
+                }, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                console.log("the avatar is : ", imageResponse.data);
+
+
+                const response = await axios.post(`${config.apiBaseUrl}/users/${this.userId}`, {
+                    firstname: this.firstName,
+                    lastname: this.lastName,
+                    email: this.email,
+                    phonenumber: this.phoneNumber,
+                    password: this.password,
+                    avatar: imageResponse.data
+                }, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                this.successMessage = response.data.message;
+                console.log('Profile modified:', response.data);
+            } catch (error) {
+                console.error('Profile modification failed:', error);
+            }
+        },
+
+        triggerFileInput() {
+            this.$refs.fileInput.click();
+        },
+
+        changeProfileImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                this.selectedImage = file;
+                this.profileImageUrl = URL.createObjectURL(file);
+            }
+        },
+
+        removeProfileImage() {
+            this.selectedImage = null;
+            this.profileImageUrl = '';
+        },
+
+        convertToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+            });
         },
 
         async fetchPendingTasksCount() {

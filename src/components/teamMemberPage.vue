@@ -16,16 +16,20 @@ import { Users, List, Plus, Search, ChevronUp, Eye } from 'lucide-vue-next';
         <!-- Search Bar Section -->
         <div class="flex flex-col sm:flex-row justify-between">
             <form class=" flex flex-1">
-                <div class="relative flex items-center w-full sm:w-3/4">
+                <div class="relative flex items-center w-full sm:w-3/4 border">
                     <Search class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                    <input type="search" id="search-input"
-                        class=" pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:border-gray-500 text-base"
+                    <input type="search" id="search-input" v-model="searchQuery" @input="filterMembers"
+                        class="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:border-gray-500 text-base"
                         placeholder="Rechercher..." />
                 </div>
-                <div class=" ml-4">
-                    <input type="submit" value="Rechercher"
-                        class=" bg-black text-white  py-2 px-6 rounded-lg cursor-pointer hover:bg-slate-600 focus:outline-none" />
-                </div>
+                <ul v-if="filteredMembers.length && searchQuery.trim()"
+                    class="absolute bg-white border border-gray-300 rounded-lg mt-10 z-10">
+                    <li v-for="member in filteredMembers" :key="member.userId" @click="selectMember(member)"
+                        class="px-4 py-2 cursor-pointer hover:bg-gray-100">
+                        {{ member.userMember.firstname }} {{ member.userMember.lastname }} - {{ member.userMember.email
+                        }}
+                    </li>
+                </ul>
             </form>
 
             <div class="mt-4 sm:mt-0 sm:ml-4">
@@ -67,13 +71,15 @@ import { Users, List, Plus, Search, ChevronUp, Eye } from 'lucide-vue-next';
                                     <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody class="bg-white divide-gray-200">
-                                <tr v-for="member in projectMembers" :key="member.userId" class="hover:bg-gray-50">
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <tr v-for="member in projectMembers" :key="member.userId"
+                                    :data-member-id="member.userId"
+                                    :class="{ 'bg-gray-200': member.userId === selectedMemberId }"
+                                    class="hover:bg-gray-100">
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="flex items-center space-x-2">
                                             <img class="border border-black h-11 w-11 rounded-full mr-5"
                                                 src="../assets/images/logoflysoft.png" alt="logo Entreprise" />
-                                            <!--{{ member.userMember.avatar }}-->
                                             {{ member.userMember.firstname }} {{ member.userMember.lastname }}
                                         </div>
                                     </td>
@@ -82,7 +88,7 @@ import { Users, List, Plus, Search, ChevronUp, Eye } from 'lucide-vue-next';
                                     <td class="px-6 py-4 whitespace-nowrap">{{ member.Role.nom }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <button type="button" class="text-black hover:text-green-900"
-                                            @click="showMemberDetails()">
+                                            @click="showMemberDetails(member)">
                                             <Eye class="w-full h-6" />
                                         </button>
                                     </td>
@@ -131,14 +137,19 @@ import { Users, List, Plus, Search, ChevronUp, Eye } from 'lucide-vue-next';
                             <option v-for="role in roles" :key="role.id" :value="role.id">{{ role.nom }}</option>
                         </select>
                     </div>
-
                 </div>
 
                 <div class="flex justify-end">
                     <button
-                        class="w-2/5 bg-black text-white p-3 rounded hover:bg-gray-600 focus:outline-none focus:ring focus:ring-blue-300"
+                        class="w-2/5 bg-black text-white p-3 rounded hover:bg-gray-600 focus:outline-none focus:ring focus:ring-gray-100"
                         type="submit">
-                        Ajouter
+                        <span v-if="!membreLoading">
+                            Ajouter
+                        </span>
+                        <div v-else class="flex justify-center">
+                            <span
+                                class="inline-block w-6 h-6 border-4 border-gray-400 border-t-black border-b-black rounded-full animate-spin"></span>
+                        </div>
                     </button>
                 </div>
             </form>
@@ -161,6 +172,7 @@ export default {
         return {
             email: '',
             modalmembers: false,
+            membreLoading: false,
             projectId: '',
             roleId: '',
             userId: '',
@@ -169,10 +181,15 @@ export default {
             filteredEmails: [],
             roles: [],
             userData: null,
-            isteamMemberListVisible: false,
+            isteamMemberListVisible: true,
             projectMembers: [],//tableau des membres du projet
+
+            searchQuery: '',
+            filteredMembers: [],
+            selectedMemberId: null,
         };
     },
+
     mounted() {
         if (this.isConnected()) {
             this.usercreatedId = localStorage.getItem('userId');
@@ -186,13 +203,9 @@ export default {
             this.errorMessage = 'Utilisateur non connecté';
             this.$router.push('/auth'); // Rediriger vers la page de connexion
         }
-
-
     },
+
     methods: {
-
-
-
         hideModalmembers() {
             this.modalmembers = false;
         },
@@ -289,8 +302,8 @@ export default {
         },
 
         async addMember() {
+            this.membreLoading = true;
             try {
-
                 const token = localStorage.getItem('token');
                 // const userId = localStorage.getItem('IdCollaborateur');
 
@@ -306,23 +319,23 @@ export default {
                 });
                 this.success = true;
                 this.successMessage = response.data.message;
+                this.membreLoading = false;
                 console.log("Membre ajouter au project avec succces!!!")
                 // Réinitialiser les champs du formulaire
                 this.email = '';
                 this.roleId = '';
-
             } catch (error) {
                 this.error = true;
                 this.errorMessage = error.response ? error.response.data.message : error.message;
                 console.log("Erreur lors de l'ajout du membre")
+                this.membreLoading = false;
             }
         },
-        
+
         async fetchProjectMembers() {
-            console.log("Bonjour: Voici l'id du project seletionné");
-            console.log(this.projectId)
+            console.log("Bonjour: Voici l'id du project sélectionné");
+            console.log(this.projectId);
             try {
-                console.log(this.projectId)
                 const token = localStorage.getItem('token');
                 const response = await axios.get(`${config.apiBaseUrl}/team-members/project/${this.projectId}`, {
                     headers: {
@@ -331,14 +344,42 @@ export default {
                 });
                 this.projectMembers = response.data;
                 console.log("Bonsoir");
-                console.log("Voici la liste des membres d'equipe");
+                console.log("Voici la liste des membres d'équipe");
                 console.log(this.projectMembers);
             } catch (error) {
                 this.errorMessage = 'Erreur lors de la récupération des membres du projet : ' + (error.response ? error.response.data.message : error.message);
             }
+        },
+
+        filterMembers() {
+            const query = this.searchQuery.toLowerCase();
+            this.filteredMembers = this.projectMembers.filter(member => {
+                const fullName = `${member.userMember.firstname} ${member.userMember.lastname}`.toLowerCase();
+                const email = member.userMember.email.toLowerCase();
+                const phoneNumber = member.userMember.phonenumber.toLowerCase();
+                const role = member.Role.nom.toLowerCase();
+                return fullName.includes(query) || email.includes(query) || phoneNumber.includes(query) || role.includes(query);
+            });
+        },
+        selectMember(member) {
+            this.selectedMemberId = member.userId;
+            this.searchQuery = `${member.userMember.firstname} ${member.userMember.lastname}`;
+            this.filteredMembers = [];
+            this.scrollToMember(member.userId);
+        },
+        scrollToMember(userId) {
+            this.$nextTick(() => {
+                const element = document.querySelector(`[data-member-id="${userId}"]`);
+                if (element) {
+                    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            });
+        },
+        handleClickOutside(event) {
+            if (!this.$el.contains(event.target)) {
+                this.selectedMemberId = null;
+            }
         }
-
-
     }
 };
 </script>
