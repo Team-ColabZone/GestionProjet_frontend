@@ -30,7 +30,8 @@ import { Users, Gauge, CircleGauge, ClockArrowDown, UserRoundCheck, Logs, Trendi
 
             <div class="stat-box flex flex-col justify-between bg-green-100 rounded-xl px-1 py-3 lg:p-3">
                 <div class="flex justify-between items-center ">
-                    <h1 id="taskRate" class="text-2xl font-medium lg:text-4xl lg:pl-3">{{ (taskRate).toFixed(2) }}t/j</h1>
+                    <h1 id="taskRate" class="text-2xl font-medium lg:text-4xl lg:pl-3">{{ (taskRate).toFixed(2) }}t/j
+                    </h1>
                     <ClockArrowDown class="w-10 h-10" />
                 </div>
                 <h3 class="text-xs mt-2">Taux de tache journaliere</h3>
@@ -90,8 +91,20 @@ import { Users, Gauge, CircleGauge, ClockArrowDown, UserRoundCheck, Logs, Trendi
                         <ChevronUp />
                     </button>
                 </div>
-                <div class="h-full p-4"></div>
+                <div class="h-full p-4">
+                    <div v-for="task in commonTasks" :key="task.id" class="flex justify-between items-center mb-2">
+                        <div :class="[getPriorityClass(task.priority), 'priority-bar']"></div>
+                        <div class="flex-1 ml-2">
+                            <p class="font-semibold">{{ task.taskname }}</p>
+                            <p class="text-sm text-gray-600">{{ task.description }}</p>
+                        </div>
+                        <div :class="getStatusClass(task.status)" class="ml-2">
+                            {{ task.status }}
+                        </div>
+                    </div>
+                </div>
             </div>
+
 
             <!-- Best Contributors -->
             <div class="task-box w-full lg:w-1/4">
@@ -179,6 +192,7 @@ export default {
             // taskRate1: 0,
             reactivityRate: 0,
             realisationRate: 0,
+            commonTasks: [], //Listes des taches courantes
 
         };
     },
@@ -192,18 +206,19 @@ export default {
             this.$router.push('/auth'); // Rediriger vers la page de connexion
         }
         this.fetchProjects();
-
+        
         this.fetchTeamMemberCount();
         this.fetchPendingTasksCount();
         this.fetchInProgressTasksCount();
         this.fetchCompletedTasksCount();
         this.fetchTotalTasksCount();
         this.fetchTaskRate();
+        this.fetchCommonTasks();
         // this.fetchTaskRate();
         // this.fetchTaskRate1();
         this.fetchReactivityRate();
         this.fetchRealisationRate();
-        
+
     },
     methods: {
         isConnected() {
@@ -364,6 +379,47 @@ export default {
                 console.error('Erreur lors de la recupération du taux de reactivté:', error);
             }
         },
+        //recupération des taches courantes
+        async fetchCommonTasks() {
+            console.log("Bonsoir*******************************")
+            try {
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/allTasksLive/${this.projectId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                this.commonTasks = response.data;
+                console.log("Voici les taches courantes de ce projet : ")
+                console.log(this.commonTasks);
+            } catch (error) {
+                console.error('Erreur lors de la recupération des taches courantes:', error);
+            }
+        },
+        getPriorityClass(priority) {
+            switch (priority) {
+                case 'ELEVEE':
+                    return 'bg-red-500';
+                case 'MOYENNE':
+                    return 'bg-yellow-500';
+                case 'FAIBLE':
+                    return 'bg-green-500';
+                default:
+                    return '';
+            }
+        },
+        getStatusClass(status) {
+            switch (status) {
+                case 'EN_COURS':
+                    return 'status-en-cours';
+                case 'EN_ATTENTE':
+                    return 'status-en-attente';
+                case 'TERMINEE':
+                    return 'status-terminee';
+                default:
+                    return '';
+            }
+        },
     }
 };
 </script>
@@ -385,5 +441,32 @@ export default {
     display: flex;
     flex-direction: column;
     background: white;
+}
+
+.priority-bar {
+    width: 9px;
+    height: 50px;
+    border-radius: 0px 2px 2px 0px;
+}
+
+.status-en-cours {
+    background-color: #86FD92;
+    color: #065E0F;
+    padding: 2px 5px;
+    border-radius: 5px;
+}
+
+.status-en-attente {
+    background-color: #FFD1A6;
+    color: #7C480C;
+    padding: 2px 5px;
+    border-radius: 5px;
+}
+
+.status-terminee {
+    background-color: #B3E2FC;
+    color: #000000;
+    padding: 2px 5px;
+    border-radius: 5px;
 }
 </style>
