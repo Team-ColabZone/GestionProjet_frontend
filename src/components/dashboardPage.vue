@@ -22,15 +22,16 @@ import { Users, Gauge, CircleGauge, ClockArrowDown, UserRoundCheck, Logs, Trendi
 
             <div class="stat-box flex flex-col justify-between bg-pink-100 rounded-xl p-3">
                 <div class="flex justify-between items-center gap-3 md:gap-5 ">
-                    <h1 class="text-3xl font-medium lg:text-5xl lg:pl-3">{{ (realisationRate) }}%</h1>
+                    <h1 class="text-3xl font-medium lg:text-5xl lg:pl-3">{{ (realisationRate).toFixed(0) }}%</h1>
                     <CircleGauge class="w-10 h-10" />
                 </div>
                 <h3 class="text-xs mt-2">Pourcentage de réalisation</h3>
             </div>
 
-            <div class="stat-box flex flex-col justify-between bg-green-100 rounded-xl pl-2 py-3 lg:p-3">
+            <div class="stat-box flex flex-col justify-between bg-green-100 rounded-xl px-1 py-3 lg:p-3">
                 <div class="flex justify-between items-center ">
-                    <h1 id="taskRate" class="text-2xl font-medium lg:text-4xl lg:pl-3">{{ (taskRate).toFixed(2) }}t/j</h1>
+                    <h1 id="taskRate" class="text-2xl font-medium lg:text-4xl lg:pl-3">{{ (taskRate).toFixed(2) }}t/j
+                    </h1>
                     <ClockArrowDown class="w-10 h-10" />
                 </div>
                 <h3 class="text-xs mt-2">Taux de tache journaliere</h3>
@@ -38,10 +39,10 @@ import { Users, Gauge, CircleGauge, ClockArrowDown, UserRoundCheck, Logs, Trendi
 
             <div class="stat-box flex flex-col justify-between bg-pink-50 rounded-xl  py-3 lg:p-3">
                 <div class="flex justify-between items-center gap-3 md:gap-5 px-2 lg:px-4">
-                    <h1 class="text-3xl font-medium lg:text-5xl lg:pl-3">01</h1>
+                    <h1 class="text-3xl font-medium lg:text-5xl lg:pl-3">{{ powerMembersCount }}</h1>
                     <UserRoundCheck class="w-10 h-10" />
                 </div>
-                <h3 class="text-xs mt-2">Nombre de membres performant</h3>
+                <h3 class="text-xs pl-2 md:mt-2">Nombre de membres performant</h3>
             </div>
 
             <div class="stat-box flex flex-col justify-between bg-blue-50 rounded-xl p-3">
@@ -54,7 +55,7 @@ import { Users, Gauge, CircleGauge, ClockArrowDown, UserRoundCheck, Logs, Trendi
 
             <div class="stat-box flex flex-col justify-between bg-lime-100 rounded-xl p-3">
                 <div class="flex justify-between items-center gap-3 md:gap-5">
-                    <h1 class="text-3xl font-medium lg:text-5xl lg:pl-3">{{ reactivityRate }}%</h1>
+                    <h1 class="text-3xl font-medium lg:text-5xl lg:pl-3">{{ (reactivityRate).toFixed(0) }}%</h1>
                     <TrendingUp class="w-10 h-10" />
                 </div>
                 <h3 class="text-xs mt-2">Taux de reactivité</h3>
@@ -73,11 +74,11 @@ import { Users, Gauge, CircleGauge, ClockArrowDown, UserRoundCheck, Logs, Trendi
                 <input type="submit" value="Rechercher"
                     class="w-1/4 h-11 bg-black text-white  rounded-lg hover:bg-slate-600 focus:outline-none" />
             </form>
-            <div class="w-full md:w-1/2 flex items-center justify-center text-red-500 mt-4 md:mt-0">error message</div>
+            <!-- <div class="w-full hidden md:w-1/2 md:flex items-center justify-center text-red-500 mt-4 md:mt-0">error message</div> -->
         </div>
 
         <!-- Task Sections -->
-        <div class="flex gap-4 w-full h-full">
+        <div class="flex flex-wrap md:flex-nowrap gap-4 w-full h-full">
             <!-- Current Tasks -->
             <div class="task-box w-full lg:w-1/2">
                 <div class="flex justify-between items-center border-b border-gray-300 p-2">
@@ -90,8 +91,20 @@ import { Users, Gauge, CircleGauge, ClockArrowDown, UserRoundCheck, Logs, Trendi
                         <ChevronUp />
                     </button>
                 </div>
-                <div class="h-full p-4"></div>
+                <div class="h-full p-4">
+                    <div v-for="task in commonTasks" :key="task.id" class="flex justify-between items-center mb-2">
+                        <div :class="[getPriorityClass(task.priority), 'priority-bar']"></div>
+                        <div class="flex-1 ml-2">
+                            <p class="font-semibold">{{ task.taskname }}</p>
+                            <p class="text-sm text-gray-600">{{ task.description }}</p>
+                        </div>
+                        <div :class="getStatusClass(task.status)" class="ml-2">
+                            {{ task.status }}
+                        </div>
+                    </div>
+                </div>
             </div>
+
 
             <!-- Best Contributors -->
             <div class="task-box w-full lg:w-1/4">
@@ -105,8 +118,20 @@ import { Users, Gauge, CircleGauge, ClockArrowDown, UserRoundCheck, Logs, Trendi
                         <ChevronUp />
                     </button>
                 </div>
-                <div></div>
+                <div class="p-4">
+                    <div v-for="(member, userId) in powerMembers" :key="userId" class="flex items-center mb-4">
+                        <img v-if="member.details" :src="member.details.avatar" alt="Avatar"
+                            class="w-12 h-12 rounded-full border border-gray-300 mr-4">
+                        <div class="flex-1">
+                            <p v-if="member.details" class="font-semibold">{{ member.details.firstname }} {{
+                                member.details.lastname }}</p>
+                            <p v-if="member.role" class="text-sm text-gray-600">{{ member.role }}</p>
+                        </div>
+                        <p class="font-semibold">{{ member.percentage.toFixed(2) }}%</p>
+                    </div>
+                </div>
             </div>
+
 
             <!-- Task Overview -->
             <div class="task-box w-full flex flex-col justify-between lg:w-1/4">
@@ -179,7 +204,13 @@ export default {
             // taskRate1: 0,
             reactivityRate: 0,
             realisationRate: 0,
-
+            commonTasks: [], //Listes des taches courantes
+            powerMembers: {}, //Listes des membres performant
+            powerMembersCount: 0, //Nombres de membres performant du projet
+            avatar: '',
+            firstname: '',
+            lastname: '',
+            nom: '',
         };
     },
     mounted() {
@@ -199,11 +230,13 @@ export default {
         this.fetchCompletedTasksCount();
         this.fetchTotalTasksCount();
         this.fetchTaskRate();
+        this.fetchCommonTasks();
         // this.fetchTaskRate();
         // this.fetchTaskRate1();
         this.fetchReactivityRate();
         this.fetchRealisationRate();
-        
+        this.fetchPowerMembers();
+
     },
     methods: {
         isConnected() {
@@ -247,30 +280,6 @@ export default {
             localStorage.setItem('projectId', projectId); // Stocker l'ID du projet dans le localStorage
             this.$router.push('/accueilPage'); // Rediriger vers la page des détails du projet
         },
-        // async fetchTaskRate() {
-        //     try {
-        //         const token = localStorage.getItem('token');
-        //         const response = await axios.get(`${config.apiBaseUrl}/tasks/tauxTasksDay/${this.projectId}`, {
-        //             headers: {
-        //                 'Authorization': `Bearer ${token}`
-        //             }
-        //         });
-        //         if (!response.ok) {
-        //             throw new Error('Network response was not ok');
-        //         }
-        //         // const data = await response.json();
-        //         this.taskRate = response.data; // Adjust based on the actual structure of your response
-        //         console.log(this.taskRate)
-        //         const response = await fetch(`http://localhost:3001/tasks/tauxTasksDay/${this.projectId}`);
-        //         if (!response.ok) {
-        //             throw new Error('Network response was not ok');
-        //         }
-        //         const data = await response.json();
-        //         this.taskRate = data.taskRate; // Adjust based on the actual structure of your response
-        //     } catch (error) {
-        //         console.error('Error fetching task rate:', error);
-        //     }
-        // },
 
         async fetchTeamMemberCount() {
             try {
@@ -358,21 +367,6 @@ export default {
                 console.error('Erreur lors de la recupération du taux de tache journaliere:', error);
             }
         },
-        // async fetchTaskRate1() {
-        //     try {
-        //         const token = localStorage.getItem('token');
-        //         const response = await axios.get(`${config.apiBaseUrl}/tasks/tauxTasksDay/${this.projectId}`, {
-        //             headers: {
-        //                 'Authorization': `Bearer ${token}`
-        //             }
-        //         });
-        //         this.taskRate1 = response.data;
-        //         console.log("Voici le taux de tache journaliere: ")
-        //         console.log(this.taskRate1);
-        //     } catch (error) {
-        //         console.error('Erreur lors de la recupération du taux de tache journaliere:', error);
-        //     }
-        // },
         async fetchReactivityRate() {
             try {
                 const token = localStorage.getItem('token');
@@ -403,6 +397,100 @@ export default {
                 console.error('Erreur lors de la recupération du taux de reactivté:', error);
             }
         },
+        //recupération des taches courantes
+        async fetchCommonTasks() {
+            console.log("Bonsoir*******************************")
+            try {
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/allTasksLive/${this.projectId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                this.commonTasks = response.data;
+                console.log("Voici les taches courantes de ce projet : ")
+                console.log(this.commonTasks);
+            } catch (error) {
+                console.error('Erreur lors de la recupération des taches courantes:', error);
+            }
+        },
+        getPriorityClass(priority) {
+            switch (priority) {
+                case 'ELEVEE':
+                    return 'bg-red-500';
+                case 'MOYENNE':
+                    return 'bg-yellow-500';
+                case 'FAIBLE':
+                    return 'bg-green-500';
+                default:
+                    return '';
+            }
+        },
+        getStatusClass(status) {
+            switch (status) {
+                case 'EN_COURS':
+                    return 'status-en-cours';
+                case 'EN_ATTENTE':
+                    return 'status-en-attente';
+                case 'TERMINEE':
+                    return 'status-terminee';
+                default:
+                    return '';
+            }
+        },
+        //Membres performant d'un project
+        async fetchPowerMembers() {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/allMemberPower/${this.projectId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                console.log("Bonjour ! Le nombre de membre performant du projet est:");
+                this.powerMembersCount = Object.keys(response.data).length;
+                console.log(this.powerMembersCount);
+                console.log("Bonsoir ! Voici donc ces membres performants:");
+                this.powerMembers = response.data;
+                console.log(this.powerMembers);
+
+                // Initialiser powerMembers comme un objet contenant des objets
+                const powerMembersData = {};
+                for (const userId of Object.keys(this.powerMembers)) {
+                    powerMembersData[userId] = { percentage: this.powerMembers[userId] };
+                }
+                this.powerMembers = powerMembersData;
+
+                // Récupérer les informations détaillées des membres performants
+                for (const userId of Object.keys(this.powerMembers)) {
+                    const userResponse = await axios.get(`${config.apiBaseUrl}/users/${userId}`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    const memberResponse = await axios.get(`${config.apiBaseUrl}/team-members/${this.projectId}/user/${userId}`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    console.log("voici les données des users performant");
+                    console.log(userResponse.data); // Vérifiez que les données utilisateur sont correctes
+                    console.log(memberResponse.data); // Vérifiez que les données de membre sont correctes
+
+                    // Assigner directement les propriétés
+                    this.powerMembers[userId].details = userResponse.data;
+                    if (memberResponse.data && memberResponse.data.Role) {
+                        this.powerMembers[userId].role = memberResponse.data.Role.nom;
+                    } else {
+                        this.powerMembers[userId].role = 'Role non défini';
+                    }
+                }
+                console.log("Membres performants avec détails:", this.powerMembers);
+            } catch (error) {
+                console.error('Erreur lors de la récupération des membres performants :', error);
+            }
+        }
+        ,
     }
 };
 </script>
@@ -424,5 +512,40 @@ export default {
     display: flex;
     flex-direction: column;
     background: white;
+}
+
+.priority-bar {
+    width: 9px;
+    height: 50px;
+    border-radius: 0px 2px 2px 0px;
+}
+
+.status-en-cours {
+    background-color: #86FD92;
+    color: #065E0F;
+    padding: 2px 5px;
+    border-radius: 5px;
+}
+
+.status-en-attente {
+    background-color: #FFD1A6;
+    color: #7C480C;
+    padding: 2px 5px;
+    border-radius: 5px;
+}
+
+.status-terminee {
+    background-color: #B3E2FC;
+    color: #000000;
+    padding: 2px 5px;
+    border-radius: 5px;
+}
+
+.avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 1px solid #d1d5db;
+    /* Couleur grise légère */
 }
 </style>

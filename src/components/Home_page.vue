@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col w-full h-screen  bg-white monda-font animate__animated animate__fadeInDown">
+    <div class="flex flex-col w-full h-screen  bg-white monda-font ">
         <header class="h-auto flex justify-between items-center w-full px-4 border-b border-gray-200 ">
             <img src="../assets/images/logoflysoft.png" alt="logo Entreprise" class="h-11">
 
@@ -65,12 +65,12 @@
                                 class="absolute top-full left-0 w-full flex flex-col gap-2 p-2 bg-white shadow-sm border border-gray-300 rounded-lg z-10">
                                 <!-- Projects List -->
                                 <div class="h-40 w-full overflow-x-auto overflow-y-auto">
-                                    <div v-for="project in filteredProjects" :key="project.id"
+                                    <div v-for="project in displayedProjects" :key="project.id"
                                         @click="selectProject(project.id)" :class="[
                                             'flex items-center border-b border-gray-50 cursor-pointer rounded-lg pr-2',
                                             { 'bg-gray-300': selectedProjectId === project.id, 'bg-gray-100': selectedProjectId !== project.id }
                                         ]">
-                                        <img :src="project.logo" alt="Project Logo"
+                                        <img :src="project.projectlogo" alt="Project Logo"
                                             class="w-12 h-full rounded border" />
                                         <p class="text-left text-black text-ellipsis text-xs md:text-sm p-2">
                                             <span class="font-medium">{{ project.projectname }}</span><br />
@@ -141,7 +141,7 @@
                             'bg-gray-100 py-1 px-2 rounded-lg': currentPage === 'team',
                         }" @click="showPage('team')">
                             <div class="flex w-4/5 md:w-3/5 items-center gap-1">
-                                <Users class="vue h4" />
+                                <Users class="h4" />
                                 <h3 class="text-black">
                                     Membres
                                 </h3>
@@ -282,7 +282,8 @@
                         </div>
 
                         <div class="flex justify-end w-full ">
-                            <button class="w-2/5 bg-black text-white p-3 rounded hover:bg-gray-600 focus:outline-none focus:ring focus:ring-blue-300"
+                            <button
+                                class="w-2/5 bg-black text-white p-3 rounded hover:bg-gray-600 focus:outline-none focus:ring focus:ring-blue-300"
                                 type="submit">
                                 <span v-if="!projectLoading">
                                     Enregistrer le projet
@@ -363,7 +364,8 @@
                         </div>
 
                         <div class="flex justify-end w-full ">
-                            <button class="w-2/5 bg-black text-white p-3 rounded hover:bg-gray-600 focus:outline-none focus:ring focus:ring-gray-700"
+                            <button
+                                class="w-2/5 bg-black text-white p-3 rounded hover:bg-gray-600 focus:outline-none focus:ring focus:ring-gray-700"
                                 type="submit">
                                 <span v-if="!enterpriseLoading">
                                     Ajouter
@@ -408,7 +410,7 @@
                             '' }}</span>
 
                         <!-- Manage Account button -->
-                        <button class="border border-gray-200 text-blue-600 px-5 rounded-2xl">
+                        <button class="border border-gray-200 text-blue-600 px-5 rounded-2xl" @click="accountdata">
                             Gérer votre compte
                         </button>
                     </div>
@@ -466,6 +468,76 @@
 
                 </div>
             </div>
+
+            <div class="fixed inset-0 backdrop-blur-sm flex justify-end z-50" v-if="modalModifyData">
+                <button @click="closeModifyData" class="self-start p-6">
+                    <span class="text-black text-2xl">×</span>
+                </button>
+
+                <div
+                    class="flex flex-col bg-white p-6 gap-5 rounded-lg shadow-lg animate__animated animate__fadeInDown w-full max-w-4xl h-full">
+                    <div class="flex justify-between">
+                        <h1 class="text-center text-2xl text-black">COMPTE</h1>
+                        <button class="px-3 bg-black text-white rounded hover:bg-gray-600"
+                            @click="modifyProfile">sauvegarder</button>
+                    </div>
+
+                    <form @submit.prevent="modifyProfile" class="flex flex-col gap-4">
+                        <div
+                            class="flex flex-row gap-4 border-t border-b border-gray-300 py-3 justify-between items-center">
+                            <div class="flex flex-col gap-3 items-center md:flex-row">
+                                <img :src="profileImageUrl" alt="Profile Image"
+                                    class="w-16 h-16 rounded-full border" />
+                                <span>PHOTO DE PROFIL</span>
+                            </div>
+
+                            <div class="flex gap-4">
+                                <input type="file" ref="fileInput" @change="changeProfileImage" class="hidden">
+                                <button type="button"
+                                    class="px-3 bg-white text-black border border-gray-100 rounded hover:bg-gray-600"
+                                    @click="triggerFileInput">Modifier</button>
+                                <button type="button"
+                                    class="px-3 py-1 bg-gray-300 text-black rounded hover:bg-gray-600"
+                                    @click="removeProfileImage">Supprimer</button>
+                            </div>
+                        </div>
+
+                        <div class="w-full flex md:flex-row gap-5 md:gap-14">
+                            <div class="w-full">
+                                <label for="firstName"
+                                    class="block text-gray-700 text-sm font-bold mb-2">Nom</label>
+                                <input type="text" v-model="firstName"
+                                    class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-200" />
+                            </div>
+
+                            <div class="w-full">
+                                <label for="lastName"
+                                    class="block text-gray-700 text-sm font-bold mb-2">Prenom</label>
+                                <input type="text" v-model="lastName"
+                                    class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-200" />
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col md:flex-row gap-5 md:gap-14">
+                            <div class="w-full md:w-1/2">
+                                <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email</label>
+                                <input type="text" v-model="email"
+                                    class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-200" />
+                            </div>
+
+                            <div class="w-full md:w-1/2 relative">
+                                <label for="phoneNumber" class="block text-gray-700 text-sm font-bold mb-2">Numéro
+                                    de téléphone</label>
+                                <input type="text" v-model="phoneNumber"
+                                    class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-200" />
+                            </div>
+                        </div>
+
+                        <router-link to="/Updatepassword" class="w-full text-right text-blue-600">MODIFIER VOTRE MOT
+                            DE PASSE</router-link>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -493,10 +565,11 @@ export default {
             modalIdentity: false,
             modalEntreprise: false,
             modalmembers: false,
+            modalModifyData: false,
             showMessagePage: false,
             showNotificationPage: false,
-            enterpriseLoading:false,
-            projectLoading:false,
+            enterpriseLoading: false,
+            projectLoading: false,
             logoutLoader: false,
             currentPage: 'dashboard',
             selectedButton: 'button4',
@@ -537,6 +610,7 @@ export default {
             projectId: '',
             entrepriseId: '',
             // filteredProjects: [],
+            displayedProjects: [],
             selectedEntrepriseId: null,
             roleId: '', // This should be fetched from the system
             filteredEmails: [],
@@ -546,23 +620,31 @@ export default {
             isEntreprisesListVisible: false,
             isNavOpen: false,
             isLgScreen: false,
+
+            //profile modifier
+            firstName: '',
+            lastName: '',
+            password: '',
+            profileImageUrl: '',
+            projectsEntreprise: [],//liste des projets par Entreprises
         };
     },
 
-    computed: {
-        filteredProjects() {
-            if (this.selectedEntrepriseId) {
-                return this.projects.filter(project => project.entrepriseId === this.selectedEntrepriseId);
-            }
-            return this.projects.filter(project => !project.entrepriseId);
-        },
-    },
+    // computed: {
+    //     filteredProjects() {
+    //         if (this.selectedEntrepriseId) {
+    //             return this.projects.filter(project => project.entrepriseId === this.selectedEntrepriseId);
+    //         }
+    //         return this.projects.filter(project => !project.entrepriseId);
+    //     },
+    // },
 
     mounted() {
         if (this.isConnected()) {
             this.userId = localStorage.getItem('userId');
             this.projectId = localStorage.getItem('projectId');
-            this.entrepriseId = localStorage.getItem('entrepriseId');
+            this.entrepriseId = localStorage.getItem('selectedEntrepriseId');
+            this.selectedEntrepriseId = localStorage.getItem('selectedEntrepriseId'); 
             this.fetchUserData();
             this.fetchProjects();
             this.fetchEntreprises();
@@ -571,6 +653,7 @@ export default {
             this.fetchInProgressTasksCount();
             this.fetchCompletedTasksCount();
             this.fetchTotalTasksCount();
+            this.fetchProjectsByEntreprise();
         } else {
             this.errorMessage = 'Utilisateur non connecté';
             this.$router.push('/auth'); // Rediriger vers la page de connexion
@@ -582,7 +665,6 @@ export default {
 
     },
     methods: {
-
         toggleNav() {
             this.isNavOpen = !this.isNavOpen;
         },
@@ -654,7 +736,7 @@ export default {
                 this.success = true;
                 this.modalmembers = true;
                 this.successMessage = response.data.message;
-
+                // this.projectId = response.data.id;
                 console.log('Project creation response:', response.data);
 
                 //saves image if there were added
@@ -703,8 +785,9 @@ export default {
                 reader.onload = async (e) => {
                     const base64Image = e.target.result;
                     const token = localStorage.getItem('token');
-                    console.log('Base64 Image:', base64Image); // Log the base64 image data
-                    await axios.post(`${config.apiBaseUrl}/projects/setProjectLogo`, {
+                    // console.log('here is the project image logoId',projectId);
+                    //     console.log('Base64 Image:', base64Image); // Log the base64 image data
+                    const response = await axios.post(`${config.apiBaseUrl}/projects/setProjectLogo`, {
                         file: base64Image,
                         fileName: this.selectedImage.name,
                         id: projectId
@@ -713,8 +796,12 @@ export default {
                             'Authorization': `Bearer ${token}`
                         }
                     });
+
+                    this.successMessage = response.data.message;
+                    console.log('the response is:', response.data);
                 };
                 reader.readAsDataURL(this.selectedImage);
+
             } catch (error) {
                 console.error('Image upload failed:', error);
             }
@@ -727,7 +814,26 @@ export default {
                 this.selectedImageURL = URL.createObjectURL(file);
             }
         },
+        updateDisplayedProjects() {
+            console.log("bonjour>>>>>>>>>>>>>>>>>>>>>>>");
+            console.log("Début de updateDisplayedProjects");
+            console.log("selectedEntrepriseId:", this.selectedEntrepriseId);
+            console.log("projectsEntreprise:", this.projectsEntreprise);
 
+            if (this.selectedEntrepriseId) {
+                console.log("voici l'id de l'entreprise selectionnée>>>>>>>>>>>>: ");
+                console.log(this.selectedEntrepriseId);
+                // Filtrer les projets de l'entreprise sélectionnée
+                this.displayedProjects = this.projectsEntreprise.filter(project => project.entrepriseId === this.selectedEntrepriseId);
+                console.log("Projets de l'entreprise sélectionnée: £££££££££££££££££££££££ ");
+                console.log(this.displayedProjects);
+            } else {
+                // Filtrer les projets sans entreprise
+                this.displayedProjects = this.projects.filter(project => !project.entrepriseId);
+                console.log("Voici les projets personnels de l'utilisateur connecté:");
+                console.log(this.displayedProjects);
+            }
+        },
         async createNewEntreprise() {
             this.enterpriseLoading = true;
             try {
@@ -812,8 +918,13 @@ export default {
                         'Authorization': `Bearer ${token}`
                     }
                 });
-                console.log(this.userData);
-                this.userData = response.data;
+                console.log("this the user Data", response.data);
+                const profile = response.data;
+                this.firstName = profile.firstname;
+                this.lastName = profile.lastname;
+                this.email = profile.email;
+                this.phoneNumber = profile.phonenumber;
+                this.profileImageUrl = profile.avatar;
             } catch (error) {
                 this.errorMessage = 'Erreur lors de la récupération des données utilisateur : ' + error.response.data.message;
             } finally {
@@ -830,13 +941,16 @@ export default {
                     }
                 });
                 this.projects = response.data;
+                console.log(",>,..,.,..,,..<><><><>.,.,:", response.data);
+
                 const savedProject = JSON.parse(localStorage.getItem('currentProject'));
                 if (savedProject) {
                     this.setFirstProject(savedProject);
                 } else if (this.projects.length > 0) {
                     this.setFirstProject(this.projects[0]);
                 }
-                this.filterProjects();
+                // this.filterProjects();
+                this.updateDisplayedProjects();
             } catch (error) {
                 this.errorMessage = 'Erreur lors de la récupération des projets : ' + (error.response ? error.response.data.message : error.message);
             }
@@ -863,6 +977,7 @@ export default {
             this.firstProjectLogo = project.logo; // Assuming the project object has a 'logo' property
             this.projects = this.projects.filter(p => p.id !== project.id);
             localStorage.setItem('currentProject', JSON.stringify(project));
+            localStorage.setItem('projectId', project.id); // Ajouter cette ligne pour stocker l'ID du projet
         },
 
         filterProjects() {
@@ -879,11 +994,16 @@ export default {
                 this.projects.push({
                     id: this.selectedProjectId,
                     projectname: this.firstProjectName,
-                    logo: this.firstProjectLogo
+                    projectlogo: this.firstProjectLogo
                 });
                 this.setFirstProject(selectedProject);
                 this.selectedProjectId = projectId;
+                console.log("Voici l'id du projet selectionné: ")
+                console.log(this.selectedProjectId);
                 localStorage.setItem('projectId', projectId);
+                this.isProjectListVisible = false;
+                window.location.reload();
+
             }
         },
 
@@ -908,15 +1028,95 @@ export default {
 
         selectEntreprise(entrepriseId) {
             this.selectedEntrepriseId = entrepriseId;
+            console.log("Entreprise sélectionnée ID:", this.selectedEntrepriseId);
             localStorage.setItem('selectedEntrepriseId', entrepriseId);
-            const entrepriseProjects = this.projects.filter(project => project.entrepriseId === entrepriseId);
+            this.updateDisplayedProjects(); // Mettre à jour les projets affichés
+            const entrepriseProjects = this.displayedProjects;
             if (entrepriseProjects.length > 0) {
                 this.setFirstProject(entrepriseProjects[0]);
             } else {
                 this.firstProjectName = '';
                 this.firstProjectLogo = '';
             }
-            this.filterProjects();
+            this.modalIdentity = false;
+            window.location.reload();
+        },
+
+        accountdata() {
+            this.modalModifyData = true;
+            this.modalIdentity = false;
+        },
+
+        closeModifyData() {
+            this.modalModifyData = false;
+        },
+
+        async modifyProfile() {
+            try {
+                const token = localStorage.getItem('token');
+                let profileImageBase64 = null;
+
+                if (this.selectedImage) {
+                    profileImageBase64 = await this.convertToBase64(this.selectedImage);
+                }
+                console.log(profileImageBase64);
+
+
+                const imageResponse = await axios.post(`${config.apiBaseUrl}/users/setAvatar`, {
+                    email: this.email,
+                    file: profileImageBase64
+                }, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                console.log("the avatar is : ", imageResponse.data);
+
+
+                const response = await axios.post(`${config.apiBaseUrl}/users/${this.userId}`, {
+                    firstname: this.firstName,
+                    lastname: this.lastName,
+                    email: this.email,
+                    phonenumber: this.phoneNumber,
+                    password: this.password,
+                    avatar: imageResponse.data
+                }, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                this.successMessage = response.data.message;
+                console.log('Profile modified:', response.data);
+            } catch (error) {
+                console.error('Profile modification failed:', error);
+            }
+        },
+
+        triggerFileInput() {
+            this.$refs.fileInput.click();
+        },
+
+        changeProfileImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                this.selectedImage = file;
+                this.profileImageUrl = URL.createObjectURL(file);
+            }
+        },
+
+        removeProfileImage() {
+            this.selectedImage = null;
+            this.profileImageUrl = '';
+        },
+
+        convertToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+            });
         },
 
         async fetchPendingTasksCount() {
@@ -991,6 +1191,29 @@ export default {
             } catch (error) {
                 console.error('Error logging out:', error);
                 this.logoutLoader = true;
+            }
+        },
+        async fetchProjectsByEntreprise() {
+            try {
+                const token = localStorage.getItem('token'); // or another method to retrieve the token
+                const response = await axios.get(`${config.apiBaseUrl}/projects/byEntreprise/${this.entrepriseId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                this.projectsEntreprise = response.data;
+                console.log("Projects d'entreprise méthode fetchProjectsByEntreprise :<<<<<<<<");
+                console.log(this.projectsEntreprise);
+                const savedProject = JSON.parse(localStorage.getItem('currentProject'));
+
+                if (savedProject) {
+                    this.setFirstProject(savedProject);
+                } else if (this.projectsEntreprise.length > 0) {
+                    this.setFirstProject(this.projectsEntreprise[0]);
+                }
+                this.updateDisplayedProjects();
+            } catch (error) {
+                this.errorMessage = 'Erreur lors de la récupération des projets d entreprise : ' + (error.response ? error.response.data.message : error.message);
             }
         }
     }
