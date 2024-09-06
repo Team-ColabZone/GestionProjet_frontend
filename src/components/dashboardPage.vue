@@ -22,7 +22,7 @@ import { Users, Gauge, CircleGauge, ClockArrowDown, UserRoundCheck, Logs, Trendi
 
             <div class="stat-box flex flex-col justify-between bg-pink-100 rounded-xl p-3">
                 <div class="flex justify-between items-center gap-3 md:gap-5 ">
-                    <h1 class="text-3xl font-medium lg:text-5xl lg:pl-3">{{ (realisationRate) }}%</h1>
+                    <h1 class="text-3xl font-medium lg:text-5xl lg:pl-3">{{ (realisationRate).toFixed(0) }}%</h1>
                     <CircleGauge class="w-10 h-10" />
                 </div>
                 <h3 class="text-xs mt-2">Pourcentage de réalisation</h3>
@@ -39,7 +39,7 @@ import { Users, Gauge, CircleGauge, ClockArrowDown, UserRoundCheck, Logs, Trendi
 
             <div class="stat-box flex flex-col justify-between bg-pink-50 rounded-xl  py-3 lg:p-3">
                 <div class="flex justify-between items-center gap-3 md:gap-5 px-2 lg:px-4">
-                    <h1 class="text-3xl font-medium lg:text-5xl lg:pl-3">01</h1>
+                    <h1 class="text-3xl font-medium lg:text-5xl lg:pl-3">{{ powerMembersCount }}</h1>
                     <UserRoundCheck class="w-10 h-10" />
                 </div>
                 <h3 class="text-xs mt-2">Nombre de membres performant</h3>
@@ -55,7 +55,7 @@ import { Users, Gauge, CircleGauge, ClockArrowDown, UserRoundCheck, Logs, Trendi
 
             <div class="stat-box flex flex-col justify-between bg-lime-100 rounded-xl p-3">
                 <div class="flex justify-between items-center gap-3 md:gap-5">
-                    <h1 class="text-3xl font-medium lg:text-5xl lg:pl-3">{{ reactivityRate }}%</h1>
+                    <h1 class="text-3xl font-medium lg:text-5xl lg:pl-3">{{ (reactivityRate).toFixed(0) }}%</h1>
                     <TrendingUp class="w-10 h-10" />
                 </div>
                 <h3 class="text-xs mt-2">Taux de reactivité</h3>
@@ -74,7 +74,6 @@ import { Users, Gauge, CircleGauge, ClockArrowDown, UserRoundCheck, Logs, Trendi
                 <input type="submit" value="Rechercher"
                     class="w-1/4 h-11 bg-black text-white  rounded-lg hover:bg-slate-600 focus:outline-none" />
             </form>
-            <div class="w-full md:w-1/2 flex items-center justify-center text-red-500 mt-4 md:mt-0">error message</div>
         </div>
 
         <!-- Task Sections -->
@@ -118,8 +117,20 @@ import { Users, Gauge, CircleGauge, ClockArrowDown, UserRoundCheck, Logs, Trendi
                         <ChevronUp />
                     </button>
                 </div>
-                <div></div>
+                <div class="p-4">
+                    <div v-for="(member, userId) in powerMembers" :key="userId" class="flex items-center mb-4">
+                        <img v-if="member.details" :src="member.details.avatar" alt="Avatar"
+                            class="w-12 h-12 rounded-full border border-gray-300 mr-4">
+                        <div class="flex-1">
+                            <p v-if="member.details" class="font-semibold">{{ member.details.firstname }} {{
+                                member.details.lastname }}</p>
+                            <p v-if="member.role" class="text-sm text-gray-600">{{ member.role }}</p>
+                        </div>
+                        <p class="font-semibold">{{ member.percentage.toFixed(2) }}%</p>
+                    </div>
+                </div>
             </div>
+
 
             <!-- Task Overview -->
             <div class="task-box w-full flex flex-col justify-between lg:w-1/4">
@@ -193,7 +204,12 @@ export default {
             reactivityRate: 0,
             realisationRate: 0,
             commonTasks: [], //Listes des taches courantes
-
+            powerMembers: {}, //Listes des membres performant
+            powerMembersCount: 0, //Nombres de membres performant du projet
+            avatar: '',
+            firstname: '',
+            lastname: '',
+            nom: '',
         };
     },
     mounted() {
@@ -206,7 +222,7 @@ export default {
             this.$router.push('/auth'); // Rediriger vers la page de connexion
         }
         this.fetchProjects();
-        
+
         this.fetchTeamMemberCount();
         this.fetchPendingTasksCount();
         this.fetchInProgressTasksCount();
@@ -218,6 +234,7 @@ export default {
         // this.fetchTaskRate1();
         this.fetchReactivityRate();
         this.fetchRealisationRate();
+        this.fetchPowerMembers();
 
     },
     methods: {
@@ -459,6 +476,59 @@ export default {
                     return '';
             }
         },
+        //Membres performant d'un project
+        async fetchPowerMembers() {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/allMemberPower/${this.projectId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                console.log("Bonjour ! Le nombre de membre performant du projet est:");
+                this.powerMembersCount = Object.keys(response.data).length;
+                console.log(this.powerMembersCount);
+                console.log("Bonsoir ! Voici donc ces membres performants:");
+                this.powerMembers = response.data;
+                console.log(this.powerMembers);
+
+                // Initialiser powerMembers comme un objet contenant des objets
+                const powerMembersData = {};
+                for (const userId of Object.keys(this.powerMembers)) {
+                    powerMembersData[userId] = { percentage: this.powerMembers[userId] };
+                }
+                this.powerMembers = powerMembersData;
+
+                // Récupérer les informations détaillées des membres performants
+                for (const userId of Object.keys(this.powerMembers)) {
+                    const userResponse = await axios.get(`${config.apiBaseUrl}/users/${userId}`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    const memberResponse = await axios.get(`${config.apiBaseUrl}/team-members/${this.projectId}/user/${userId}`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    console.log("voici les données des users performant");
+                    console.log(userResponse.data); // Vérifiez que les données utilisateur sont correctes
+                    console.log(memberResponse.data); // Vérifiez que les données de membre sont correctes
+
+                    // Assigner directement les propriétés
+                    this.powerMembers[userId].details = userResponse.data;
+                    if (memberResponse.data && memberResponse.data.Role) {
+                        this.powerMembers[userId].role = memberResponse.data.Role.nom;
+                    } else {
+                        this.powerMembers[userId].role = 'Role non défini';
+                    }
+                }
+                console.log("Membres performants avec détails:", this.powerMembers);
+            } catch (error) {
+                console.error('Erreur lors de la récupération des membres performants :', error);
+            }
+        }
+        ,
     }
 };
 </script>
@@ -507,5 +577,13 @@ export default {
     color: #000000;
     padding: 2px 5px;
     border-radius: 5px;
+}
+
+.avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 1px solid #d1d5db;
+    /* Couleur grise légère */
 }
 </style>
