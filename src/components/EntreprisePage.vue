@@ -5,22 +5,23 @@
             <span>Entreprises</span>
         </div>
 
-        <div class="flex w-full gap-8">
-            <form action="" class="flex w-1/2 gap-4">
-                <div class="flex relative item-center w-3/4">
+        <div class="flex flex-col md:flex-row w-full gap-4 md:gap-8">
+            <form action="" class="flex flex-col md:flex-row w-full md:w-1/2 gap-4">
+                <div class="flex relative items-center w-full md:w-3/4">
                     <Search class="absolute left-2 top-2.5 text-gray-600 h-1/2" />
                     <input type="search" id="search-input"
-                        class=" w-full h-11 pl-10 pr-4 border border-gray-300 rounded-lg text-gray-800 focus:outline-none focus:border-blue-500"
+                        class="w-full h-11 pl-10 pr-4 border border-gray-300 rounded-lg text-gray-800 focus:outline-none focus:border-blue-500"
                         placeholder="Rechercher...">
                 </div>
 
                 <input type="submit" value="Rechercher"
-                    class=" w-1/4 h-11 bg-black text-white font-bold rounded-lg hover:bg-slate-600 focus:outline-none">
-
+                    class="w-full md:w-1/4 h-11 bg-black text-white font-bold rounded-lg hover:bg-slate-600 focus:outline-none">
             </form>
 
-            <div class="w-1/2 flex justify-end">
-                <button class="flex items-center bg-black rounded-lg p-2 h-full text-white hover:bg-slate-600 focus:outline-none" @click="showModal2">
+            <div class="w-full md:w-1/2 flex justify-end mt-4 md:mt-0">
+                <button
+                    class="flex items-center bg-black rounded-lg p-2 h-full text-white hover:bg-slate-600 focus:outline-none"
+                    @click="showModal2">
                     <Plus />
                     <span>Ajoute une entreprise</span>
                 </button>
@@ -35,16 +36,19 @@
                         <p class="text-black text-sm font-bold">Listes des entreprise</p>
                     </div>
                     <button @click="toggleteamEntrepriseList()" class="flex gap-1  text-black px-3 py-2 rounded-lg">
-                        <ChevronUp :class="{ 'chevron-down': !isEntrepriseListVisible, 'chevron-up': isEntrepriseListVisible,
+                        <ChevronUp :class="{
+                            'chevron-down': !isEntrepriseListVisible, 'chevron-up': isEntrepriseListVisible,
                         }" class="w-full h-6 transition-transform" />
                     </button>
                 </div>
 
-                <div :class="{ block: isEntrepriseListVisible, hidden: !isEntrepriseListVisible,}" class="flex-grow" v-if="isEntrepriseListVisible">
+                <div :class="{ block: isEntrepriseListVisible, hidden: !isEntrepriseListVisible, }" class="flex-grow"
+                    v-if="isEntrepriseListVisible">
                     <table class="min-w-full divide-y divide-gray-200 text-left">
                         <thead class="bg-gray-50">
                             <tr>
-                                <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Nom de l'entreprise</th>
+                                <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Nom de l'entreprise
+                                </th>
                                 <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Email </th>
                                 <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Adresse </th>
                                 <!-- <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Date Ajout </th> -->
@@ -58,7 +62,8 @@
                                 <td class="px-6 py-4 whitespace-nowrap">{{ entreprise.pobox }}</td>
                                 <!-- <td class="px-6 py-4 whitespace-nowrap">{{ member.Role.nom }}</td> -->
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <button type="button" class="text-black hover:text-green-900" @click="showMemberDetails()">
+                                    <button type="button" class="text-black hover:text-green-900"
+                                        @click="showMemberDetails()">
                                         <Eye class=" w-full h-6" />
                                     </button>
                                 </td>
@@ -76,7 +81,7 @@
 import config from "../config";
 import axios from 'axios';
 
-export default{
+export default {
     components: {
     },
     mounted() {
@@ -95,9 +100,9 @@ export default{
         showModal2() {
             this.modalVisible = true
         },
-        
+
         toggleteamEntrepriseList() {
-            this.isEntrepriseListVisible =!this.isEntrepriseListVisible
+            this.isEntrepriseListVisible = !this.isEntrepriseListVisible
         },
 
         async fetchEntreprises() {
