@@ -44,7 +44,7 @@ import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
                     </div>
                 </div>
 
-                <draggable
+                <draggable style="height: 590px;"
                     class="h-80 overflow-y-auto flex flex-col gap-2 border border-gray-300 rounded-lg px-4 py-10 pendingTasks"
                     group="tasks" :list="pendingTasks" @change="log" @end="onEnd">
                     <div class="flex flex-col border border-gray-300 py-2 px-3" v-for="task in pendingTasks"
@@ -98,7 +98,7 @@ import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
                     </div>
                 </div>
 
-                <draggable
+                <draggable style="height: 590px;"
                     class="h-80 overflow-y-auto flex flex-col gap-2 border border-gray-300 rounded-lg px-4 py-10 inProgressTasks"
                     group="tasks" :list="inProgressTasks" @change="log" @end="onEnd">
                     <div class="flex flex-col border border-gray-300 py-2 px-3" v-for="task in inProgressTasks"
@@ -150,8 +150,8 @@ import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
                     </div>
                 </div>
 
-                <draggable
-                    class="h-80 overflow-y-auto flex flex-col gap-2 border border-gray-300 rounded-lg px-4 py-10 completedTasks"
+                <draggable style="height: 590px;"
+                    class="overflow-y-auto flex flex-col gap-2 border border-gray-300 rounded-lg px-4 py-10 completedTasks"
                     group="tasks" :list="completedTasks" @change="log" @end="onEnd">
                     <div class="border border-gray-300 py-2 px-3" v-for="task in completedTasks" :key="task.id"
                         @click="storeTaskId(task.id)">
@@ -952,5 +952,21 @@ export default defineComponent({
 
 body {
     font-family: Monda;
+}
+
+
+/* Masquer la barre de défilement */
+.pendingTasks::-webkit-scrollbar,
+.inProgressTasks::-webkit-scrollbar,
+.completedTasks::-webkit-scrollbar {
+display: none;
+}
+
+/* Masquer la barre de défilement pour Firefox */
+.pendingTasks,
+.inProgressTasks,
+.completedTasks {
+-ms-overflow-style: none;  /* IE and Edge */
+scrollbar-width: none;  /* Firefox */
 }
 </style>

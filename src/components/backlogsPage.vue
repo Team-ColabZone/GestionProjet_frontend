@@ -92,17 +92,35 @@ import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs } from 'lucide-v
                                 <tr>
                                     <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Nom de la tache
                                     </th>
-                                    <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Responsable(s)
+                                    <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Responsable
                                     </th>
+                                    <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Budget</th>
+
                                     <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Statut</th>
 
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-gray-200">
                                 <tr v-for="tasklate in taskslate" :key="tasklate.id" class="hover:bg-gray-50">
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ tasklate.taskname }} </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ tasklate.budget }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ tasklate.status }}</td>
+                                    <td class="px-6 py-3 whitespace-nowrap">{{ tasklate.taskname }} </td>
+                                    <td class="px-6 py-3 whitespace-nowrap">
+                                        <div v-if="tasklate.assignedUserDetails" class="flex items-center">
+                                            <div class="w-10 h-10 rounded-full border border-gray-300 overflow-hidden">
+                                                <img :src="tasklate.assignedUserDetails.avatar" alt="Avatar"
+                                                    class="w-full h-full object-cover">
+                                            </div>
+                                            <div class="ml-4">
+                                                <div>{{ tasklate.assignedUserDetails.email }}</div>
+                                            </div>
+                                        </div>
+                                        <div v-else class="text-gray-400">tache non affectée</div>
+                                    </td>
+                                    <td class="px-6 py-3 whitespace-nowrap">{{ tasklate.budget }}</td>
+                                    <td class="px-4 py-3 whitespace-nowrap">
+                                        <div :class="getStatusClass(tasklate.status)" class="ml-2">
+                                            {{ tasklate.status }}
+                                        </div>
+                                    </td>
 
                                 </tr>
                             </tbody>
@@ -305,6 +323,8 @@ export default {
             userAssignId: '',
             projectMembers: [],
             taskslate: [],
+            assignedUserDetails: [], //details de l'utilisateurs a qui on a affecté une tache qui est deja en retard
+
         };
     },
 
@@ -558,8 +578,42 @@ export default {
                 this.taskslate = response.data;
                 console.log("Voici la liste des taches  en retard:")
                 console.log(this.taskslate);
+                // Récupérer les informations de l'utilisateur assigné pour chaque tâche
+                for (let task of this.taskslate) {
+                    const assignmentResponse = await axios.get(`${config.apiBaseUrl}/tasks-assignments/task/${task.id}`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    const assignedUserId = assignmentResponse.data.userId;
+                    console.log(`ID de l'utilisateur assigné pour la tâche en retard ${task.id} :`, assignedUserId);
+
+                    if (assignedUserId) {
+                        const userResponse = await axios.get(`${config.apiBaseUrl}/users/${assignedUserId}`, {
+                            headers: {
+                                'Authorization': `Bearer ${token}`
+                            }
+                        });
+                        task.assignedUserDetails = userResponse.data;
+                        console.log(`Détails de l'utilisateur assigné pour la tâche en retard --- ${task.id} :`, task.assignedUserDetails);
+                    }
+                }
+
+                console.log("Tâches en attente avec détails des utilisateurs assignés :", this.pendingTasks);
             } catch (error) {
                 console.error('Erreur lors de la récupération du nombre de taches en retard :', error);
+            }
+        },
+        getStatusClass(status) {
+            switch (status) {
+                case 'EN_COURS':
+                    return 'status-en-cours';
+                case 'EN_ATTENTE':
+                    return 'status-en-attente';
+                case 'TERMINEE':
+                    return 'status-terminee';
+                default:
+                    return '';
             }
         },
 
@@ -570,4 +624,25 @@ export default {
 
 </script>
 
-<style scoped></style>
+<style scoped>
+.status-en-cours {
+    background-color: #86FD92;
+    color: #065E0F;
+    padding: 2px 5px;
+    border-radius: 5px;
+}
+
+.status-en-attente {
+    background-color: #FFD1A6;
+    color: #7C480C;
+    padding: 2px 5px;
+    border-radius: 5px;
+}
+
+.status-terminee {
+    background-color: #B3E2FC;
+    color: #000000;
+    padding: 2px 5px;
+    border-radius: 5px;
+}
+</style>

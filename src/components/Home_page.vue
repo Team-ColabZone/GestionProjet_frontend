@@ -13,7 +13,8 @@
                 </button>
 
                 <button @click="showIdentity" class="rounded-full h-11 bg-white border-none p-px shadow-2xl">
-                    <img :src="profileImageUrl" alt="Profile Image" class="w-10 h-10 rounded-full border object-cover object-center"  />
+                    <img :src="profileImageUrl" alt="Profile Image"
+                        class="w-10 h-10 rounded-full border object-cover object-center" />
 
                 </button>
             </div>
@@ -43,7 +44,8 @@
                                 @click="showPage('dashboard')">
                                 <div class="w-4/5 md:w-4/5">
                                     <div v-if="firstProjectName" class="flex items-center gap-2 h-14 md:gap-4 pr-2">
-                                        <img :src="firstProjectLogo" alt="Logo" class="h-full border rounded-lg" />
+                                        <img :src="firstProjectLogo" alt="Logo"
+                                            class="h-full w-16 border rounded-lg object-cover" />
                                         <h3 class="text-black text-lg font-semibold py-1">{{ firstProjectName }}</h3>
                                     </div>
                                     <div v-else class="flex items-center gap-1 py-1 px-2">
@@ -71,7 +73,7 @@
                                             { 'bg-gray-300': selectedProjectId === project.id, 'bg-gray-100': selectedProjectId !== project.id }
                                         ]">
                                         <img :src="project.projectlogo" alt="Project Logo"
-                                            class="w-12 h-full rounded border" />
+                                            class="h-full w-12 border rounded-lg object-cover" />
                                         <p class="text-left text-black text-ellipsis text-xs md:text-sm p-2">
                                             <span class="font-medium">{{ project.projectname }}</span><br />
                                             {{ project.description }}
@@ -275,7 +277,7 @@
                             <div class="mb-4">
                                 <label for="downloadUrlLink" class="block text-gray-700 text-sm font-bold mb-2">Lien
                                     github du projet :</label>
-                                <input type="text" id="downloadUrlLink" v-model="downloadUrlLink" required
+                                <input type="text" id="downloadUrlLink" v-model="downloadUrlLink"
                                     class="w-full p-2 border rounded focus:outline-none focus:ring focus:border-blue-300">
                             </div>
 
@@ -489,7 +491,8 @@
                         <div
                             class="flex flex-row gap-4 border-t border-b border-gray-300 py-3 justify-between items-center">
                             <div class="flex flex-col gap-3 items-center md:flex-row">
-                                <img :src="profileImageUrl" alt="Profile Image" class="w-16 h-16 rounded-full border object-cover object-center" />
+                                <img :src="profileImageUrl" alt="Profile Image"
+                                    class="w-16 h-16 rounded-full border object-cover object-center" />
                                 <span>PHOTO DE PROFIL</span>
                             </div>
 
@@ -625,6 +628,7 @@ export default {
             password: '',
             profileImageUrl: '',
             projectsEntreprise: [],//liste des projets par Entreprises
+            projectlogo: '',
         };
     },
 
@@ -725,7 +729,7 @@ export default {
                     projectType: this.projectType,
                     projectPrivacyPolicy: this.projectPrivacyPolicy,
                     downloadUrlLink: this.downloadUrlLink,
-                    userId: this.userId // Assure-toi d'inclure l'ID de l'utilisateur
+                    userId: this.userId, // Assure-toi d'inclure l'ID de l'utilisateur
                 }, {
                     headers: {
                         'Authorization': `Bearer ${token}`
@@ -771,7 +775,7 @@ export default {
             this.start_date = '';
             this.end_date = '';
             this.budget = '';
-            this.logo = '';
+            this.projectlogo = '';
             this.selectedImage = "";
             this.selectedImageURL = "";
             this.hideModalProject();
@@ -933,13 +937,28 @@ export default {
         async fetchProjects() {
             try {
                 const token = localStorage.getItem('token'); // or another method to retrieve the token
-                const response = await axios.get(`${config.apiBaseUrl}/projects/user/${this.userId}`, {
+                // Récupérer les projets créés par l'utilisateur
+                const responseCreated = await axios.get(`${config.apiBaseUrl}/projects/user/${this.userId}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
                 });
-                this.projects = response.data;
-                console.log(",>,..,.,..,,..<><><><>.,.,:", response.data);
+                console.log("Projets personnels de l'utilisateur:", responseCreated.data)
+                // Récupérer les projets où l'utilisateur est membre
+                const responseMember = await axios.get(`${config.apiBaseUrl}/team-members/user/${this.userId}/projects`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                console.log("Projets dans lesquels l'utilisateur a été invité:", responseMember.data)
+
+                // Extraire les projets invités
+                const invitedProjects = responseMember.data.map(member => member.Project).filter(project => project !== null);
+                console.log("Voici l'extraction des projects invités: ",invitedProjects)
+                // Combiner les deux listes de projets
+                this.projects = [...responseCreated.data, ...invitedProjects];
+                console.log("Projets récupérés ++++++++++++++++:", this.projects);
+
 
                 const savedProject = JSON.parse(localStorage.getItem('currentProject'));
                 if (savedProject) {
@@ -972,7 +991,7 @@ export default {
 
         setFirstProject(project) {
             this.firstProjectName = project.projectname;
-            this.firstProjectLogo = project.logo; // Assuming the project object has a 'logo' property
+            this.firstProjectLogo = project.projectlogo; // Assuming the project object has a 'logo' property
             this.projects = this.projects.filter(p => p.id !== project.id);
             localStorage.setItem('currentProject', JSON.stringify(project));
             localStorage.setItem('projectId', project.id); // Ajouter cette ligne pour stocker l'ID du projet

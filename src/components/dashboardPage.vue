@@ -127,7 +127,7 @@ import { Users, Gauge, CircleGauge, ClockArrowDown, UserRoundCheck, Logs, Trendi
                                 member.details.lastname }}</p>
                             <p v-if="member.role" class="text-sm text-gray-600">{{ member.role }}</p>
                         </div>
-                        <p class="font-semibold">{{ member.percentage.toFixed(2) }}%</p>
+                        <p class="font-semibold">{{ Number(member.count).toFixed(2) }}%</p>
                     </div>
                 </div>
             </div>
@@ -456,24 +456,33 @@ export default {
         async fetchPowerMembers() {
             try {
                 const token = localStorage.getItem('token');
+                // Récupérer les membres performants pour le projet spécifié
                 const response = await axios.get(`${config.apiBaseUrl}/tasks/allMemberPower/${this.projectId}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
                 });
-                console.log("Bonjour ! Le nombre de membre performant du projet est:");
-                this.powerMembersCount = Object.keys(response.data).length;
-                console.log(this.powerMembersCount);
-                console.log("Bonsoir ! Voici donc ces membres performants:");
-                this.powerMembers = response.data;
-                console.log(this.powerMembers);
+                console.log("Réponse des membres performants :", response.data);
 
-                // Initialiser powerMembers comme un objet contenant des objets
+                // Compter le nombre de membres performants
+                this.powerMembersCount = response.data.length;
+                console.log("Nombre de membres performants :", this.powerMembersCount);
+
+                // Initialiser powerMembers avec les données reçues
+                this.powerMembers = response.data;
+
+                // Convertir les valeurs de count en nombres et vérifier les userId
                 const powerMembersData = {};
-                for (const userId of Object.keys(this.powerMembers)) {
-                    powerMembersData[userId] = { percentage: this.powerMembers[userId] };
+                for (const member of this.powerMembers) {
+                    console.log("Membre :", member);
+                    if (member.userId && member.count !== undefined) {
+                        powerMembersData[member.userId] = { count: Number(member.count) }; // Convertir en nombre
+                    } else {
+                        console.error("Données de membre invalides :", member);
+                    }
                 }
                 this.powerMembers = powerMembersData;
+                console.log("Membres performants après conversion :", this.powerMembers);
 
                 // Récupérer les informations détaillées des membres performants
                 for (const userId of Object.keys(this.powerMembers)) {
@@ -482,16 +491,16 @@ export default {
                             'Authorization': `Bearer ${token}`
                         }
                     });
+                    console.log("Détails de l'utilisateur :", userResponse.data);
+
                     const memberResponse = await axios.get(`${config.apiBaseUrl}/team-members/${this.projectId}/user/${userId}`, {
                         headers: {
                             'Authorization': `Bearer ${token}`
                         }
                     });
-                    console.log("voici les données des users performant");
-                    console.log(userResponse.data); // Vérifiez que les données utilisateur sont correctes
-                    console.log(memberResponse.data); // Vérifiez que les données de membre sont correctes
+                    console.log("Détails du membre de l'équipe :", memberResponse.data);
 
-                    // Assigner directement les propriétés
+                    // Assigner les détails de l'utilisateur et le rôle au membre performant
                     this.powerMembers[userId].details = userResponse.data;
                     if (memberResponse.data && memberResponse.data.Role) {
                         this.powerMembers[userId].role = memberResponse.data.Role.nom;
@@ -499,11 +508,13 @@ export default {
                         this.powerMembers[userId].role = 'Role non défini';
                     }
                 }
-                console.log("Membres performants avec détails:", this.powerMembers);
+                console.log("Membres performants avec détails :", this.powerMembers);
             } catch (error) {
                 console.error('Erreur lors de la récupération des membres performants :', error);
             }
         }
+
+
         ,
     }
 };
