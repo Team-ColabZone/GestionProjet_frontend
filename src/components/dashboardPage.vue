@@ -121,7 +121,7 @@ import { Users, Gauge, CircleGauge, ClockArrowDown, UserRoundCheck, Logs, Trendi
                 <div class="p-4">
                     <div v-for="(member, userId) in powerMembers" :key="userId" class="flex items-center mb-4">
                         <img v-if="member.details" :src="member.details.avatar" alt="Avatar"
-                            class="w-12 h-12 rounded-full border border-gray-300 mr-4">
+                            class="w-12 h-12 rounded-full border object-cover object-center border-gray-300 mr-4">
                         <div class="flex-1">
                             <p v-if="member.details" class="font-semibold">{{ member.details.firstname }} {{
                                 member.details.lastname }}</p>
@@ -199,7 +199,7 @@ export default {
             selectedProjectId: '', // ID du projet sélectionné
             userId: '',
             projectId: '',
-            userData: null,
+            userData: {},
             isProjectListVisible: false,
             // taskRate1: 0,
             reactivityRate: 0,
@@ -211,6 +211,7 @@ export default {
             firstname: '',
             lastname: '',
             nom: '',
+            profile: {},
         };
     },
     mounted() {
@@ -251,10 +252,23 @@ export default {
         },
         async fetchUserData() {
             try {
-                const response = await axios.get(`${config.apiBaseUrl}/users/${this.userId}`);
-                this.userData = response.data;
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`${config.apiBaseUrl}/users/${this.userId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                console.log("this the user Data", response.data);
+                this.profile = response.data;
+                this.firstName = this.profile.firstname;
+                this.lastName = this.profile.lastname;
+                this.email = this.profile.email;
+                this.phoneNumber = this.profile.phonenumber;
+                this.profileImageUrl = this.profile.avatar;
             } catch (error) {
                 this.errorMessage = 'Erreur lors de la récupération des données utilisateur : ' + error.response.data.message;
+            } finally {
+                this.loading = false;
             }
         },
 

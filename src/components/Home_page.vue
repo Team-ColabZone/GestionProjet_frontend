@@ -13,8 +13,8 @@
                 </button>
 
                 <button @click="showIdentity" class="rounded-full h-11 bg-white border-none p-px shadow-2xl">
-                    <img class=" border boreder-black w-full h-full rounded-full "
-                        src="../assets/images/logoflysoft.png" alt="logo Entreprise" />
+                    <img :src="profileImageUrl" alt="Profile Image" class="w-10 h-10 rounded-full border object-cover object-center"  />
+
                 </button>
             </div>
         </header>
@@ -387,7 +387,7 @@
                     <div class="flex justify-between font-medium">
                         <span></span>
                         <!-- Displaying user's email -->
-                        <span>{{ userData.email }}</span>
+                        <span>{{ profile.email }}</span>
 
                         <!-- Close button -->
                         <button @click="hideIdentity">
@@ -400,13 +400,16 @@
                         <div class="w-20 h-20  rounded-full">
                             <div v-if="loading">Loading...</div>
                             <div v-else>
-                                <img :src="'data:image/jpeg;base64,' + userData.profileImage" alt="Profile Image"
-                                    class="h-20 w-20 rounded-full border object-contain">
+                                <!-- <img :src="'data:image/jpeg;base64,' + profile.profileImage" alt="Profile Image"
+                                    class="h-20 w-20 rounded-full border object-contain"> -->
+                                <img :src="profileImageUrl" alt="Profile Image"
+                                    class="w-20 h-20 rounded-full border object-cover object-center" />
+
                             </div>
                         </div>
 
                         <!-- Greeting with user's last name -->
-                        <span class="font-medium text-xl">{{ userData.lastname ? 'Bonjour ' + userData.lastname + ' !' :
+                        <span class="font-medium text-xl">{{ profile.lastname ? 'Bonjour ' + profile.lastname + ' !' :
                             '' }}</span>
 
                         <!-- Manage Account button -->
@@ -486,8 +489,7 @@
                         <div
                             class="flex flex-row gap-4 border-t border-b border-gray-300 py-3 justify-between items-center">
                             <div class="flex flex-col gap-3 items-center md:flex-row">
-                                <img :src="profileImageUrl" alt="Profile Image"
-                                    class="w-16 h-16 rounded-full border" />
+                                <img :src="profileImageUrl" alt="Profile Image" class="w-16 h-16 rounded-full border object-cover object-center" />
                                 <span>PHOTO DE PROFIL</span>
                             </div>
 
@@ -496,23 +498,20 @@
                                 <button type="button"
                                     class="px-3 bg-white text-black border border-gray-100 rounded hover:bg-gray-600"
                                     @click="triggerFileInput">Modifier</button>
-                                <button type="button"
-                                    class="px-3 py-1 bg-gray-300 text-black rounded hover:bg-gray-600"
+                                <button type="button" class="px-3 py-1 bg-gray-300 text-black rounded hover:bg-gray-600"
                                     @click="removeProfileImage">Supprimer</button>
                             </div>
                         </div>
 
                         <div class="w-full flex md:flex-row gap-5 md:gap-14">
                             <div class="w-full">
-                                <label for="firstName"
-                                    class="block text-gray-700 text-sm font-bold mb-2">Nom</label>
+                                <label for="firstName" class="block text-gray-700 text-sm font-bold mb-2">Nom</label>
                                 <input type="text" v-model="firstName"
                                     class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-200" />
                             </div>
 
                             <div class="w-full">
-                                <label for="lastName"
-                                    class="block text-gray-700 text-sm font-bold mb-2">Prenom</label>
+                                <label for="lastName" class="block text-gray-700 text-sm font-bold mb-2">Prenom</label>
                                 <input type="text" v-model="lastName"
                                     class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-200" />
                             </div>
@@ -600,7 +599,6 @@ export default {
             error: false,
             errorMessage: '',
 
-            // userData: {},
             userId: '',
             projects: [], // Liste des projets
             firstProjectName: '',
@@ -644,7 +642,7 @@ export default {
             this.userId = localStorage.getItem('userId');
             this.projectId = localStorage.getItem('projectId');
             this.entrepriseId = localStorage.getItem('selectedEntrepriseId');
-            this.selectedEntrepriseId = localStorage.getItem('selectedEntrepriseId'); 
+            this.selectedEntrepriseId = localStorage.getItem('selectedEntrepriseId');
             this.fetchUserData();
             this.fetchProjects();
             this.fetchEntreprises();
@@ -919,12 +917,12 @@ export default {
                     }
                 });
                 console.log("this the user Data", response.data);
-                const profile = response.data;
-                this.firstName = profile.firstname;
-                this.lastName = profile.lastname;
-                this.email = profile.email;
-                this.phoneNumber = profile.phonenumber;
-                this.profileImageUrl = profile.avatar;
+                this.profile = response.data;
+                this.firstName = this.profile.firstname;
+                this.lastName = this.profile.lastname;
+                this.email = this.profile.email;
+                this.phoneNumber = this.profile.phonenumber;
+                this.profileImageUrl = this.profile.avatar;
             } catch (error) {
                 this.errorMessage = 'Erreur lors de la récupération des données utilisateur : ' + error.response.data.message;
             } finally {

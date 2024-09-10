@@ -11,7 +11,7 @@
   mounted() {
   setTimeout(() => {
   this.$router.push('/auth');
-  }, 50000); 
+  }, 3000); 
   },
   };
   </script>
