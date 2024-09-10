@@ -74,9 +74,18 @@ import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
                         <div class="flex flex-col pb-2">
                             <span class="font-medium">{{ task.taskname }}</span>
                             <span>{{ task.description }}</span>
-                            <span class="font-bold">Budget: {{ task.budget }}Frs</span>
+                            <div class="flex justify-between items-center pb-2">
+                                <span class="font-bold">Budget: {{ task.budget }}Frs</span>
+                                <div v-if="task.assignedUserDetails"
+                                    class="w-10 h-10 rounded-full border border-gray-300 overflow-hidden">
+                                    <img :src="task.assignedUserDetails.avatar" alt="Avatar"
+                                        class="w-full h-full object-cover">
+                                </div>
+                            </div>
                         </div>
                     </div>
+
+
                 </draggable>
             </div>
 
@@ -118,7 +127,14 @@ import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
                         <div class="flex flex-col pb-2">
                             <span class="font-medium">{{ task.taskname }}</span>
                             <span>{{ task.description }}</span>
-                            <span class="font-bold">Budget: {{ task.budget }}Frs</span>
+                            <div class="flex justify-between items-center pb-2">
+                                <span class="font-bold">Budget: {{ task.budget }}Frs</span>
+                                <div v-if="task.assignedUserDetails"
+                                    class="w-10 h-10 rounded-full border border-gray-300 overflow-hidden">
+                                    <img :src="task.assignedUserDetails.avatar" alt="Avatar"
+                                        class="w-full h-full object-cover">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </draggable>
@@ -163,7 +179,14 @@ import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
                         <div class="flex flex-col pb-2">
                             <span class="font-medium">{{ task.taskname }}</span>
                             <span>{{ task.description }}</span>
-                            <span class="font-bold">Budget: {{ task.budget }}Frs</span>
+                            <div class="flex justify-between items-center pb-2">
+                                <span class="font-bold">Budget: {{ task.budget }}Frs</span>
+                                <div v-if="task.assignedUserDetails"
+                                    class="w-10 h-10 rounded-full border border-gray-300 overflow-hidden">
+                                    <img :src="task.assignedUserDetails.avatar" alt="Avatar"
+                                        class="w-full h-full object-cover">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </draggable>
@@ -347,7 +370,9 @@ import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
                         <p for="Status" class="block text-gray-700 text-sm font-bold mb-2">Statut de la
                             tache
                         </p>
-                        <p class="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-200">{{ status }}</p>
+                        <p
+                            class="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-200">
+                            {{ status }}</p>
                     </div>
                 </div>
             </div>
@@ -444,7 +469,8 @@ export default defineComponent({
             modalEditTasks: false,
             showMenu: false,
             modalDetailTasks: false,
-            taskDetails: [] // details de la tache
+            taskDetails: [], // details de la tache
+            assignedUserDetails: [], //details de l'utilisateurs a qui on a affecté une tache
 
         };
     },
@@ -578,7 +604,30 @@ export default defineComponent({
                     }
                 });
                 this.pendingTasks = response.data;
-                console.log(this.pendingTasks);
+                console.log("Tâches en attente récupérées :", this.pendingTasks);
+
+                // Récupérer les informations de l'utilisateur assigné pour chaque tâche
+                for (let task of this.pendingTasks) {
+                    const assignmentResponse = await axios.get(`${config.apiBaseUrl}/tasks-assignments/task/${task.id}`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    const assignedUserId = assignmentResponse.data.userId;
+                    console.log(`ID de l'utilisateur assigné pour la tâche ${task.id} :`, assignedUserId);
+
+                    if (assignedUserId) {
+                        const userResponse = await axios.get(`${config.apiBaseUrl}/users/${assignedUserId}`, {
+                            headers: {
+                                'Authorization': `Bearer ${token}`
+                            }
+                        });
+                        task.assignedUserDetails = userResponse.data;
+                        console.log(`Détails de l'utilisateur assigné pour la tâche ${task.id} :`, task.assignedUserDetails);
+                    }
+                }
+
+                console.log("Tâches en attente avec détails des utilisateurs assignés :", this.pendingTasks);
             } catch (error) {
                 console.error('Erreur lors de la récupération des tâches en attente :', error);
             }
@@ -593,6 +642,30 @@ export default defineComponent({
                 });
                 this.inProgressTasks = response.data;
                 console.log(this.inProgressTasks);
+
+                // Récupérer les informations de l'utilisateur assigné pour chaque tâche
+                for (let task of this.inProgressTasks) {
+                    const assignmentResponse = await axios.get(`${config.apiBaseUrl}/tasks-assignments/task/${task.id}`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    const assignedUserId = assignmentResponse.data.userId;
+                    console.log(`ID de l'utilisateur assigné pour la tâche ${task.id} :`, assignedUserId);
+
+                    if (assignedUserId) {
+                        const userResponse = await axios.get(`${config.apiBaseUrl}/users/${assignedUserId}`, {
+                            headers: {
+                                'Authorization': `Bearer ${token}`
+                            }
+                        });
+                        task.assignedUserDetails = userResponse.data;
+                        console.log(`Détails de l'utilisateur assigné pour la tâche ${task.id} :`, task.assignedUserDetails);
+                    }
+                }
+
+                console.log("Tâches en cours avec détails des utilisateurs assignés :", this.inProgressTasks);
+
             } catch (error) {
                 console.error('Erreur lors de la récupération des tâches en cours :', error);
             }
@@ -607,6 +680,30 @@ export default defineComponent({
                 });
                 this.completedTasks = response.data;
                 console.log(this.completedTasks);
+                // Récupérer les informations de l'utilisateur assigné pour chaque tâche
+                for (let task of this.completedTasks) {
+                    const assignmentResponse = await axios.get(`${config.apiBaseUrl}/tasks-assignments/task/${task.id}`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    const assignedUserId = assignmentResponse.data.userId;
+                    console.log(`ID de l'utilisateur assigné pour la tâche ${task.id} :`, assignedUserId);
+
+                    if (assignedUserId) {
+                        const userResponse = await axios.get(`${config.apiBaseUrl}/users/${assignedUserId}`, {
+                            headers: {
+                                'Authorization': `Bearer ${token}`
+                            }
+                        });
+                        task.assignedUserDetails = userResponse.data;
+                        console.log(`Détails de l'utilisateur assigné pour la tâche ${task.id} :`, task.assignedUserDetails);
+                    }
+                }
+
+                console.log("Tâches terminée avec détails des utilisateurs assignés :", this.completedTasks);
+
+
             } catch (error) {
                 console.error('Erreur lors de la récupération des tâches terminées :', error);
             }
@@ -706,14 +803,14 @@ export default defineComponent({
         async fetchTaskDetails() {
             try {
                 const token = localStorage.getItem('token');
-                console.log(this.movedItemId)
+                console.log(this.movedItemId);
                 const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.movedItemId}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
                 });
                 this.taskDetails = response.data;
-                console.log("Voici les details de la tache selectionné:")
+                console.log("Voici les details de la tache selectionné:");
                 console.log(this.taskDetails);
                 this.showMenu = false;
                 this.openEditTaskModal();
@@ -829,7 +926,7 @@ export default defineComponent({
                 });
                 this.projectMembers = response.data;
                 console.log("Bonsoir")
-                console.log("Voici la liste des membre dans le backlogs");
+                console.log("Voici la liste des membre dans taskspage ++++++++++++++++");
                 console.log(this.projectMembers);
             } catch (error) {
                 this.errorMessage = 'Erreur lors de la récupération des membres du projet : ' + (error.response ? error.response.data.message : error.message);

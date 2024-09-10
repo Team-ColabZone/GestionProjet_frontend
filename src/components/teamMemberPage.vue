@@ -78,8 +78,8 @@ import { Users, List, Plus, Search, ChevronUp, Eye } from 'lucide-vue-next';
                                     class="hover:bg-gray-100">
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="flex items-center space-x-2">
-                                            <img class="border border-black h-11 w-11 rounded-full mr-5"
-                                                src="../assets/images/logoflysoft.png" alt="logo Entreprise" />
+                                            <img class="border border-black h-11 w-11 rounded-full object-cover object-center mr-5"
+                                                :src="member.userMember.avatar" alt="profil" />
                                             {{ member.userMember.firstname }} {{ member.userMember.lastname }}
                                         </div>
                                     </td>
