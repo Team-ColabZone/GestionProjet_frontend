@@ -963,6 +963,8 @@ export default {
                 const savedProject = JSON.parse(localStorage.getItem('currentProject'));
                 if (savedProject) {
                     this.setFirstProject(savedProject);
+                    console.log("currentProject is set <><>><><><>><>><>><<>><>><><><<>><<><><>");
+                    
                 } else if (this.projects.length > 0) {
                     this.setFirstProject(this.projects[0]);
                 }
