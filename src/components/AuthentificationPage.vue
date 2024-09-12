@@ -25,8 +25,15 @@
 
                     <div class="flex flex-col gap-2">
                         <label for="password" class="text-gray-700">Mot de passe</label>
-                        <input type="password" id="password" v-model="password"
-                            placeholder="Veuillez entrer un mot de passe" required class="p-4 border rounded-lg">
+                        <div class="relative flex items-center">
+                            <input type="password" id="password" v-model="password"
+                                placeholder="Veuillez entrer un mot de passe" required
+                                class="w-full p-4 border rounded-lg">
+                            <eye class="absolute right-4 " v-if="showPassword" @click="showPassword = !showPassword">
+                            </eye>
+                            <EyeOff v-else @click="showPassword = !showPassword"
+                                class="absolute right-4 " />
+                        </div>
                         <router-link to="/Forgotpassword" class="text-blue-600 text-right text-sm">Mot de passe
                             oublié?</router-link>
                     </div>
@@ -37,7 +44,8 @@
                         Se connecter
                     </span>
                     <div v-else class="flex justify-center">
-                        <span class="inline-block w-6 h-6 border-4 border-gray-400 border-t-black border-b-black rounded-full animate-spin"></span>
+                        <span
+                            class="inline-block w-6 h-6 border-4 border-gray-400 border-t-black border-b-black rounded-full animate-spin"></span>
                     </div>
                 </button>
             </form>
@@ -69,9 +77,20 @@ export default {
             errorMessage: '',
             hover: false,
             loading: false,
+            showPassword: false,
         };
     },
 
+    watch: {
+        showPassword(val) {
+            const passwordField = document.getElementById('password');
+            if (val) {
+                passwordField.type = 'text';
+            } else {
+                passwordField.type = 'password';
+            }
+        }
+    },
     methods: {
         async login() {
             this.loading = true;

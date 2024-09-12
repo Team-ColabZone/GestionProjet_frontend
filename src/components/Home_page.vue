@@ -12,10 +12,9 @@
                     <BellRing class="w-4 h-4" />
                 </button>
 
-                <button @click="showIdentity" class="rounded-full h-11 bg-white border-none p-px shadow-2xl">
+                <button @click="handleButtonClick" class="rounded-full h-11 bg-white border-none p-px shadow-2xl">
                     <img :src="profileImageUrl" alt="Profile Image"
                         class="w-10 h-10 rounded-full border object-cover object-center" />
-
                 </button>
             </div>
         </header>
@@ -23,7 +22,6 @@
         <main class="h-full flex flex-col lg:flex-row gap-1">
             <!-- Hamburger Menu Button -->
             <button @click="toggleNav" class="lg:hidden p-4">
-                <!-- Icon for 3 bars -->
                 <AlignJustify class="w-6 h-6" />
             </button>
 
@@ -45,7 +43,7 @@
                                 <div class="w-4/5 md:w-4/5">
                                     <div v-if="firstProjectName" class="flex items-center gap-2 h-14 md:gap-4 pr-2">
                                         <img :src="firstProjectLogo" alt="Logo"
-                                            class="h-full w-16 border rounded-lg object-cover" />
+                                            class="h-full w-14 rounded-lg object-fit " />
                                         <h3 class="text-black text-lg font-semibold py-1">{{ firstProjectName }}</h3>
                                     </div>
                                     <div v-else class="flex items-center gap-1 py-1 px-2">
@@ -69,10 +67,10 @@
                                 <div class="h-40 w-full overflow-x-auto overflow-y-auto">
                                     <div v-for="project in displayedProjects" :key="project.id"
                                         @click="selectProject(project.id)" :class="[
-                                            'flex items-center border-b border-gray-50 cursor-pointer rounded-lg pr-2',
+                                            'h-14 flex items-center border-b border-gray-50 cursor-pointer rounded-lg pr-2',
                                             { 'bg-gray-300': selectedProjectId === project.id, 'bg-gray-100': selectedProjectId !== project.id }
                                         ]">
-                                        <img :src="project.projectlogo" alt="Project Logo"
+                                        <img :src="project.projectlogo" alt="Logo"
                                             class="h-full w-12 border rounded-lg object-cover" />
                                         <p class="text-left text-black text-ellipsis text-xs md:text-sm p-2">
                                             <span class="font-medium">{{ project.projectname }}</span><br />
@@ -480,7 +478,7 @@
                 </button>
 
                 <div
-                    class="flex flex-col bg-white p-6 gap-5 rounded-lg shadow-lg animate__animated animate__fadeInDown w-full max-w-4xl h-full">
+                    class="flex flex-col h-full md:h-auto bg-white p-6 gap-5 rounded-lg shadow-lg animate__animated animate__fadeInDown w-full max-w-4xl">
                     <div class="flex justify-between">
                         <h1 class="text-center text-2xl text-black">COMPTE</h1>
                         <button class="px-3 bg-black text-white rounded hover:bg-gray-600"
@@ -696,6 +694,13 @@ export default {
         },
         hideIdentity() {
             this.modalIdentity = false;
+        },
+        handleButtonClick() {
+            if (localStorage.getItem('selectedEntrepriseId')) {
+                localStorage.removeItem('selectedEntrepriseId');
+                window.location.reload();
+            }
+            this.showIdentity();
         },
         showIdentity() {
             this.modalIdentity = true;
@@ -954,7 +959,7 @@ export default {
 
                 // Extraire les projets invités
                 const invitedProjects = responseMember.data.map(member => member.Project).filter(project => project !== null);
-                console.log("Voici l'extraction des projects invités: ",invitedProjects)
+                console.log("Voici l'extraction des projects invités: ", invitedProjects)
                 // Combiner les deux listes de projets
                 this.projects = [...responseCreated.data, ...invitedProjects];
                 console.log("Projets récupérés ++++++++++++++++:", this.projects);
@@ -964,7 +969,7 @@ export default {
                 if (savedProject) {
                     this.setFirstProject(savedProject);
                     console.log("currentProject is set <><>><><><>><>><>><<>><>><><><<>><<><><>");
-                    
+
                 } else if (this.projects.length > 0) {
                     this.setFirstProject(this.projects[0]);
                 }
@@ -1068,6 +1073,30 @@ export default {
 
         closeModifyData() {
             this.modalModifyData = false;
+        },
+
+        async fetchProjectsByEntreprise() {
+            try {
+                const token = localStorage.getItem('token'); // or another method to retrieve the token
+                const response = await axios.get(`${config.apiBaseUrl}/projects/byEntreprise/${this.entrepriseId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                this.projectsEntreprise = response.data;
+                console.log("Projects d'entreprise méthode fetchProjectsByEntreprise :<<<<<<<<");
+                console.log(this.projectsEntreprise);
+                const savedProject = JSON.parse(localStorage.getItem('currentProject'));
+
+                if (savedProject) {
+                    this.setFirstProject(savedProject);
+                } else if (this.projectsEntreprise.length > 0) {
+                    this.setFirstProject(this.projectsEntreprise[0]);
+                }
+                this.updateDisplayedProjects();
+            } catch (error) {
+                this.errorMessage = 'Erreur lors de la récupération des projets d entreprise : ' + (error.response ? error.response.data.message : error.message);
+            }
         },
 
         async modifyProfile() {
@@ -1210,29 +1239,6 @@ export default {
             } catch (error) {
                 console.error('Error logging out:', error);
                 this.logoutLoader = true;
-            }
-        },
-        async fetchProjectsByEntreprise() {
-            try {
-                const token = localStorage.getItem('token'); // or another method to retrieve the token
-                const response = await axios.get(`${config.apiBaseUrl}/projects/byEntreprise/${this.entrepriseId}`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                this.projectsEntreprise = response.data;
-                console.log("Projects d'entreprise méthode fetchProjectsByEntreprise :<<<<<<<<");
-                console.log(this.projectsEntreprise);
-                const savedProject = JSON.parse(localStorage.getItem('currentProject'));
-
-                if (savedProject) {
-                    this.setFirstProject(savedProject);
-                } else if (this.projectsEntreprise.length > 0) {
-                    this.setFirstProject(this.projectsEntreprise[0]);
-                }
-                this.updateDisplayedProjects();
-            } catch (error) {
-                this.errorMessage = 'Erreur lors de la récupération des projets d entreprise : ' + (error.response ? error.response.data.message : error.message);
             }
         }
     }

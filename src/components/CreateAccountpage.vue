@@ -47,9 +47,13 @@
 
                         <div class="flex flex-col gap-2">
                             <label for="password" class="text-black">Mot de passe</label>
-                            <input type="password" id="password" v-model="password" :class="inputClass(errors.password)"
-                                @blur="validatePassword" placeholder="Veuillez entrer un mot de passe" required
-                                class="p-4 border rounded-lg">
+                            <div class="relative flex items-center">
+                                <input type="password" id="password" v-model="password" :class="inputClass(errors.password)"
+                                    @blur="validatePassword" placeholder="Veuillez entrer un mot de passe" required
+                                    class="w-full p-4 border rounded-lg">
+                                    <eye v-if="showPassword" class="absolute right-4" @click="showPassword = !showPassword"/>
+                                    <EyeOff v-else class="absolute right-4" @click="showPassword = !showPassword"/>
+                            </div>
                         </div>
                     </div>
 
@@ -107,9 +111,21 @@ export default {
                 password: null,
             },
             loading: false,
+            showPassword: false,
             // successMessage: '',
             // errorMessage: ''
         };
+    },
+
+    watch: {
+        showPassword(val){
+            const passwordField = document.getElementById("password");
+            if (val){
+                passwordField.type = "text";
+            } else {
+                passwordField.type = "password";
+            }
+        }
     },
 
     methods: {

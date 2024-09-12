@@ -98,13 +98,12 @@ import { Users, Gauge, CircleGauge, ClockArrowDown, UserRoundCheck, Logs, Trendi
                             <p class="font-semibold">{{ task.taskname }}</p>
                             <p class="text-sm text-gray-600">{{ task.description }}</p>
                         </div>
-                        <div :class="getStatusClass(task.status)" class="ml-2">
+                        <div :class="getStatusClass(task.status)" class="w-24 text-center">
                             {{ task.status }}
                         </div>
                     </div>
                 </div>
             </div>
-
 
             <!-- Best Contributors -->
             <div class="task-box w-full lg:w-1/4">

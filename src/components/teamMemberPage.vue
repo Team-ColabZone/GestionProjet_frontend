@@ -16,7 +16,7 @@ import { Users, List, Plus, Search, ChevronUp, Eye } from 'lucide-vue-next';
         <!-- Search Bar Section -->
         <div class="flex flex-col sm:flex-row justify-between">
             <form class=" flex flex-1">
-                <div class="relative flex items-center w-full sm:w-3/4 border">
+                <div class="relative flex items-center w-full sm:w-3/4 ">
                     <Search class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                     <input type="search" id="search-input" v-model="searchQuery" @input="filterMembers"
                         class="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:border-gray-500 text-base"
