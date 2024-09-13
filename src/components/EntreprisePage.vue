@@ -18,14 +18,14 @@
                     class="w-full md:w-1/4 h-11 bg-black text-white font-bold rounded-lg hover:bg-slate-600 focus:outline-none">
             </form>
 
-            <div class="w-full md:w-1/2 flex justify-end mt-4 md:mt-0">
+            <!-- <div class="w-full md:w-1/2 flex justify-end mt-4 md:mt-0">
                 <button
                     class="flex items-center bg-black rounded-lg p-2 h-full text-white hover:bg-slate-600 focus:outline-none"
                     @click="showModal2">
                     <Plus />
                     <span>Ajoute une entreprise</span>
                 </button>
-            </div>
+            </div> -->
         </div>
 
         <div class=" mt-8 flex-grow flex">
@@ -42,35 +42,36 @@
                     </button>
                 </div>
 
-                <div :class="{ block: isEntrepriseListVisible, hidden: !isEntrepriseListVisible, }" class="flex-grow"
+                <div :class="{ block: isEntrepriseListVisible, hidden: !isEntrepriseListVisible }" class="flex-grow"
                     v-if="isEntrepriseListVisible">
                     <table class="min-w-full divide-y divide-gray-200 text-left">
                         <thead class="bg-gray-50">
                             <tr>
                                 <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Nom de l'entreprise
                                 </th>
-                                <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Email </th>
-                                <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Adresse </th>
-                                <!-- <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Date Ajout </th> -->
-                                <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Actions </th>
+                                <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Email</th>
+                                <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Adresse</th>
+                                <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            <tr v-for="entreprise in entreprises" :key="entreprise.id" class="hover:bg-gray-50">
-                                <td class="px-6 py-4 whitespace-nowrap">{{ entreprise.name }}asd</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ entreprise.email }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ entreprise.pobox }}</td>
-                                <!-- <td class="px-6 py-4 whitespace-nowrap">{{ member.Role.nom }}</td> -->
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <button type="button" class="text-black hover:text-green-900"
-                                        @click="showMemberDetails()">
-                                        <Eye class=" w-full h-6" />
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
                     </table>
-
+                    <div class="overflow-y-auto" style="max-height: 200px;">
+                        <table class="min-w-full divide-y divide-gray-200 text-left">
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <tr v-for="entreprise in entreprises" :key="entreprise.id" class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ entreprise.name }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ entreprise.email }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ entreprise.pobox }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <button type="button" class="text-black hover:text-green-900"
+                                            @click="showMemberDetails()">
+                                            <Eye class="w-full h-6" />
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

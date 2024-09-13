@@ -12,6 +12,10 @@
                     <img class="w-24 h-24" src="../assets/images/logoflysoft.png" alt="logo Entreprise" />
                 </div>
 
+                <!-- Success and Error Messages -->
+                <div v-if="successMessage" class="text-green-600 text-center mt-4">{{ successMessage }}</div>
+                <div v-if="errorMessage" class="text-red-600 text-center mt-4">{{ errorMessage }}</div>
+
                 <!-- Registration Form -->
                 <form @submit.prevent="createAccount" class="w-full flex flex-col gap-4">
                     <h2 class="text-2xl font-bold">Inscription</h2>
@@ -19,40 +23,41 @@
                     <div class="flex flex-col gap-4">
                         <div class="flex flex-col gap-2">
                             <label for="firstname" class="text-black">Nom</label>
-                            <input type="text" id="firstname" v-model="firstname" :class="inputClass(errors.firstname)"
-                                @blur="validateFirstName" placeholder="Veuillez entrer votre nom" required
-                                class="p-4 border rounded-lg">
+                            <input type="text" id="firstname" v-model="firstname"
+                                :class="['p-4 border rounded-lg', inputClass(errors.firstname)]"
+                                @blur="validateFirstName" placeholder="Veuillez entrer votre nom" >
                         </div>
 
                         <div class="flex flex-col gap-2">
                             <label for="lastname" class="text-black">Prénom</label>
-                            <input type="text" id="lastname" v-model="lastname" :class="inputClass(errors.lastname)"
-                                @blur="validateLastName" placeholder="Veuillez entrer votre prénom" required
-                                class="p-4 border rounded-lg">
+                            <input type="text" id="lastname" v-model="lastname"
+                                :class="['p-4 border rounded-lg', inputClass(errors.lastname)]" @blur="validateLastName"
+                                placeholder="Veuillez entrer votre prénom" >
                         </div>
 
                         <div class="flex flex-col gap-2">
                             <label for="email" class="text-black">Email</label>
-                            <input type="email" id="email" v-model="email" :class="inputClass(errors.email)"
-                                @blur="validateEmail" placeholder="Veuillez entrer votre email" required
-                                class="p-4 border rounded-lg">
+                            <input type="email" id="email" v-model="email"
+                                :class="['p-4 border rounded-lg', inputClass(errors.email)]" @blur="validateEmail"
+                                placeholder="Veuillez entrer votre email" >
                         </div>
 
                         <div class="flex flex-col gap-2">
                             <label for="phonenumber" class="text-black">Téléphone</label>
                             <input type="text" id="phonenumber" v-model="phonenumber"
-                                :class="inputClass(errors.phonenumber)" @blur="validatePhoneNumber"
-                                placeholder="Veuillez entrer contact" required class="p-4 border rounded-lg">
+                                :class="['p-4 border rounded-lg', inputClass(errors.phonenumber)]"
+                                @blur="validatePhoneNumber" placeholder="Veuillez entrer contact" >
                         </div>
 
                         <div class="flex flex-col gap-2">
                             <label for="password" class="text-black">Mot de passe</label>
                             <div class="relative flex items-center">
-                                <input type="password" id="password" v-model="password" :class="inputClass(errors.password)"
-                                    @blur="validatePassword" placeholder="Veuillez entrer un mot de passe" required
-                                    class="w-full p-4 border rounded-lg">
-                                    <eye v-if="showPassword" class="absolute right-4" @click="showPassword = !showPassword"/>
-                                    <EyeOff v-else class="absolute right-4" @click="showPassword = !showPassword"/>
+                                <input type="password" id="password" v-model="password"
+                                    :class="['w-full p-4 border rounded-lg', inputClass(errors.password)]"
+                                    @blur="validatePassword" placeholder="Veuillez entrer un mot de passe" >
+                                <eye v-if="showPassword" class="absolute right-4"
+                                    @click="showPassword = !showPassword" />
+                                <EyeOff v-else class="absolute right-4" @click="showPassword = !showPassword" />
                             </div>
                         </div>
                     </div>
@@ -69,6 +74,21 @@
                     </button>
                 </form>
 
+                <!-- Error Popup -->
+                <div v-if="showErrorPopup"
+                    class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm">
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="text-xl font-bold text-red-600">Erreur</h2>
+                            <button @click="closeErrorPopup" class="text-red-600 text-3xl">×</button>
+                        </div>
+                        <ul class="text-black">
+                            <li v-for="error in filteredErrors" :key="error">-{{ error }}</li>
+                        </ul>
+                    </div>
+                </div>
+
+
                 <div class="text-center">
                     <span class="block text-black">Avez-vous déjà un Compte? <router-link to="/auth"
                             class="text-blue-600">Connexion</router-link>
@@ -80,9 +100,7 @@
                 </div>
             </div>
 
-            <!-- Success and Error Messages -->
-            <div v-if="successMessage" class="text-green-600 text-center mt-4">{{ successMessage }}</div>
-            <div v-if="errorMessage" class="text-red-600 text-center mt-4">{{ errorMessage }}</div>
+
         </div>
     </div>
 </template>
@@ -112,19 +130,26 @@ export default {
             },
             loading: false,
             showPassword: false,
-            // successMessage: '',
-            // errorMessage: ''
+            showErrorPopup: false,
+            successMessage: '',
+            errorMessage: ''
         };
     },
 
     watch: {
-        showPassword(val){
+        showPassword(val) {
             const passwordField = document.getElementById("password");
-            if (val){
+            if (val) {
                 passwordField.type = "text";
             } else {
                 passwordField.type = "password";
             }
+        }
+    },
+
+    computed: {
+        filteredErrors() {
+            return Object.values(this.errors).filter(error => error);
         }
     },
 
@@ -133,9 +158,9 @@ export default {
             if (error === null) {
                 return ''; // No class applied initially
             } else if (error === '') {
-                return 'input-success'; // Green border for valid input
+                return 'border-green-500'; // Green border for valid input
             } else {
-                return 'input-error'; // Red border for invalid input
+                return 'border-red-500'; // Red border for invalid input
             }
         },
         validateFirstName() {
@@ -179,14 +204,19 @@ export default {
             }
         },
         async createAccount() {
+            // Run all validation functions
             this.validateFirstName();
             this.validateLastName();
             this.validateEmail();
             this.validatePhoneNumber();
             this.validatePassword();
 
-            this.loading = true;
+            // Log the errors object to see its state
+            console.log('Validation errors:', this.errors);
+
+            // Check if there are any validation errors
             if (Object.values(this.errors).every((error) => error === '')) {
+                this.loading = true;
                 try {
                     const response = await axios.post(`${config.apiBaseUrl}/users`, {
                         firstname: this.firstname,
@@ -196,15 +226,18 @@ export default {
                         password: this.password,
                     });
                     console.log('Account created:', response.data);
+                    this.resetForm();
                     this.$router.push('/auth');
                 } catch (error) {
-                    this.loading = false;
                     console.error('Error creating account:', error);
-                    this.loading = false;
+                    this.errorMessage = 'An error occurred while creating the account. Please try again.';
                 } finally {
                     this.loading = false;
                 }
             } else {
+                console.log('Form contains validation errors.');
+                this.errorMessage = 'Veuillez corriger les erreurs avant de soumettre.';
+                this.showErrorPopup = true;
                 this.loading = false;
             }
         },
@@ -216,12 +249,19 @@ export default {
             this.password = '';
             this.successMessage = '';
             this.errorMessage = '';
+        },
+        closeErrorPopup() {
+            this.showErrorPopup = false;
         }
     }
 };
 </script>
 
 <style scoped>
+.input-error {
+    border-color: red;
+}
+
 @media (max-width: 800px) {
     .small_screens {
         display: none;
