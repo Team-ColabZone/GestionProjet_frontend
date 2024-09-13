@@ -44,19 +44,17 @@
 
                 <div :class="{ block: isEntrepriseListVisible, hidden: !isEntrepriseListVisible }" class="flex-grow"
                     v-if="isEntrepriseListVisible">
-                    <table class="min-w-full divide-y divide-gray-200 text-left">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Nom de l'entreprise
-                                </th>
-                                <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Email</th>
-                                <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Adresse</th>
-                                <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Actions</th>
-                            </tr>
-                        </thead>
-                    </table>
-                    <div class="overflow-y-auto" style="max-height: 200px;">
+                    <div class="overflow-y-auto" style="max-height: 50vh;">
                         <table class="min-w-full divide-y divide-gray-200 text-left">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Nom de
+                                        l'entreprise</th>
+                                    <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Email</th>
+                                    <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Adresse</th>
+                                    <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Actions</th>
+                                </tr>
+                            </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
                                 <tr v-for="entreprise in entreprises" :key="entreprise.id" class="hover:bg-gray-50">
                                     <td class="px-6 py-4 whitespace-nowrap">{{ entreprise.name }}</td>

@@ -86,23 +86,20 @@ import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs } from 'lucide-v
                 </div>
 
                 <div class="list-late flex-grow">
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full divide-gray-200 text-left">
+                    <div class="overflow-x-auto" style="max-height: 50vh;">
+                        <table class="min-w-full divide-y divide-gray-200 text-left">
                             <thead class="bg-gray-50">
                                 <tr>
                                     <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Nom de la tache
                                     </th>
-                                    <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Responsable
-                                    </th>
+                                    <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Responsable</th>
                                     <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Budget</th>
-
-                                    <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Statut</th>
-
+                                    <th class="px-6 py-3 text-xs text-black uppercase tracking-wider text-center">Statut</th>
                                 </tr>
                             </thead>
-                            <tbody class="bg-white divide-gray-200">
+                            <tbody class="bg-white divide-y divide-gray-200">
                                 <tr v-for="tasklate in taskslate" :key="tasklate.id" class="hover:bg-gray-50">
-                                    <td class="px-6 py-3 whitespace-nowrap">{{ tasklate.taskname }} </td>
+                                    <td class="px-6 py-3 whitespace-nowrap">{{ tasklate.taskname }}</td>
                                     <td class="px-6 py-3 whitespace-nowrap">
                                         <div v-if="tasklate.assignedUserDetails" class="flex items-center">
                                             <div class="w-10 h-10 rounded-full border border-gray-300 overflow-hidden">
@@ -117,15 +114,13 @@ import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs } from 'lucide-v
                                     </td>
                                     <td class="px-6 py-3 whitespace-nowrap">{{ tasklate.budget }}</td>
                                     <td class="px-4 py-3 whitespace-nowrap">
-                                        <div :class="getStatusClass(tasklate.status)" class="ml-2">
+                                        <div :class="getStatusClass(tasklate.status)" class="ml-2 text-center">
                                             {{ tasklate.status }}
                                         </div>
                                     </td>
-
                                 </tr>
                             </tbody>
                         </table>
-
                     </div>
                 </div>
             </div>

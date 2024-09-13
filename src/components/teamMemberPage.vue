@@ -41,7 +41,7 @@ import { Users, List, Plus, Search, ChevronUp, Eye } from 'lucide-vue-next';
                 </button>
             </div>
         </div>
-        <!-- Task List Section -->
+        <!-- Team Section -->
         <div class=" mt-8 flex-grow flex">
             <div class="border border-gray-300 rounded-lg p-2 w-full flex flex-col">
                 <div class="flex justify-between items-center border-b border-gray-300 pb-1 mb-2">
@@ -327,7 +327,8 @@ export default {
             } catch (error) {
                 this.error = true;
                 this.errorMessage = error.response ? error.response.data.message : error.message;
-                console.log("Erreur lors de l'ajout du membre")
+                console.log("Erreur lors de l'ajout du membre");
+                console.log(error);
                 this.membreLoading = false;
             }
         },

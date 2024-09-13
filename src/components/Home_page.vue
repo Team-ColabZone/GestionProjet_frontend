@@ -43,7 +43,7 @@
                                 <div class="w-4/5 md:w-4/5">
                                     <div v-if="firstProjectName" class="flex items-center gap-2 h-14 md:gap-4 pr-2">
                                         <img :src="firstProjectLogo" alt="Logo"
-                                            class="h-full w-14 rounded-lg object-fit " />
+                                            class="h-full w-14 rounded-lg object-fit border" />
                                         <h3 class="text-black text-lg font-semibold py-1">{{ firstProjectName }}</h3>
                                     </div>
                                     <div v-else class="flex items-center gap-1 py-1 px-2">
