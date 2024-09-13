@@ -35,6 +35,7 @@ import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 mt-2">
+            <!-- EN ATTENTE Column -->
             <div class="h-full flex flex-col gap-2">
                 <div class="flex items-center">
                     <div class="w-6 h-6 rounded-full bg-orange-200"></div>
@@ -46,9 +47,9 @@ import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
 
                 <draggable style="height: 590px;"
                     class="h-80 overflow-y-auto flex flex-col gap-2 border border-gray-300 rounded-lg px-4 py-10 pendingTasks"
-                    group="tasks" :list="pendingTasks" @change="log" @end="onEnd">
+                    group="tasks" :list="pendingTasks" @change="log" @start="onStart" @end="onEnd">
                     <div class="flex flex-col border border-gray-300 py-2 px-3" v-for="task in pendingTasks"
-                        :key="task.id" @click="storeTaskId(task.id)">
+                        :key="task.id" :data-id="task.id" @click="storeTaskId(task.id)">
                         <div class="flex justify-between pb-2">
                             <div class="py-1 px-3 rounded-xl" :class="['priority', getPriorityClass(task.priority)]">
                                 Tache
@@ -60,12 +61,15 @@ import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
                                 <div :class="{ block: task.showMenu, hidden: !task.showMenu }" v-if="task.showMenu"
                                     class="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded-lg shadow-lg">
                                     <ul>
-                                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer"><button
-                                                @click="fetchTaskDetailsView()">Voir détails</button></li>
-                                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer"><button
-                                                @click="fetchTaskDetails()">Modifier</button></li>
-                                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer"><button
-                                                @click="deleteTask()">Supprimer</button></li>
+                                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                                            <button @click="fetchTaskDetailsView()">Voir détails</button>
+                                        </li>
+                                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                                            <button @click="fetchTaskDetails()">Modifier</button>
+                                        </li>
+                                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                                            <button @click="deleteTask()">Supprimer</button>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
@@ -84,12 +88,11 @@ import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
                             </div>
                         </div>
                     </div>
-
-
                 </draggable>
             </div>
 
-            <div class="flex flex-col gap-2">
+            <!-- EN COURS Column -->
+            <div class="h-full flex flex-col gap-2">
                 <div class="flex items-center">
                     <div class="w-6 h-6 rounded-full bg-green-300"></div>
                     <p class="font-bold text-sm px-2">EN COURS</p>
@@ -100,11 +103,11 @@ import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
 
                 <draggable style="height: 590px;"
                     class="h-80 overflow-y-auto flex flex-col gap-2 border border-gray-300 rounded-lg px-4 py-10 inProgressTasks"
-                    group="tasks" :list="inProgressTasks" @change="log" @end="onEnd">
+                    group="tasks" :list="inProgressTasks" @change="log" @start="onStart" @end="onEnd">
                     <div class="flex flex-col border border-gray-300 py-2 px-3" v-for="task in inProgressTasks"
-                        :key="task.id" @click="storeTaskId(task.id)">
+                        :key="task.id" :data-id="task.id" @click="storeTaskId(task.id)">
                         <div class="flex justify-between pb-2">
-                            <div class="py-1 px-3 rounded-lg" :class="['priority', getPriorityClass(task.priority)]">
+                            <div class="py-1 px-3 rounded-xl" :class="['priority', getPriorityClass(task.priority)]">
                                 Tache
                             </div>
                             <div class="relative">
@@ -114,16 +117,20 @@ import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
                                 <div :class="{ block: task.showMenu, hidden: !task.showMenu }" v-if="task.showMenu"
                                     class="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded-lg shadow-lg">
                                     <ul>
-                                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer"><button
-                                                @click="fetchTaskDetailsView()">Voir détails</button></li>
-                                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer"><button
-                                                @click="fetchTaskDetails()">Modifier</button></li>
-                                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer"><button
-                                                @click="deleteTask()">Supprimer</button></li>
+                                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                                            <button @click="fetchTaskDetailsView()">Voir détails</button>
+                                        </li>
+                                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                                            <button @click="fetchTaskDetails()">Modifier</button>
+                                        </li>
+                                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                                            <button @click="deleteTask()">Supprimer</button>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
                         </div>
+
                         <div class="flex flex-col pb-2">
                             <span class="font-medium">{{ task.taskname }}</span>
                             <span>{{ task.description }}</span>
@@ -140,23 +147,23 @@ import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
                 </draggable>
             </div>
 
-            <div class="flex flex-col gap-2">
+            <!-- TERMINÉE Column -->
+            <div class="h-full flex flex-col gap-2">
                 <div class="flex items-center">
                     <div class="w-6 h-6 rounded-full bg-blue-300"></div>
                     <p class="font-bold text-sm px-2">TERMINÉE</p>
                     <div class="w-8 h-6 bg-gray-300 rounded-lg flex items-center justify-center">
-                        <p class="text-black text-xs m-0 border border-gray-300 rounded-lg">{{ completedTasksCount }}
-                        </p>
+                        <p class="text-black text-xs m-0">{{ completedTasksCount }}</p>
                     </div>
                 </div>
 
                 <draggable style="height: 590px;"
                     class="overflow-y-auto flex flex-col gap-2 border border-gray-300 rounded-lg px-4 py-10 completedTasks"
-                    group="tasks" :list="completedTasks" @change="log" @end="onEnd">
+                    group="tasks" :list="completedTasks" @change="log" @start="onStart" @end="onEnd">
                     <div class="border border-gray-300 py-2 px-3" v-for="task in completedTasks" :key="task.id"
-                        @click="storeTaskId(task.id)">
+                        :data-id="task.id" @click="storeTaskId(task.id)">
                         <div class="flex justify-between pb-2">
-                            <div class="py-1 px-3 rounded-lg" :class="['priority', getPriorityClass(task.priority)]">
+                            <div class="py-1 px-3 rounded-xl" :class="['priority', getPriorityClass(task.priority)]">
                                 Tache
                             </div>
                             <div class="relative">
@@ -166,16 +173,20 @@ import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
                                 <div :class="{ block: task.showMenu, hidden: !task.showMenu }" v-if="task.showMenu"
                                     class="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded-lg shadow-lg">
                                     <ul>
-                                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer"><button
-                                                @click="fetchTaskDetailsView()">Voir détails</button></li>
-                                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer"><button
-                                                @click="fetchTaskDetails()">Modifier</button></li>
-                                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer"><button
-                                                @click="deleteTask()">Supprimer</button></li>
+                                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                                            <button @click="fetchTaskDetailsView()">Voir détails</button>
+                                        </li>
+                                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                                            <button @click="fetchTaskDetails()">Modifier</button>
+                                        </li>
+                                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                                            <button @click="deleteTask()">Supprimer</button>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
                         </div>
+
                         <div class="flex flex-col pb-2">
                             <span class="font-medium">{{ task.taskname }}</span>
                             <span>{{ task.description }}</span>
@@ -334,7 +345,6 @@ import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
     </modal>
 
     <!--Modal pour afficher le details de la tache-->
-
     <modal class="fixed inset-0 backdrop-blur-sm flex justify-end z-50" v-if="modalDetailTasks">
         <button @click="closeDetailsTask()" class="self-start p-6">
             <X class="text-black text-2xl" />
@@ -726,7 +736,10 @@ export default defineComponent({
             localStorage.setItem('selectedTaskId', taskid);
             console.log(`Task ID ${taskid} stored in local storage`);
         },
-
+        onStart(event) {
+            const taskId = event.item.getAttribute('data-id');
+            this.storeTaskId(taskId);
+        },
         async onEnd(event) {
             const movedItemId = localStorage.getItem('selectedTaskId');
             if (!movedItemId) {
@@ -755,6 +768,9 @@ export default defineComponent({
                 this.fetchPendingTasks();
                 this.fetchInProgressTasks();
                 this.fetchCompletedTasks();
+                this.fetchPendingTasksCount();
+                this.fetchInProgressTasksCount();
+                this.fetchCompletedTasksCount();
             } catch (error) {
                 console.error('Error updating task status:', error);
             }
@@ -959,14 +975,16 @@ body {
 .pendingTasks::-webkit-scrollbar,
 .inProgressTasks::-webkit-scrollbar,
 .completedTasks::-webkit-scrollbar {
-display: none;
+    display: none;
 }
 
 /* Masquer la barre de défilement pour Firefox */
 .pendingTasks,
 .inProgressTasks,
 .completedTasks {
--ms-overflow-style: none;  /* IE and Edge */
-scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
 }
 </style>
