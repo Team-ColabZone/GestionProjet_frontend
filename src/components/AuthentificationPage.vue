@@ -31,8 +31,7 @@
                                 class="w-full p-4 border rounded-lg">
                             <eye class="absolute right-4 " v-if="showPassword" @click="showPassword = !showPassword">
                             </eye>
-                            <EyeOff v-else @click="showPassword = !showPassword"
-                                class="absolute right-4 " />
+                            <EyeOff v-else @click="showPassword = !showPassword" class="absolute right-4 " />
                         </div>
                         <router-link to="/Forgotpassword" class="text-blue-600 text-right text-sm">Mot de passe
                             oublié?</router-link>
@@ -111,6 +110,8 @@ export default {
             } catch (error) {
                 this.errorMessage = 'Échec de la connexion : ' + error.response.data.message;
                 alert('Echec de la connexion');
+                this.loading = false;
+            } finally {
                 this.loading = false;
             }
         },

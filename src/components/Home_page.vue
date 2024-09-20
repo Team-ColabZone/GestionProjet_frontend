@@ -5,11 +5,17 @@
 
             <div class="flex gap-2">
                 <button class="cursor-pointer border-none bg-transparent">
-                    <MessageSquare class="w-4 h-4" />
+                    <MessageSquare class="w-4 h-4 md:h-5 md:w-5" />
                 </button>
 
-                <button class="cursor-pointer border-none bg-transparent">
-                    <BellRing class="w-4 h-4" />
+                <button class="cursor-pointer border-none bg-transparent relative" @click="showNotifications">
+                    <div class="flex">
+                        <BellRing class="w-4 h-4 md:h-5 md:w-5" />
+                        <span
+                            class="absolute top-0 left-1 md:left-2 flex items-center justify-center w-4 h-4 rounded-full bg-red-500 text-white p-1 text-xs">
+                            2
+                        </span>
+                    </div>
                 </button>
 
                 <button @click="handleButtonClick" class="rounded-full h-11 bg-white border-none p-px shadow-2xl">
@@ -37,7 +43,7 @@
                     <!-- Dashboard -->
                     <li class="w-full flex flex-col gap-2">
                         <div class="relative w-full">
-                            <button class="flex justify-between items-center w-full rounded"
+                            <button class="flex justify-between items-center w-full rounded md:gap-4"
                                 :class="{ 'bg-gray-100 h-full w-full rounded-lg': currentPage === 'dashboard' }"
                                 @click="showPage('dashboard')">
                                 <div class="w-4/5 md:w-4/5">
@@ -53,7 +59,7 @@
                                 </div>
 
                                 <button @click="toggleProjectList"
-                                    class="w-1/5 bg-transparent border-none cursor-pointer"
+                                    class="w-1/5 bg-transparent border-none cursor-pointer "
                                     :class="{ 'text-black': currentPage === 'dashboard', 'text-gray-500': currentPage !== 'dashboard' }">
                                     <ChevronUp
                                         :class="{ 'chevron-down': !isProjectListVisible, 'chevron-up': isProjectListVisible }"
@@ -64,7 +70,7 @@
                             <div :class="{ block: isProjectListVisible, hidden: !isProjectListVisible }"
                                 class="absolute top-full left-0 w-full flex flex-col gap-2 p-2 bg-white shadow-sm border border-gray-300 rounded-lg z-10">
                                 <!-- Projects List -->
-                                <div class="h-40 w-full overflow-x-auto overflow-y-auto">
+                                <div class="h-40 w-full flex flex-col gap-1 overflow-x-auto overflow-y-auto">
                                     <div v-for="project in displayedProjects" :key="project.id"
                                         @click="selectProject(project.id)" :class="[
                                             'h-14 flex items-center border-b border-gray-50 cursor-pointer rounded-lg pr-2',
@@ -72,7 +78,8 @@
                                         ]">
                                         <img :src="project.projectlogo" alt="Logo"
                                             class="h-full w-12 border rounded-lg object-cover" />
-                                        <p class="text-left text-black text-ellipsis text-xs md:text-sm p-2">
+                                        <p class="text-left text-black text-ellipsis text-xs md:text-sm p-2"
+                                            style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                                             <span class="font-medium">{{ project.projectname }}</span><br />
                                             {{ project.description }}
                                         </p>
@@ -123,7 +130,7 @@
                             'bg-gray-100 py-1 px-2 rounded-lg': currentPage === 'tasks',
                         }" @click="showPage('tasks')">
                             <div class="flex w-4/5 md:w-3/5 items-center gap-1">
-                                <ListTodo class="h4" />
+                                <ListTodo class="h-5" />
                                 <h3 class="text-black">
                                     Tâches
                                 </h3>
@@ -141,7 +148,7 @@
                             'bg-gray-100 py-1 px-2 rounded-lg': currentPage === 'team',
                         }" @click="showPage('team')">
                             <div class="flex w-4/5 md:w-3/5 items-center gap-1">
-                                <Users class="h4" />
+                                <Users class="h-5" />
                                 <h3 class="text-black">
                                     Membres
                                 </h3>
@@ -159,7 +166,7 @@
                             'bg-gray-100 py-1 px-2 rounded-lg': currentPage === 'entreprise',
                         }" @click="showPage('entreprise')">
                             <div class="flex w-4/5 md:w-3/5 items-center gap-1">
-                                <Building2 class="h4" />
+                                <Building2 class="h-5" />
                                 <h3 class="text-black">
                                     Entreprise
                                 </h3>
@@ -538,6 +545,48 @@
                     </form>
                 </div>
             </div>
+
+            <div class="fixed inset-0 bg-black/50 flex items-start justify-end z-50 pt-12 px-2 md:pr-5"
+                v-if="notificationModal">
+                <div
+                    class="bg-white flex flex-col py-6 gap-2 rounded-lg shadow-lg animate__animated animate__fadeInDown w-full max-w-sm">
+                    <div class="flex justify-between border-b-2 border-b-gray-100">
+                        <div class="px-6">
+                            <h5 class="font-semibold text-xl pb-2">Notification(s)</h5>
+                            <div class="flex gap-2">
+                                <button class="hover:bg-gray-200 rounded px-2">Tout</button>
+                                <button class="hover:bg-gray-200 rounded px-2">Non lus</button>
+                            </div>
+                        </div>
+                        <button @click="closeNotificationModal" class="self-start pr-2">
+                            <span class="text-black text-3xl">×</span>
+                        </button>
+                    </div>
+                    <div>
+                        <div class="flex gap-2 pl-5 pr-1 pb-1 items-center border-b-2 border-b-gray-200">
+                            <div>
+                                <img :src="projectImg" alt="logo"
+                                    class="w-14 h-14 rounded-full border object-cover object-center">
+                            </div>
+                            <div class="flex flex-col">
+                                <p>Vous avez été ajouté au projet collabzone par Bomme Gervais</p>
+                                <div class="flex gap-4">
+                                    <button
+                                        class="px-4 py-1 bg-gray-200 text-black rounded-md hover:bg-green-500 hover:text-white">Accepter</button>
+                                    <button
+                                        class="px-4 py-1 bg-red-600 text-white rounded-md hover:text-black">Réfuser</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex gap-2 pl-5 items-center pb-1 border-b-2 border-b-gray-200">
+                            <ListTodo class="w-8 h-8 md:w-11 md:h-11" />
+                            <div class="flex flex-col">
+                                <p>Une tache vous as été affecté sur le projet Collabzone</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -567,7 +616,7 @@ export default {
             modalmembers: false,
             modalModifyData: false,
             showMessagePage: false,
-            showNotificationPage: false,
+            notificationModal: false,
             enterpriseLoading: false,
             projectLoading: false,
             logoutLoader: false,
@@ -720,6 +769,14 @@ export default {
             this.currentPage = page;
         },
 
+        showNotifications() {
+            this.notificationModal = true;
+        },
+
+        closeNotificationModal() {
+            this.notificationModal = false;
+        },
+
         async createNewProject() {
             this.projectLoading = true;
             try {
@@ -750,8 +807,7 @@ export default {
                 if (this.selectedImage) {
                     await this.uploadImage(response.data.id);
                 }
-
-                // Réinitialiser les champs du formulaire
+                this.fetchProjects();
                 this.clearProjectFormField();
             } catch (error) {
                 this.error = true;
@@ -1133,8 +1189,8 @@ export default {
                         'Authorization': `Bearer ${token}`
                     }
                 });
-
                 this.successMessage = response.data.message;
+                this.accountdata();
                 console.log('Profile modified:', response.data);
             } catch (error) {
                 console.error('Profile modification failed:', error);
