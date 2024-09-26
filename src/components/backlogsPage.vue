@@ -15,26 +15,25 @@ import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs } from 'lucide-v
         <div class="cont">
             <div class="flex flex-wrap justify-between gap-4 w-full">
                 <!-- Card 1 -->
-                <div class="contex bg-blue-50 rounded-lg p-4 text-center">
+                <div class="contex bg-blue-50 rounded-lg p-4 text-left w-40 md:w-44 lg:w-48 xl:w-52" >
                     <div class="nbre_icons flex justify-between items-center">
                         <h1 class="text-4xl font-bold">{{ pendingTasksCount }}</h1>
-                        <!-- <span class="text-4xl font-medium lg:text-6xl">{{ pendingTasksCount }}</span> -->
-                        <ListVideo class=" w-10 h-9 md:h-10 md:w-12" />
+                        <ListVideo class="w-10 h-9 md:h-10 md:w-12" />
                     </div>
                     <h3 class="text-sm mt-2">Nombre de tache à faire</h3>
                 </div>
 
                 <!-- Card 2 -->
-                <div class="contex bg-pink-100 rounded-lg p-4 text-center">
+                <div class="contex bg-pink-100 rounded-lg p-4 text-left w-40 md:w-44 lg:w-48 xl:w-52" >
                     <div class="nbre_icons flex justify-between items-center">
                         <h1 class="text-4xl font-bold">{{ completedTasksCount }}</h1>
-                        <ListCheck class=" w-10 h-9 md:h-10 md:w-12" />
+                        <ListCheck class="w-10 h-9 md:h-10 md:w-12" />
                     </div>
                     <h3 class="text-sm mt-2">Nombre de tache terminée</h3>
                 </div>
 
                 <!-- Card 3 -->
-                <div class="contex bg-green-50 rounded-lg p-4 text-center">
+                <div class="contex bg-green-50 rounded-lg px-3 py-4 text-left w-40 md:w-44 lg:w-48 xl:w-52" >
                     <div class="nbre_icons flex justify-between items-center">
                         <h1 class="text-4xl font-bold">{{ tasklateCount }}</h1>
                         <ClockArrowDown class="w-10 h-9 md:h-10 md:w-12" />
@@ -43,11 +42,10 @@ import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs } from 'lucide-v
                 </div>
 
                 <!-- Card 4 -->
-                <div class="contex bg-blue-100 rounded-lg p-4 text-center">
+                <div class="contex bg-blue-100 rounded-lg p-4 text-left w-40 md:w-44 lg:w-48 xl:w-52" >
                     <div class="nbre_icons flex justify-between items-center">
                         <h1 class="text-4xl font-bold">{{ taskCount }}</h1>
-                        <!-- <span class="text-4xl font-medium lg:text-6xl">{{ taskCount }}</span> -->
-                        <Logs class=" w-10 h-9 md:h-10 md:w-12" />
+                        <Logs class="w-10 h-9 md:h-10 md:w-12" />
                     </div>
                     <h3 class="text-sm mt-2">Nombre de tache</h3>
                 </div>
@@ -94,7 +92,8 @@ import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs } from 'lucide-v
                                     </th>
                                     <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Responsable</th>
                                     <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Budget</th>
-                                    <th class="px-6 py-3 text-xs text-black uppercase tracking-wider text-center">Statut</th>
+                                    <th class="px-6 py-3 text-xs text-black uppercase tracking-wider text-center">Statut
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
@@ -159,8 +158,7 @@ import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs } from 'lucide-v
 
                     <div class="w-full flex flex-col md:flex-row gap-5">
                         <div class="w-full">
-                            <label for="Attribuer" class="block text-gray-700 text-sm font-bold mb-2">Attribuer
-                                a</label>
+                            <label for="Attribuer" class="block text-gray-700 text-sm font-bold mb-2">Attribuer a</label>
                             <select v-model="userAssignId"
                                 class="block w-full px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-200 appearance-none">
                                 <option v-for="member in projectMembers" :key="member.userId" :value="member.userId">
@@ -492,10 +490,13 @@ export default {
                 this.end_date = '';
                 this.budget = '';
                 // Assigner la tâche au membre sélectionné
+                // if (this.userAssignId === "" || this.userAssignId === null) {
+                //     console.log("the task hasn't been assigned to any body");
+                // } else {
+                // }
                 await axios.post(`${config.apiBaseUrl}/tasks-assignments`, {
                     taskId: taskId,
                     userId: this.userAssignId
-
                 }, {
                     headers: {
                         'Authorization': `Bearer ${token}`
@@ -509,6 +510,8 @@ export default {
             } catch (error) {
                 this.error = true;
                 this.errorMessage = error.response ? error.response.data.message : error.message;
+                console.log(error);
+                
             }
         },
         async getUserInfo() {

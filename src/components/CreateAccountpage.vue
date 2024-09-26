@@ -13,8 +13,8 @@
                 </div>
 
                 <!-- Success and Error Messages -->
-                <div v-if="successMessage" class="text-green-600 text-center mt-4">{{ successMessage }}</div>
-                <div v-if="errorMessage" class="text-red-600 text-center mt-4">{{ errorMessage }}</div>
+                <!-- <div v-if="successMessage" class="text-green-600 text-center mt-4">{{ successMessage }}</div>
+                <div v-if="errorMessage" class="text-red-600 text-center mt-4">{{ errorMessage }}</div> -->
 
                 <!-- Registration Form -->
                 <form @submit.prevent="createAccount" class="w-full flex flex-col gap-4">
@@ -203,6 +203,7 @@ export default {
                 this.errors.password = '';
             }
         },
+        
         async createAccount() {
             // Run all validation functions
             this.validateFirstName();

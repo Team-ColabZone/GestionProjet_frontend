@@ -11,9 +11,9 @@
                 <button class="cursor-pointer border-none bg-transparent relative" @click="showNotifications">
                     <div class="flex">
                         <BellRing class="w-4 h-4 md:h-5 md:w-5" />
-                        <span
+                        <span v-if="notificationCount > 0"
                             class="absolute top-0 left-1 md:left-2 flex items-center justify-center w-4 h-4 rounded-full bg-red-500 text-white p-1 text-xs">
-                            2
+                            {{ notificationCount }}
                         </span>
                     </div>
                 </button>
@@ -48,8 +48,14 @@
                                 @click="showPage('dashboard')">
                                 <div class="w-4/5 md:w-4/5">
                                     <div v-if="firstProjectName" class="flex items-center gap-2 h-14 md:gap-4 pr-2">
-                                        <img :src="firstProjectLogo" alt="Logo"
-                                            class="h-full w-14 rounded-lg object-fit border" />
+                                        <div v-if="firstProjectLogo">
+                                            <img :src="firstProjectLogo" alt="Logo" class="h-full w-14 rounded-lg object-fit border"/> 
+                                        </div>
+
+                                        <div v-else class="w-14 h-14">
+                                            <ChartNoAxesCombined class=" w-full h-full rounded-lg border border-gray-200 object-cover object-center" />
+                                        </div>
+
                                         <h3 class="text-black text-lg font-semibold py-1">{{ firstProjectName }}</h3>
                                     </div>
                                     <div v-else class="flex items-center gap-1 py-1 px-2">
@@ -76,8 +82,13 @@
                                             'h-14 flex items-center border-b border-gray-50 cursor-pointer rounded-lg pr-2',
                                             { 'bg-gray-300': selectedProjectId === project.id, 'bg-gray-100': selectedProjectId !== project.id }
                                         ]">
-                                        <img :src="project.projectlogo" alt="Logo"
-                                            class="h-full w-12 border rounded-lg object-cover" />
+                                        <div v-if="project.projectlogo" class="h-full">
+                                            <img :src="project.projectlogo" alt="Logo" class="h-full w-12 border rounded-lg object-cover" />
+                                        </div>
+                                        <div v-else class="h-full">
+                                            <ChartNoAxesCombined class=" w-12 h-full border border-gray-200  rounded-lg object-cover object-center" />
+                                        </div>
+                                        
                                         <p class="text-left text-black text-ellipsis text-xs md:text-sm p-2"
                                             style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                                             <span class="font-medium">{{ project.projectname }}</span><br />
@@ -200,9 +211,11 @@
             </div>
         </main>
 
-        <div>
-            <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50" v-if="modalProject">
-                <div class="bg-white p-8 rounded-lg shadow-lg animate__animated animate__fadeInDown w-full max-w-3xl">
+        <div class="w-full h=full">
+            <div class="fixed h-full w-full inset-0 bg-black/50 flex items-center justify-center z-50  md:pt-5 "
+                v-if="modalProject">
+                <div
+                    class="h-full w-full bg-white p-8 rounded-lg shadow-lg animate__animated animate__fadeInDown max-w-3xl overflow-y-scroll no-scrollbar">
                     <div class="flex justify-end">
                         <button @click="hideModalProject">
                             <X class="text-gray-600 text-2xl" />
@@ -305,7 +318,8 @@
                 </div>
             </div>
 
-            <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50" v-if="modalEntreprise">
+            <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 overflow-y-scroll no-scrollbar"
+                v-if="modalEntreprise">
                 <div
                     class="bg-white flex flex-col p-8 gap-5 rounded-lg shadow-lg animate__animated animate__fadeInDown w-full max-w-3xl">
                     <div class="flex justify-between">
@@ -387,7 +401,7 @@
                 </div>
             </div>
 
-            <div class="fixed inset-0 bg-black/50 flex items-start justify-end z-50 pt-12 px-2 md:pr-5"
+            <div class="fixed inset-0 bg-black/50 flex items-start justify-end z-50 pt-12 px-2 md:pr-5 overflow-y-scroll no-scrollbar"
                 v-if="modalIdentity">
                 <div
                     class="bg-white flex flex-col p-6 gap-5 rounded-lg shadow-lg animate__animated animate__fadeInDown w-full max-w-lg">
@@ -443,8 +457,8 @@
                                     @click="selectEntreprise(entreprise.id)"
                                     class="flex items-center border-b border-gray-200 py-1 px-2 gap-4 cursor-pointer">
                                     <div class="w-10 h-10">
-                                        <img class="border w-10 h-10 border-black rounded-full" :src="entreprise.logo"
-                                            alt="logo Entreprise" />
+                                        <img class="border w-10 h-10 border-gray-200 rounded-full"
+                                            :src="entreprise.logo" alt="logo Entreprise" />
                                     </div>
                                     <div class="flex flex-col">
                                         <span class="font-medium truncate">{{ entreprise.name }}</span>
@@ -479,7 +493,8 @@
                 </div>
             </div>
 
-            <div class="fixed inset-0 backdrop-blur-sm flex justify-end z-50" v-if="modalModifyData">
+            <div class="fixed inset-0 backdrop-blur-sm flex justify-end z-50 overflow-y-scroll no-scrollbar"
+                v-if="modalModifyData">
                 <button @click="closeModifyData" class="self-start p-6">
                     <span class="text-black text-2xl">×</span>
                 </button>
@@ -546,7 +561,7 @@
                 </div>
             </div>
 
-            <div class="fixed inset-0 bg-black/50 flex items-start justify-end z-50 pt-12 px-2 md:pr-5"
+            <div class="fixed inset-0 bg-black/50 flex items-start justify-end z-50 pt-12 px-2 md:pr-5 overflow-y-scroll no-scrollbar"
                 v-if="notificationModal">
                 <div
                     class="bg-white flex flex-col py-6 gap-2 rounded-lg shadow-lg animate__animated animate__fadeInDown w-full max-w-sm">
@@ -554,34 +569,113 @@
                         <div class="px-6">
                             <h5 class="font-semibold text-xl pb-2">Notification(s)</h5>
                             <div class="flex gap-2">
-                                <button class="hover:bg-gray-200 rounded px-2">Tout</button>
-                                <button class="hover:bg-gray-200 rounded px-2">Non lus</button>
+                                <!-- :class="{ 'bg-gray-100 h-full w-full rounded-lg': currentPage === 'dashboard' }"
+                                @click="showPage('dashboard') -->
+                                <button @click="showNotifications('unread')"
+                                    :class="{ 'bg-gray-200': selectedTab === 'unread', 'hover:bg-gray-200': true, 'rounded': true, 'px-2': true }">
+                                    Non lus
+                                </button>
+
+                                <button @click="showNotifications('all')"
+                                    :class="{ 'bg-gray-200': selectedTab === 'all', 'hover:bg-gray-200': true, 'rounded': true, 'px-2': true }">
+                                    Tout
+                                </button>
                             </div>
                         </div>
+
                         <button @click="closeNotificationModal" class="self-start pr-2">
                             <span class="text-black text-3xl">×</span>
                         </button>
                     </div>
-                    <div>
-                        <div class="flex gap-2 pl-5 pr-1 pb-1 items-center border-b-2 border-b-gray-200">
-                            <div>
-                                <img :src="projectImg" alt="logo"
-                                    class="w-14 h-14 rounded-full border object-cover object-center">
-                            </div>
-                            <div class="flex flex-col">
-                                <p>Vous avez été ajouté au projet collabzone par Bomme Gervais</p>
-                                <div class="flex gap-4">
-                                    <button
-                                        class="px-4 py-1 bg-gray-200 text-black rounded-md hover:bg-green-500 hover:text-white">Accepter</button>
-                                    <button
-                                        class="px-4 py-1 bg-red-600 text-white rounded-md hover:text-black">Réfuser</button>
+
+                    <div v-if="selectedTab === 'unread'">
+                        <div v-if="notifications.length > 0" >
+                            <div v-for="notification in notifications" :key="notification.id">
+                                <div v-if="notification.type === 'Projet'" @click="readNotification(notification.id)"
+                                    class="flex gap-2 pl-5 pr-1 pb-1 items-center border-b-2 border-b-gray-200">
+                                    <div>
+                                        <div v-if="notification.projectImg" class="w-14 h-14">
+                                            <img :src="notification.projectImg" alt="logo"
+                                                class="w-full h-full rounded-full border object-cover object-center">
+                                        </div>
+                                        <div v-else class="w-14 h-14">
+                                            <ChartNoAxesCombined
+                                                class=" w-full h-full border border-gray-200 object-cover object-center" />
+                                            <!-- <img :src="require(`@/assets/images/Project-Icon.png`)" alt="logo" class="border-red-500 w-full h-full rounded-full border object-cover object-center"> -->
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <p>Vous avez cree le projet {{ notification.projectName }}</p>
+                                        <span class="px-2 pb-1 bg-gray-200 rounded-xl">Plus ...</span>
+                                    </div>
+                                </div>
+                                <div v-else-if="notification.type === 'task'" @click="readNotification(notification.id)"
+                                    class="flex gap-2 pl-5 items-center pb-1 border-b-2 border-b-gray-200">
+                                    <ListTodo class="w-8 h-8 md:w-11 md:h-11" />
+                                    <div class="flex flex-col">
+                                        <p>Une tache vous as été affecté sur le projet {{ notification.tasksName }}</p>
+                                    </div>
+                                </div>
+                                <div v-else-if="notification.type === 'Team-Members'" class="flex gap-2 pl-5 items-center pb-1 border-b-2 border-b-gray-200" @click="readNotification(notification.id)" >
+                                    <div>
+                                        <div v-if="notification.projectImg" class="w-14 h-14">
+                                            <img :src="notification.projectImg" alt="logo"
+                                                class="w-full h-full rounded-full border object-cover object-center">
+                                        </div>
+                                        <div v-else class="w-14 h-14">
+                                            <ChartNoAxesCombined
+                                                class=" w-full h-full border border-gray-200 object-cover object-center" />
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <p>Bienvenue sur le projet {{ notification.projectName }}</p>
+                                        <!-- <p>Vous avez été ajouté au projet {{ notification.projectName }} par {{ notification.nameSender }} en temp que {{ notification.roleName }}</p> -->
+                                        <span class="px-2 pb-1 bg-gray-200 rounded-xl">Plus ...</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="flex gap-2 pl-5 items-center pb-1 border-b-2 border-b-gray-200">
-                            <ListTodo class="w-8 h-8 md:w-11 md:h-11" />
-                            <div class="flex flex-col">
-                                <p>Une tache vous as été affecté sur le projet Collabzone</p>
+
+                        <div v-else>
+                            <span class="pl-4">Vous avez aucune notification</span>
+                        </div>
+                    </div>
+
+                    <div v-if="selectedTab === 'all'">
+                        <div v-if="notifications.length === 0">
+                            <span class="pl-4">Vous avez aucune notificationaaaaa</span>
+                        </div>
+
+                        <div v-else>
+                            <div v-for="notification in notifications" :key="notification.id">
+                                <div v-if="notification.type === 'Projet'"
+                                    class="flex gap-2 pl-5 pr-1 pb-1 items-center border-b-2 border-b-gray-200">
+                                    <div>
+                                        <div v-if="notification.projectImg" class="w-14 h-14">
+                                            <img :src="notification.projectImg" alt="logo"
+                                                class="w-full h-full rounded-full border object-cover object-center">
+                                        </div>
+                                        <div v-else class="w-14 h-14">
+                                            <ChartNoAxesCombined class=" w-full h-full object-cover object-center" />
+                                            <!-- <img :src="require(`@/assets/images/Project-Icon.png`)" alt="logo" class="border-red-500 w-full h-full rounded-full border object-cover object-center"> -->
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <p>Vous avez été ajouté au projet {{ notification.projectName }} par {{
+                                            notification.nameSender }}</p>
+                                        <span class="px-2 pb-1 bg-gray-200 rounded-xl">Plus ...</span>
+                                    </div>
+                                </div>
+                                <div v-else-if="notification.type === 'task'"
+                                    class="flex gap-2 pl-5 items-center pb-1 border-b-2 border-b-gray-200">
+                                    <ListTodo class="w-8 h-8 md:w-11 md:h-11" />
+                                    <div class="flex flex-col">
+                                        <p>Une tache vous as été affecté sur le projet {{ notification.tasksName }}</p>
+                                    </div>
+                                </div>
+                                <div v-else>
+                                    <p>Unknown notification type: {{ notification.type }}</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -674,8 +768,14 @@ export default {
             lastName: '',
             password: '',
             profileImageUrl: '',
-            projectsEntreprise: [],//liste des projets par Entreprises
+            // projectsEntreprise: [],
             projectlogo: '',
+
+            notificationCount: 0,
+            notifications: [],
+            selectedTab: 'unread',
+            displayNotifications: false,
+            displayUnreadNotifications: false,
         };
     },
 
@@ -702,17 +802,17 @@ export default {
             this.fetchInProgressTasksCount();
             this.fetchCompletedTasksCount();
             this.fetchTotalTasksCount();
-            this.fetchProjectsByEntreprise();
+            // this.fetchProjectsByEntreprise();
+            this.fetchNotificationCount();
+            this.fetchAllNotifications();
         } else {
             this.errorMessage = 'Utilisateur non connecté';
             this.$router.push('/auth'); // Rediriger vers la page de connexion
         }
-
         this.handleResize();
         window.addEventListener("resize", this.handleResize);
-
-
     },
+
     methods: {
         toggleNav() {
             this.isNavOpen = !this.isNavOpen;
@@ -765,16 +865,82 @@ export default {
         selectButton(button) {
             this.selectedButton = button;
         },
+
         showPage(page) {
             this.currentPage = page;
         },
 
-        showNotifications() {
+        showNotifications(notif) {
             this.notificationModal = true;
+            this.selectedTab = notif;
+            this.viewTypeOfNotifications();
         },
-
         closeNotificationModal() {
             this.notificationModal = false;
+        },
+
+        accountdata() {
+            this.modalModifyData = true;
+        },
+        closeModifyData() {
+            this.modalModifyData = false;
+        },
+
+        toggleProjectList() {
+            this.isProjectListVisible = !this.isProjectListVisible;
+        },
+
+        toggleEntrepriseList() {
+            this.isEntreprisesListVisible = !this.isEntreprisesListVisible;
+        },
+
+        // showPage(page) {
+        //     this.currentPage = page;
+        // },
+
+        // showNotif(notif){
+        //     this.selectedTab = notif;
+        // },
+
+        viewTypeOfNotifications() {
+            if (this.selectedTab === 'all') {
+                this.displayAllNotifications = true;
+                this.displayUnreadNotifications = false;
+                this.fetchAllNotifications();
+            } else {
+                this.displayUnreadNotifications = true;
+                this.displayAllNotifications = false;
+                this.fetchUnreadNotifications();
+            }
+
+        },
+
+        // viewAllNotifications(){
+        //     this.displayAllNotifications = true;
+        //     this.displayUnreadNotifications=false;
+        //     this.fetchAllNotifications();
+        // },
+
+        async fetchUserData() {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`${config.apiBaseUrl}/users/${this.userId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                console.log("this the user Data", response.data);
+                this.profile = response.data;
+                this.firstName = this.profile.firstname;
+                this.lastName = this.profile.lastname;
+                this.email = this.profile.email;
+                this.phoneNumber = this.profile.phonenumber;
+                this.profileImageUrl = this.profile.avatar;
+            } catch (error) {
+                this.errorMessage = 'Erreur lors de la récupération des données utilisateur : ' + error.response.data.message;
+            } finally {
+                this.loading = false;
+            }
         },
 
         async createNewProject() {
@@ -804,8 +970,10 @@ export default {
                 console.log('Project creation response:', response.data);
 
                 //saves image if there were added
+                console.log("here is the project id logo before the If", response.data.id);
                 if (this.selectedImage) {
-                    await this.uploadImage(response.data.id);
+                    console.log("here is the project id logo before uploding", response.data.id);
+                    await this.uploadImage(response.data.id); 
                 }
                 this.fetchProjects();
                 this.clearProjectFormField();
@@ -843,8 +1011,10 @@ export default {
         },
 
         async uploadImage(projectId) {
+            console.log("here is the project id logo on entering the upload", projectId);
             try {
                 const reader = new FileReader();
+                console.log("here is the project id logo in the try", projectId);
                 reader.onload = async (e) => {
                     const base64Image = e.target.result;
                     const token = localStorage.getItem('token');
@@ -877,26 +1047,7 @@ export default {
                 this.selectedImageURL = URL.createObjectURL(file);
             }
         },
-        updateDisplayedProjects() {
-            console.log("bonjour>>>>>>>>>>>>>>>>>>>>>>>");
-            console.log("Début de updateDisplayedProjects");
-            console.log("selectedEntrepriseId:", this.selectedEntrepriseId);
-            console.log("projectsEntreprise:", this.projectsEntreprise);
 
-            if (this.selectedEntrepriseId) {
-                console.log("voici l'id de l'entreprise selectionnée>>>>>>>>>>>>: ");
-                console.log(this.selectedEntrepriseId);
-                // Filtrer les projets de l'entreprise sélectionnée
-                this.displayedProjects = this.projectsEntreprise.filter(project => project.entrepriseId === this.selectedEntrepriseId);
-                console.log("Projets de l'entreprise sélectionnée: £££££££££££££££££££££££ ");
-                console.log(this.displayedProjects);
-            } else {
-                // Filtrer les projets sans entreprise
-                this.displayedProjects = this.projects.filter(project => !project.entrepriseId);
-                console.log("Voici les projets personnels de l'utilisateur connecté:");
-                console.log(this.displayedProjects);
-            }
-        },
         async createNewEntreprise() {
             this.enterpriseLoading = true;
             try {
@@ -913,6 +1064,7 @@ export default {
                         'Authorization': `Bearer ${token}`
                     }
                 });
+                this.fetchEntreprises();
                 this.success = true;
                 this.successMessage = response.data.message;
 
@@ -920,6 +1072,7 @@ export default {
                 if (this.selectedImage) {
                     await this.uploadLogo(response.data.id);
                 }
+                this.fetchEntreprises();
                 // Réinitialiser les champs du formulaire
                 this.clearEntrepriseFormFields();
                 console.log("Entreprise crée avec succes");
@@ -973,84 +1126,123 @@ export default {
             this.hideModalEntreprise(); // Close the modal if applicable
         },
 
-        async fetchUserData() {
-            try {
-                const token = localStorage.getItem('token');
-                const response = await axios.get(`${config.apiBaseUrl}/users/${this.userId}`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                console.log("this the user Data", response.data);
-                this.profile = response.data;
-                this.firstName = this.profile.firstname;
-                this.lastName = this.profile.lastname;
-                this.email = this.profile.email;
-                this.phoneNumber = this.profile.phonenumber;
-                this.profileImageUrl = this.profile.avatar;
-            } catch (error) {
-                this.errorMessage = 'Erreur lors de la récupération des données utilisateur : ' + error.response.data.message;
-            } finally {
-                this.loading = false;
-            }
-        },
+
 
         async fetchProjects() {
             try {
                 const token = localStorage.getItem('token'); // or another method to retrieve the token
-                // Récupérer les projets créés par l'utilisateur
-                const responseCreated = await axios.get(`${config.apiBaseUrl}/projects/user/${this.userId}`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
+                const entrepriseId = localStorage.getItem('entrepriseId');
+
+                if (entrepriseId) {
+                    // Fetch projects by enterprise
+                    const response = await axios.get(`${config.apiBaseUrl}/projects/byEntreprise/${entrepriseId}`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    this.projects = response.data;
+                    console.log("Projects d'entreprise méthode fetchProjectsByEntreprise :>>>><<<<<<<<");
+                    console.log(this.projects);
+
+                    const savedProject = JSON.parse(localStorage.getItem('currentProject'));
+                    if (savedProject) {
+                        this.setFirstProject(savedProject);
+                    } else if (this.projects.length > 0) {
+                        this.setFirstProject(this.projects[0]);
                     }
-                });
-                console.log("Projets personnels de l'utilisateur:", responseCreated.data)
-                // Récupérer les projets où l'utilisateur est membre
-                const responseMember = await axios.get(`${config.apiBaseUrl}/team-members/user/${this.userId}/projects`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
+                } else {
+                    // Fetch user projects
+                    const responseCreated = await axios.get(`${config.apiBaseUrl}/projects/user/${this.userId}`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    console.log("Projets personnels de l'utilisateur:", responseCreated.data);
+
+                    this.projects = responseCreated.data;
+                    console.log("Projets récupérés ++++++++++++++++: ", this.projects);
+
+                    const savedProject = JSON.parse(localStorage.getItem('currentProject'));
+                    if (savedProject) {
+                        this.setFirstProject(savedProject);
+                        console.log("currentProject is set <><><>>>><><><<>><><>>><><><>>><><><><><>>");
+                    } else if (this.projects.length > 0) {
+                        this.setFirstProject(this.projects[0]);
                     }
-                });
-                console.log("Projets dans lesquels l'utilisateur a été invité:", responseMember.data)
-
-                // Extraire les projets invités
-                const invitedProjects = responseMember.data.map(member => member.Project).filter(project => project !== null);
-                console.log("Voici l'extraction des projects invités: ", invitedProjects)
-                // Combiner les deux listes de projets
-                this.projects = [...responseCreated.data, ...invitedProjects];
-                console.log("Projets récupérés ++++++++++++++++:", this.projects);
-
-
-                const savedProject = JSON.parse(localStorage.getItem('currentProject'));
-                if (savedProject) {
-                    this.setFirstProject(savedProject);
-                    console.log("currentProject is set <><>><><><>><>><>><<>><>><><><<>><<><><>");
-
-                } else if (this.projects.length > 0) {
-                    this.setFirstProject(this.projects[0]);
+                    // this.filterProjects();
+                    this.updateDisplayedProjects();
                 }
-                // this.filterProjects();
-                this.updateDisplayedProjects();
             } catch (error) {
                 this.errorMessage = 'Erreur lors de la récupération des projets : ' + (error.response ? error.response.data.message : error.message);
             }
         },
 
-        toggleProjectList() {
-            this.isProjectListVisible = !this.isProjectListVisible;
-        },
+        // async fetchProjects() {
+        //     try {
+        //         const token = localStorage.getItem('token');
+        //         const entrepriseId = localStorage.getItem('entrepriseId');
 
-        setInitialProject() {
-            const noEntrepriseProjects = this.projects.filter(project => !project.entrepriseId);
-            if (noEntrepriseProjects.length > 0) {
-                this.setFirstProject(noEntrepriseProjects[0]);
-            } else {
-                this.firstProjectName = '';
-                this.firstProjectLogo = '';
-            }
-            this.filterProjects();
+        //         if (entrepriseId) {
+        //             const response = await axios.get(`${config.apiBaseUrl}/projects/byEntreprise/${entrepriseId}`, {
+        //                 headers: {
+        //                     'Authorization': `Bearer ${token}`
+        //                 }
+        //             });
+        //             this.projects = response.data;
+        //             console.log("Projects d'entreprise méthode fetchProjectsByEntreprise :>>>><<<<<<<<");
+        //             console.log(this.projects);
 
-        },
+        //             const savedProject = JSON.parse(localStorage.getItem('currentProject'));
+        //             if (savedProject) {
+        //                 this.setFirstProject(savedProject);
+        //             } else if (this.projects.length > 0) {
+        //                 this.setFirstProject(this.projects[0]);
+        //             }
+        //         } else {
+        //             const responseCreated = await axios.get(`${config.apiBaseUrl}/projects/user/${this.userId}`, {
+        //                 headers: {
+        //                     'Authorization': `Bearer ${token}`
+        //                 }
+        //             });
+        //             console.log("Projets personnels de l'utilisateur:", responseCreated.data);
+
+        //             const responseMember = await axios.get(`${config.apiBaseUrl}/team-members/user/${this.userId}/projects`, {
+        //                 headers: {
+        //                     'Authorization': `Bearer ${token}`
+        //                 }
+        //             });
+        //             console.log("Projets dans lesquels l'utilisateur a été invité:", responseMember.data);
+
+        //             const invitedProjects = responseMember.data.map(member => member.Project).filter(project => project !== null);
+        //             console.log("Voici l'extraction des projects invités: ", invitedProjects);
+
+        //             this.projects = [...responseCreated.data, ...invitedProjects];
+        //             console.log("Projets récupérés ++++++++++++++++: ", this.projects);
+
+        //             const savedProject = JSON.parse(localStorage.getItem('currentProject'));
+        //             if (savedProject) {
+        //                 this.setFirstProject(savedProject);
+        //                 console.log("currentProject is set <><><>>>><><><<>><><>>><><><>>><><><><><>>");
+        //             } else if (this.projects.length > 0) {
+        //                 this.setFirstProject(this.projects[0]);
+        //             }
+        //             this.updateDisplayedProjects();
+        //         }
+        //     } catch (error) {
+        //         this.errorMessage = 'Erreur lors de la récupération des projets : ' + (error.response ? error.response.data.message : error.message);
+        //     }
+        // },
+
+        // setInitialProject() {
+        //     const noEntrepriseProjects = this.projects.filter(project => !project.entrepriseId);
+        //     if (noEntrepriseProjects.length > 0) {
+        //         this.setFirstProject(noEntrepriseProjects[0]);
+        //     } else {
+        //         this.firstProjectName = '';
+        //         this.firstProjectLogo = '';
+        //     }
+        //     this.filterProjects();  
+        // },
 
         setFirstProject(project) {
             this.firstProjectName = project.projectname;
@@ -1060,13 +1252,13 @@ export default {
             localStorage.setItem('projectId', project.id); // Ajouter cette ligne pour stocker l'ID du projet
         },
 
-        filterProjects() {
-            if (this.selectedEntrepriseId) {
-                this.filteredProjects = this.projects.filter(project => project.entrepriseId === this.selectedEntrepriseId);
-            } else {
-                this.filteredProjects = this.projects.filter(project => !project.entrepriseId);
-            }
-        },
+        // filterProjects() {
+        //     if (this.selectedEntrepriseId) {
+        //         this.filteredProjects = this.projects.filter(project => project.entrepriseId === this.selectedEntrepriseId);
+        //     } else {
+        //         this.filteredProjects = this.projects.filter(project => !project.entrepriseId);
+        //     }
+        // },
 
         selectProject(projectId) {
             const selectedProject = this.projects.find(p => p.id === projectId);
@@ -1083,12 +1275,28 @@ export default {
                 localStorage.setItem('projectId', projectId);
                 this.isProjectListVisible = false;
                 window.location.reload();
-
             }
         },
 
-        toggleEntrepriseList() {
-            this.isEntreprisesListVisible = !this.isEntreprisesListVisible;
+        updateDisplayedProjects() {
+            console.log("bonjour>>>>>>>>>>>>>>>>>>>>>>>");
+            console.log("Début de updateDisplayedProjects");
+            console.log("selectedEntrepriseId:", this.selectedEntrepriseId);
+            console.log("projectsEntrepriseses:", this.projectsEntreprise);
+
+            if (this.selectedEntrepriseId) {
+                console.log("voici l'id de l'entreprise selectionnée>>>>>>>>>>>>: ");
+                console.log(this.selectedEntrepriseId);
+                // Filtrer les projets de l'entreprise sélectionnée
+                this.displayedProjects = this.projects.filter(project => project.entrepriseId === this.selectedEntrepriseId);
+                console.log("Projets de l'entreprise sélectionnée: £££££££££££££££££££££££ ");
+                console.log(this.displayedProjects);
+            } else {
+                // Filtrer les projets sans entreprise
+                this.displayedProjects = this.projects.filter(project => !project.entrepriseId);
+                console.log("Voici les projets personnels de l'utilisateur connecté: £££££££££££££££££££££££ ");
+                console.log(this.displayedProjects);
+            }
         },
 
         async fetchEntreprises() {
@@ -1122,38 +1330,30 @@ export default {
             window.location.reload();
         },
 
-        accountdata() {
-            this.modalModifyData = true;
-            this.modalIdentity = false;
-        },
+        // async fetchProjectsByEntreprise() {
+        //     try {
+        //         const token = localStorage.getItem('token'); 
+        //         const response = await axios.get(`${config.apiBaseUrl}/projects/byEntreprise/${this.entrepriseId}`, {
+        //             headers: {
+        //                 'Authorization': `Bearer ${token}`
+        //             }
+        //         });
+        //         this.projectsEntreprise = response.data;
+        //         console.log("Projects d'entreprise méthode fetchProjectsByEntreprise :<<<<<<<<");
+        //         console.log(this.projectsEntreprise);
+        //         const savedProject = JSON.parse(localStorage.getItem('currentProject'));
 
-        closeModifyData() {
-            this.modalModifyData = false;
-        },
+        //         if (savedProject) {
+        //             this.setFirstProject(savedProject);
+        //         } else if (this.projectsEntreprise.length > 0) {
+        //             this.setFirstProject(this.projectsEntreprise[0]);
+        //         }
+        //         this.updateDisplayedProjects();
+        //     } catch (error) {
+        //         this.errorMessage = 'Erreur lors de la récupération des projets d entreprise : ' + (error.response ? error.response.data.message : error.message);
+        //     }
+        // },
 
-        async fetchProjectsByEntreprise() {
-            try {
-                const token = localStorage.getItem('token'); // or another method to retrieve the token
-                const response = await axios.get(`${config.apiBaseUrl}/projects/byEntreprise/${this.entrepriseId}`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                this.projectsEntreprise = response.data;
-                console.log("Projects d'entreprise méthode fetchProjectsByEntreprise :<<<<<<<<");
-                console.log(this.projectsEntreprise);
-                const savedProject = JSON.parse(localStorage.getItem('currentProject'));
-
-                if (savedProject) {
-                    this.setFirstProject(savedProject);
-                } else if (this.projectsEntreprise.length > 0) {
-                    this.setFirstProject(this.projectsEntreprise[0]);
-                }
-                this.updateDisplayedProjects();
-            } catch (error) {
-                this.errorMessage = 'Erreur lors de la récupération des projets d entreprise : ' + (error.response ? error.response.data.message : error.message);
-            }
-        },
 
         async modifyProfile() {
             try {
@@ -1164,7 +1364,6 @@ export default {
                     profileImageBase64 = await this.convertToBase64(this.selectedImage);
                 }
                 console.log(profileImageBase64);
-
 
                 const imageResponse = await axios.post(`${config.apiBaseUrl}/users/setAvatar`, {
                     email: this.email,
@@ -1190,17 +1389,15 @@ export default {
                     }
                 });
                 this.successMessage = response.data.message;
-                this.accountdata();
+                this.closeModifyData();
                 console.log('Profile modified:', response.data);
             } catch (error) {
                 console.error('Profile modification failed:', error);
             }
         },
-
         triggerFileInput() {
             this.$refs.fileInput.click();
         },
-
         changeProfileImage(event) {
             const file = event.target.files[0];
             if (file) {
@@ -1208,12 +1405,10 @@ export default {
                 this.profileImageUrl = URL.createObjectURL(file);
             }
         },
-
         removeProfileImage() {
             this.selectedImage = null;
             this.profileImageUrl = '';
         },
-
         convertToBase64(file) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -1223,10 +1418,11 @@ export default {
             });
         },
 
+
         async fetchPendingTasksCount() {
             try {
                 const token = localStorage.getItem('token');
-                const response = await axios.get(`$${config.apiBaseUrl}/tasks/${this.projectId}/tasks/pending`, {
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/tasks/pending`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -1279,6 +1475,72 @@ export default {
                 console.error('Erreur lors de la récupération du nombre total de tâches :', error);
             }
         },
+
+
+        async fetchNotificationCount() {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`${config.apiBaseUrl}/notifications/allNotByUserIdStatuscount/${this.userId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                this.notificationCount = response.data;
+                console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>", response.data);
+            } catch (error) {
+                console.error('Error fetching notification count:', error);
+            }
+        },
+        async fetchAllNotifications() {
+            try {
+                this.selectedTab = 'all';
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`${config.apiBaseUrl}/notifications/allNotByUserId/${this.userId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", response.data);
+
+                this.notifications = response.data
+                console.log("11111111111111111111111111", this.notifications);
+            } catch (error) {
+                console.error('Error fetching all notifications:', error);
+            }
+        },
+        async fetchUnreadNotifications() {
+            try {
+                this.selectedTab = 'unread';
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`${config.apiBaseUrl}/notifications/allNotByUserId/${this.userId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>", response.data);
+                this.notifications = response.data
+            } catch (error) {
+                console.error('Error fetching unread notifications:', error);
+            }
+        },
+
+        async readNotification() {
+            try {
+                this.selectedTab = 'unread';
+                const token = localStorage.getItem('token');
+                const response = await axios.post(`${config.apiBaseUrl}/notifications/allNotByUserId/${this.userId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                console.log("sends the notif enpoint stop modify this", response.data);
+                this.notifications = response.data
+            } catch (error) {
+                console.error('Error fetching unread notifications:', error);
+            }
+        },
+
+
         async logout() {
             this.logoutLoader = true;
             try {

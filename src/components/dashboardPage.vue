@@ -11,54 +11,54 @@ import { Users, Gauge, CircleGauge, ClockArrowDown, UserRoundCheck, Logs, Trendi
         </div>
 
         <!-- Statistics Section -->
-        <div class="flex flex-wrap justify-between gap-4 w-full">
-            <div class="stat-box flex flex-col justify-between bg-indigo-100 rounded-xl p-3">
+        <div class="flex flex-wrap justify-between gap-3 md:gap-4 w-full">
+            <div class="stat-box bg-indigo-100 rounded-lg p-4 text-left w-40 md:w-44 lg:w-48 xl:w-52">
+                <div class="flex justify-between items-center">
+                    <h1 class="text-4xl font-bold">{{ teamMemberCount }}</h1>
+                    <Users class="w-10 h-9 md:h-10 md:w-12" />
+                </div>
+                <h3 class="text-sm mt-2">Nombre de membre</h3>
+            </div>
+
+            <div class="stat-box bg-pink-100 rounded-lg p-4 text-left w-40 md:w-44 lg:w-48 xl:w-52">
                 <div class="flex justify-between items-center gap-3 md:gap-5">
-                    <h1 class="text-3xl font-medium lg:text-5xl lg:pl-3">{{ teamMemberCount }}</h1>
-                    <Users class="w-10 h-10 font-thin md:h-10 md:w-12" />
+                    <h1 class="text-4xl font-bold">{{ (realisationRate).toFixed(0) }}%</h1>
+                    <CircleGauge class="w-10 h-9 md:h-10 md:w-12" />
                 </div>
-                <h3 class="text-xs mt-2">Nombre de membre</h3>
+                <h3 class="text-sm mt-2">Pourcentage de réalisation</h3>
             </div>
 
-            <div class="stat-box flex flex-col justify-between bg-pink-100 rounded-xl p-3">
-                <div class="flex justify-between items-center gap-3 md:gap-5 ">
-                    <h1 class="text-3xl font-medium lg:text-5xl lg:pl-3">{{ (realisationRate).toFixed(0) }}%</h1>
-                    <CircleGauge class="w-10 h-10" />
-                </div>
-                <h3 class="text-xs mt-2">Pourcentage de réalisation</h3>
-            </div>
-
-            <div class="stat-box flex flex-col justify-between bg-green-100 rounded-xl px-1 py-3 lg:p-3">
-                <div class="flex justify-between items-center ">
-                    <h1 id="taskRate" class="text-2xl font-medium lg:text-4xl lg:pl-3">{{ (taskRate).toFixed(2) }}t/j
+            <div class="stat-box bg-green-100 rounded-lg p-4 text-left w-40 md:w-44 lg:w-48 xl:w-52">
+                <div class="flex justify-between items-center">
+                    <h1 class="text-4xl font-bold">{{ (taskRate).toFixed(2) }}t/j
                     </h1>
-                    <ClockArrowDown class="w-10 h-10" />
+                    <ClockArrowDown class="w-10 h-9 md:h-10 md:w-12" />
                 </div>
-                <h3 class="text-xs mt-2">Taux de tache journaliere</h3>
+                <h3 class="text-sm mt-2">Taux de tache journaliere</h3>
             </div>
 
-            <div class="stat-box flex flex-col justify-between bg-pink-50 rounded-xl  py-3 lg:p-3">
+            <div class="stat-box bg-pink-50 rounded-lg p-4 text-left w-40 md:w-44 lg:w-48 xl:w-52">
                 <div class="flex justify-between items-center gap-3 md:gap-5 px-2 lg:px-4">
-                    <h1 class="text-3xl font-medium lg:text-5xl lg:pl-3">{{ powerMembersCount }}</h1>
-                    <UserRoundCheck class="w-10 h-10" />
+                    <h1 class="text-4xl font-bold">{{ powerMembersCount }}</h1>
+                    <UserRoundCheck class="w-10 h-9 md:h-10 md:w-12" />
                 </div>
-                <h3 class="text-xs pl-2 md:mt-2">Nombre de membres performant</h3>
+                <h3 class="text-sm mt-2">Nombre de membres performant</h3>
             </div>
 
-            <div class="stat-box flex flex-col justify-between bg-blue-50 rounded-xl p-3">
+            <div class="stat-box bg-blue-50 rounded-lg p-4 text-left w-40 md:w-44 lg:w-48 xl:w-52">
                 <div class="flex justify-between items-center gap-3 md:gap-5">
-                    <h1 class="text-3xl font-medium lg:text-5xl lg:pl-3">0{{ taskCount }}</h1>
-                    <Logs class="w-10 h-10" />
+                    <h1 class="text-4xl font-bold">0{{ taskCount }}</h1>
+                    <Logs class="w-10 h-9 md:h-10 md:w-12" />
                 </div>
-                <h3 class="text-xs mt-2">Nombre de tache</h3>
+                <h3 class="text-sm mt-2">Nombre de tache</h3>
             </div>
 
-            <div class="stat-box flex flex-col justify-between bg-lime-100 rounded-xl p-3">
+            <div class="stat-box bg-lime-100 rounded-lg p-4 text-left w-40 md:w-44 lg:w-48 xl:w-52">
                 <div class="flex justify-between items-center gap-3 md:gap-5">
-                    <h1 class="text-3xl font-medium lg:text-5xl lg:pl-3">{{ (reactivityRate).toFixed(0) }}%</h1>
-                    <TrendingUp class="w-10 h-10" />
+                    <h1 class="text-4xl font-bold">{{ (reactivityRate).toFixed(0) }}%</h1>
+                    <TrendingUp class="w-10 h-9 md:h-10 md:w-12" />
                 </div>
-                <h3 class="text-xs mt-2">Taux de reactivité</h3>
+                <h3 class="text-sm mt-2">Taux de reactivité</h3>
             </div>
         </div>
 
@@ -297,14 +297,18 @@ export default {
         async fetchTeamMemberCount() {
             try {
                 const token = localStorage.getItem('token');
-                const response = await axios.get(`${config.apiBaseUrl}/team-members/${this.projectId}/team/count`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                this.teamMemberCount = response.data.length;
-                console.log(this.teamMemberCount);
-                console.log(this.projectId)
+                if (this.projectId === null) {
+                    console.log("No project choosen");
+                } else {
+                    const response = await axios.get(`${config.apiBaseUrl}/team-members/${this.projectId}/team/count`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    this.teamMemberCount = response.data.length;
+                    console.log(this.teamMemberCount);
+                    console.log(this.projectId)
+                }
             } catch (error) {
                 console.error('Erreur lors de la récupération du nombre de personnels :', error);
             }
@@ -312,13 +316,18 @@ export default {
         async fetchPendingTasksCount() {
             try {
                 const token = localStorage.getItem('token');
-                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/tasks/pending`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                this.pendingTasksCount = response.data.length;
-                console.log(this.pendingTasksCount);
+                if (this.projectId === null) {
+                    console.log("No project choosen");
+                    
+                } else {
+                    const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/tasks/pending`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    this.pendingTasksCount = response.data.length;
+                    console.log(this.pendingTasksCount);
+                }
             } catch (error) {
                 console.error('Erreur lors de la récupération des tâches en attente :', error);
             }
@@ -326,13 +335,17 @@ export default {
         async fetchInProgressTasksCount() {
             try {
                 const token = localStorage.getItem('token');
-                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/tasks/in-progress`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                this.inProgressTasksCount = response.data.length;
-                console.log(this.inProgressTasksCount);
+                if (this.projectId === null) {
+                    console.log("No project choosen");
+                } else {
+                    const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/tasks/in-progress`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    this.inProgressTasksCount = response.data.length;
+                    console.log(this.inProgressTasksCount);
+                }
             } catch (error) {
                 console.error('Erreur lors de la récupération des tâches en cours :', error);
             }
@@ -340,13 +353,17 @@ export default {
         async fetchCompletedTasksCount() {
             try {
                 const token = localStorage.getItem('token');
-                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/tasks/completed`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                this.completedTasksCount = response.data.length;
-                console.log(this.completedTasksCount);
+                if (this.projectId === null) {
+                    console.log("No project choosen");
+                } else {
+                    const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/tasks/completed`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    this.completedTasksCount = response.data.length;
+                    console.log(this.completedTasksCount);
+                }
             } catch (error) {
                 console.error('Erreur lors de la récupération des tâches terminées :', error);
             }
@@ -354,13 +371,17 @@ export default {
         async fetchTotalTasksCount() {
             try {
                 const token = localStorage.getItem('token');
-                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/tasks/count`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                this.taskCount = response.data;
-                console.log(this.taskCount);
+                if (this.projectId === null) {
+                    console.log("No project choosen");
+                } else {
+                    const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/tasks/count`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    this.taskCount = response.data;
+                    console.log(this.taskCount);
+                }
             } catch (error) {
                 console.error('Erreur lors de la récupération du nombre total de tâches :', error);
             }
@@ -368,14 +389,18 @@ export default {
         async fetchTaskRate() {
             try {
                 const token = localStorage.getItem('token');
-                const response = await axios.get(`${config.apiBaseUrl}/tasks/tauxTasksDay/${this.projectId}`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                this.taskRate = response.data;
-                console.log("Voici le taux de tache journaliere: ")
-                console.log(this.taskRate);
+                if (this.projectId === null) {
+                    console.log("No project choosen");
+                } else {
+                    const response = await axios.get(`${config.apiBaseUrl}/tasks/tauxTasksDay/${this.projectId}`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    this.taskRate = response.data;
+                    console.log("Voici le taux de tache journaliere: ")
+                    console.log(this.taskRate);
+                }
             } catch (error) {
                 console.error('Erreur lors de la recupération du taux de tache journaliere:', error);
             }
@@ -383,14 +408,18 @@ export default {
         async fetchReactivityRate() {
             try {
                 const token = localStorage.getItem('token');
-                const response = await axios.get(`${config.apiBaseUrl}/tasks/tauxReactTasks/${this.projectId}`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                this.reactivityRate = response.data;
-                console.log("Voici le taux de tache reactivité des membres: ")
-                console.log(this.reactivityRate);
+                if (this.projectId === null) {
+                    console.log("No project choosen");
+                } else {
+                    const response = await axios.get(`${config.apiBaseUrl}/tasks/tauxReactTasks/${this.projectId}`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    this.reactivityRate = response.data;
+                    console.log("Voici le taux de tache reactivité des membres: ")
+                    console.log(this.reactivityRate);
+                }
             } catch (error) {
                 console.error('Erreur lors de la recupération du taux de reactivté:', error);
             }
@@ -398,14 +427,18 @@ export default {
         async fetchRealisationRate() {
             try {
                 const token = localStorage.getItem('token');
-                const response = await axios.get(`${config.apiBaseUrl}/tasks/tauxRealisation/${this.projectId}`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                this.realisationRate = response.data;
-                console.log("Voici le pourcentage de realisation de la tache: ")
-                console.log(this.realisationRate);
+                if (this.projectId === null) {
+                    console.log("No project choosen");
+                } else {
+                    const response = await axios.get(`${config.apiBaseUrl}/tasks/tauxRealisation/${this.projectId}`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    this.realisationRate = response.data;
+                    console.log("Voici le pourcentage de realisation de la tache: ")
+                    console.log(this.realisationRate);
+                }
             } catch (error) {
                 console.error('Erreur lors de la recupération du taux de reactivté:', error);
             }
@@ -415,14 +448,18 @@ export default {
             console.log("Bonsoir*******************************")
             try {
                 const token = localStorage.getItem('token');
-                const response = await axios.get(`${config.apiBaseUrl}/tasks/allTasksLive/${this.projectId}`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                this.commonTasks = response.data;
-                console.log("Voici les taches courantes de ce projet : ")
-                console.log(this.commonTasks);
+                if (this.projectId === null) {
+                    console.log("No project choosen");
+                } else {
+                    const response = await axios.get(`${config.apiBaseUrl}/tasks/allTasksLive/${this.projectId}`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    this.commonTasks = response.data;
+                    console.log("Voici les taches courantes de ce projet : ")
+                    console.log(this.commonTasks);
+                }
             } catch (error) {
                 console.error('Erreur lors de la recupération des taches courantes:', error);
             }
@@ -456,65 +493,66 @@ export default {
             try {
                 const token = localStorage.getItem('token');
                 // Récupérer les membres performants pour le projet spécifié
-                const response = await axios.get(`${config.apiBaseUrl}/tasks/allMemberPower/${this.projectId}`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                console.log("Réponse des membres performants :", response.data);
-
-                // Compter le nombre de membres performants
-                this.powerMembersCount = response.data.length;
-                console.log("Nombre de membres performants :", this.powerMembersCount);
-
-                // Initialiser powerMembers avec les données reçues
-                this.powerMembers = response.data;
-
-                // Convertir les valeurs de count en nombres et vérifier les userId
-                const powerMembersData = {};
-                for (const member of this.powerMembers) {
-                    console.log("Membre :", member);
-                    if (member.userId && member.count !== undefined) {
-                        powerMembersData[member.userId] = { count: Number(member.count) }; // Convertir en nombre
-                    } else {
-                        console.error("Données de membre invalides :", member);
-                    }
-                }
-                this.powerMembers = powerMembersData;
-                console.log("Membres performants après conversion :", this.powerMembers);
-
-                // Récupérer les informations détaillées des membres performants
-                for (const userId of Object.keys(this.powerMembers)) {
-                    const userResponse = await axios.get(`${config.apiBaseUrl}/users/${userId}`, {
+                if (this.projectId === null) {
+                    console.log("No project choosen");
+                } else {
+                    const response = await axios.get(`${config.apiBaseUrl}/tasks/allMemberPower/${this.projectId}`, {
                         headers: {
                             'Authorization': `Bearer ${token}`
                         }
                     });
-                    console.log("Détails de l'utilisateur :", userResponse.data);
-
-                    const memberResponse = await axios.get(`${config.apiBaseUrl}/team-members/${this.projectId}/user/${userId}`, {
-                        headers: {
-                            'Authorization': `Bearer ${token}`
+                    console.log("Réponse des membres performants :", response.data);
+    
+                    // Compter le nombre de membres performants
+                    this.powerMembersCount = response.data.length;
+                    console.log("Nombre de membres performants :", this.powerMembersCount);
+    
+                    // Initialiser powerMembers avec les données reçues
+                    this.powerMembers = response.data;
+    
+                    // Convertir les valeurs de count en nombres et vérifier les userId
+                    const powerMembersData = {};
+                    for (const member of this.powerMembers) {
+                        console.log("Membre :", member);
+                        if (member.userId && member.count !== undefined) {
+                            powerMembersData[member.userId] = { count: Number(member.count) }; // Convertir en nombre
+                        } else {
+                            console.error("Données de membre invalides :", member);
                         }
-                    });
-                    console.log("Détails du membre de l'équipe :", memberResponse.data);
-
-                    // Assigner les détails de l'utilisateur et le rôle au membre performant
-                    this.powerMembers[userId].details = userResponse.data;
-                    if (memberResponse.data && memberResponse.data.Role) {
-                        this.powerMembers[userId].role = memberResponse.data.Role.nom;
-                    } else {
-                        this.powerMembers[userId].role = 'Role non défini';
                     }
+                    this.powerMembers = powerMembersData;
+                    console.log("Membres performants après conversion :", this.powerMembers);
+    
+                    // Récupérer les informations détaillées des membres performants
+                    for (const userId of Object.keys(this.powerMembers)) {
+                        const userResponse = await axios.get(`${config.apiBaseUrl}/users/${userId}`, {
+                            headers: {
+                                'Authorization': `Bearer ${token}`
+                            }
+                        });
+                        console.log("Détails de l'utilisateur :", userResponse.data);
+    
+                        const memberResponse = await axios.get(`${config.apiBaseUrl}/team-members/${this.projectId}/user/${userId}`, {
+                            headers: {
+                                'Authorization': `Bearer ${token}`
+                            }
+                        });
+                        console.log("Détails du membre de l'équipe :", memberResponse.data);
+    
+                        // Assigner les détails de l'utilisateur et le rôle au membre performant
+                        this.powerMembers[userId].details = userResponse.data;
+                        if (memberResponse.data && memberResponse.data.Role) {
+                            this.powerMembers[userId].role = memberResponse.data.Role.nom;
+                        } else {
+                            this.powerMembers[userId].role = 'Role non défini';
+                        }
+                    }
+                    console.log("Membres performants avec détails :", this.powerMembers);
                 }
-                console.log("Membres performants avec détails :", this.powerMembers);
             } catch (error) {
                 console.error('Erreur lors de la récupération des membres performants :', error);
             }
-        }
-
-
-        ,
+        },
     }
 };
 </script>

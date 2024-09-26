@@ -210,8 +210,7 @@ import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
             <X class="text-black text-2xl" />
         </button>
 
-        <div
-            class="flex flex-col bg-white p-6 gap-5 rounded-lg shadow-lg animate__animated animate__fadeInDown w-full max-w-4xl h-full">
+        <div class="flex flex-col bg-white p-6 gap-5 rounded-lg shadow-lg animate__animated animate__fadeInDown w-full max-w-4xl h-full">
 
             <div class="flex justify-between">
                 <h1 class="text-center text-2xl text-gray-800 ">MODIFIER UNE TACHE</h1>
@@ -232,13 +231,11 @@ import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
 
                 <div class="w-full flex flex-col md:flex-row gap-5">
                     <div class="w-full">
-                        <label for="Attribuer" class="block text-gray-700 text-sm font-bold mb-2">Attribuer
-                            a</label>
+                        <label for="Attribuer" class="block text-gray-700 text-sm font-bold mb-2">Attribuer a</label>
                         <select v-model="userAssignId"
                             class="block w-full px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-200 appearance-none">
                             <option v-for="member in projectMembers" :key="member.userId" :value="member.userId">
                                 {{ member.userMember.email }}</option>
-
                         </select>
                     </div>
 
@@ -255,11 +252,6 @@ import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
                             </select>
                         </div>
 
-                        <!-- <span class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                                <ChevronDown
-                                    :class="{ 'chevron-down': isDropdown1Open, 'chevron-up': !isDropdown1Open }"
-                                    class="w-5 h-5 text-gray-500" />
-                            </span> -->
                     </div>
                 </div>
 
@@ -269,6 +261,7 @@ import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
                             <label for="Planing" class="block text-gray-700 text-sm font-bold mb-2">
                                 Planning début et fin
                             </label>
+
                             <div class="flex w-full gap-2">
                                 <input type="text" v-model="start_date" required
                                     class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-200">
@@ -290,12 +283,7 @@ import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
                                 <option value="ELEVEE">Elevée</option>
                             </select>
                         </div>
-                        <!-- <span class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                                <ChevronDown :class="{ 'chevron-down': isPriorityOpen, 'chevron-up': !isPriorityOpen }"
-                                    class="w-5 h-5 text-gray-500" />
-                            </span> -->
                     </div>
-
                 </div>
 
                 <div class="w-full flex flex-col md:flex-row gap-5">
@@ -307,24 +295,17 @@ import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
                             class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-200">
                     </div>
 
-                    <!-- <div class="flex flex-col md:flex-row gap-5">
-                             -->
-
                     <div class="w-full md:w-1/2">
                         <label for="Type" class="block text-gray-700 text-sm font-bold mb-2">Type de tache</label>
                         <input type="text" v-model="taskType"
                             class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-300">
                     </div>
-                    <!-- </div> -->
-
-
                 </div>
+                
                 <div class="w-full flex flex-col md:flex-row gap-5">
-
                     <div class="w-full md:w-1/2">
                         <label for="piece" class="block text-gray-700 text-sm font-bold mb-2">Piece jointe</label>
-                        <input type="file"
-                            class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-300">
+                        <input type="file" class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-300">
                     </div>
 
                 </div>
@@ -335,6 +316,7 @@ import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
                             <img src="../assets/images/logoflysoft.png" alt="Photo de l'utilisateur"
                                 class="w-full h-full object-cover">
                         </div>
+
                         <input type="text" placeholder="Ajouter un commentaire à la tâche"
                             class="w-full h-full border border-150 rounded focus:outline-none focus:ring focus:ring-gray-300 pl-5"
                             v-model="content">
@@ -801,9 +783,10 @@ export default defineComponent({
                 this.fetchPendingTasks();
                 this.fetchInProgressTasks();
                 this.fetchCompletedTasks();
+                this.fetchPendingTasksCount();
+                this.fetchInProgressTasksCount();
+                this.fetchCompletedTasksCount();
                 this.showMenu = false;
-                //methode pour recharger la page
-                window.location.reload();
 
             } catch (error) {
                 console.error('Erreur lors de la suppression de la tache :', error);
@@ -819,14 +802,16 @@ export default defineComponent({
         async fetchTaskDetails() {
             try {
                 const token = localStorage.getItem('token');
+                console.log("trying to git task details");
                 console.log(this.movedItemId);
+                
                 const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.movedItemId}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
                 });
                 this.taskDetails = response.data;
-                console.log("Voici les details de la tache selectionné:");
+                console.log("Voici les details de la tache selectionné:+++");
                 console.log(this.taskDetails);
                 this.showMenu = false;
                 this.openEditTaskModal();
@@ -859,7 +844,7 @@ export default defineComponent({
                     }
                 });
                 this.taskDetails = response.data;
-                console.log("Voici les details de la tache selectionné:")
+                console.log("Voici les details de la tache selectionné:------")
                 console.log(this.taskDetails);
                 this.openViewTaskModal();
                 this.showMenu = false;

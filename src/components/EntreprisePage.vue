@@ -7,15 +7,22 @@
 
         <div class="flex flex-col md:flex-row w-full gap-4 md:gap-8">
             <form action="" class="flex flex-col md:flex-row w-full md:w-1/2 gap-4">
-                <div class="flex relative items-center w-full md:w-3/4">
-                    <Search class="absolute left-2 top-2.5 text-gray-600 h-1/2" />
-                    <input type="search" id="search-input"
-                        class="w-full h-11 pl-10 pr-4 border border-gray-300 rounded-lg text-gray-800 focus:outline-none focus:border-blue-500"
-                        placeholder="Rechercher...">
+                <div class="relative flex items-center w-full sm:w-3/4 ">
+                    <Search class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                    <input type="search" id="search-input" v-model="searchQuery" @input="filterEntreprises"
+                        class="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:border-gray-500 text-base"
+                        placeholder="Rechercher..." />
                 </div>
-
-                <input type="submit" value="Rechercher"
-                    class="w-full md:w-1/4 h-11 bg-black text-white font-bold rounded-lg hover:bg-slate-600 focus:outline-none">
+                
+                <ul v-if="filteredEntreprises.length && searchQuery.trim()"
+                    class="absolute bg-white border border-gray-300 rounded-lg mt-10 z-10">
+                    <li v-for="entreprise in filteredEntreprises" :key="entreprise.id" @click="selectEntreprise(entreprise)"
+                        class="px-4 py-2 cursor-pointer hover:bg-gray-100">
+                        {{ entreprise.name }} - {{ entreprise.email}}
+                    </li>
+                </ul>
+                <!-- <input type="submit" value="Rechercher"
+                    class="w-full md:w-1/4 h-11 bg-black text-white font-bold rounded-lg hover:bg-slate-600 focus:outline-none"> -->
             </form>
 
             <!-- <div class="w-full md:w-1/2 flex justify-end mt-4 md:mt-0">
@@ -83,17 +90,21 @@ import axios from 'axios';
 export default {
     components: {
     },
-    mounted() {
-        this.userId = localStorage.getItem('userId');
-        this.entrepriseId = localStorage.getItem('entrepriseId');
-        this.fetchEntreprises();
-    },
     data() {
         return {
             isEntrepriseListVisible: true,
             entrepriseId: '',
             entreprises: [], // Liste des entreprises
+
+            searchQuery: '',
+            filteredEntreprises: [],
+            searchedEntrepriseId: null,
         }
+    },
+    mounted() {
+        this.userId = localStorage.getItem('userId');
+        this.entrepriseId = localStorage.getItem('entrepriseId');
+        this.fetchEntreprises();
     },
     methods: {
         showModal2() {
@@ -113,10 +124,37 @@ export default {
                     }
                 });
                 this.entreprises = response.data;
+                console.log(response.data);
+                
                 console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
             } catch (error) {
                 this.errorMessage = 'Erreur lors de la récupération des entreprises : ' + (error.response ? error.response.data.message : error.message);
             }
+        },
+
+
+        filterEntreprises() {
+            const query = this.searchQuery.toLowerCase();
+            this.filteredEntreprises = this.entreprises.filter(entreprise => {
+                const name = entreprise.name.toLowerCase();
+                const email = entreprise.email.toLowerCase();
+                const pobox = entreprise.pobox.toLowerCase();
+                return name.includes(query) || email.includes(query) || pobox.includes(query)
+            });
+        },
+        selectEntreprise(entreprise) {
+            this.selectedEntrepriseId = entreprise.entrepriseId;
+            this.searchQuery = entreprise.name;
+            this.filteredEntreprise = [];
+            this.scrollToEntreprise(entreprise.userId);
+        },
+        scrollToEntreprise(userId) {
+            this.$nextTick(() => {
+                const element = document.querySelector(`[data-entreprise-id="${userId}"]`);
+                if (element) {
+                    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            });
         },
     }
 }

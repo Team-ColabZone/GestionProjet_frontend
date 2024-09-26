@@ -11,8 +11,6 @@ import { Users, List, Plus, Search, ChevronUp, Eye } from 'lucide-vue-next';
             <p class="title_entete text-xl">Equipe du Projet</p>
         </div>
 
-        <!-- Stat Cards Section -->
-
         <!-- Search Bar Section -->
         <div class="flex flex-col sm:flex-row justify-between">
             <form class=" flex flex-1">
@@ -78,7 +76,7 @@ import { Users, List, Plus, Search, ChevronUp, Eye } from 'lucide-vue-next';
                                     class="hover:bg-gray-100">
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="flex items-center space-x-2">
-                                            <img class="border border-black h-11 w-11 rounded-full object-cover object-center mr-5"
+                                            <img class="border border-gray-200 h-11 w-11 rounded-full object-cover object-center mr-5"
                                                 :src="member.userMember.avatar" alt="profil" />
                                             {{ member.userMember.firstname }} {{ member.userMember.lastname }}
                                         </div>
@@ -147,8 +145,7 @@ import { Users, List, Plus, Search, ChevronUp, Eye } from 'lucide-vue-next';
                             Ajouter
                         </span>
                         <div v-else class="flex justify-center">
-                            <span
-                                class="inline-block w-6 h-6 border-4 border-gray-400 border-t-black border-b-black rounded-full animate-spin"></span>
+                            <span  class="inline-block w-6 h-6 border-4 border-gray-400 border-t-black border-b-black rounded-full animate-spin"></span>
                         </div>
                     </button>
                 </div>
@@ -244,7 +241,7 @@ export default {
                 console.log(user)
                 this.userId = user.id; // Assigner l'ID de l'utilisateur récupéré
                 // console.log("ceci est l'id du user selectionné")
-                localStorage.setItem('IdCollaborateur', user.user_id);
+                localStorage.setItem('IdCollaborateur', user.id);
                 // console.log(this.userId)
             } catch (error) {
                 console.error('Erreur lors de la récupération de l\'utilisateur specifique:', error);
@@ -254,15 +251,17 @@ export default {
 
         async fetchUserData() {
             try {
-                const token = localStorage.getItem('token');
-                const response = await axios.get(`${config.apiBaseUrl}/users/${this.userId}`, {
+                const token = localStorage.getItem('token');                
+                const response = await axios.get(`${config.apiBaseUrl}/users/${this.usercreatedId}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
                 });
-                this.userData = response.data;
+                console.log("this the user Data", response.data);
             } catch (error) {
                 this.errorMessage = 'Erreur lors de la récupération des données utilisateur : ' + error.response.data.message;
+            } finally {
+                this.loading = false;
             }
         },
 
@@ -324,6 +323,7 @@ export default {
                 // Réinitialiser les champs du formulaire
                 this.email = '';
                 this.roleId = '';
+                this.fetchProjectMembers();
             } catch (error) {
                 this.error = true;
                 this.errorMessage = error.response ? error.response.data.message : error.message;
