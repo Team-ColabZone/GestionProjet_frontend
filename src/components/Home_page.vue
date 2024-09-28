@@ -11,9 +11,9 @@
                 <button class="cursor-pointer border-none bg-transparent relative" @click="showNotifications">
                     <div class="flex">
                         <BellRing class="w-4 h-4 md:h-5 md:w-5" />
-                        <span v-if="notificationCount > 0"
+                        <span v-if="notificationCountBell > 0"
                             class="absolute top-0 left-1 md:left-2 flex items-center justify-center w-4 h-4 rounded-full bg-red-500 text-white p-1 text-xs">
-                            {{ notificationCount }}
+                            {{ notificationCountBell }}
                         </span>
                     </div>
                 </button>
@@ -42,21 +42,27 @@
 
                     <!-- Dashboard -->
                     <li class="w-full flex flex-col gap-2">
-                        <div class="relative w-full">
-                            <button class="flex justify-between items-center w-full rounded md:gap-4"
+                        <div class="relative w-full ">
+                            <button class="flex justify-between items-center w-full rounded md:gap-3"
                                 :class="{ 'bg-gray-100 h-full w-full rounded-lg': currentPage === 'dashboard' }"
                                 @click="showPage('dashboard')">
                                 <div class="w-4/5 md:w-4/5">
-                                    <div v-if="firstProjectName" class="flex items-center gap-2 h-14 md:gap-4 pr-2">
-                                        <div v-if="firstProjectLogo">
-                                            <img :src="firstProjectLogo" alt="Logo" class="h-full w-14 rounded-lg object-fit border"/> 
+                                    <div v-if="firstProjectName" class="flex items-center gap-2 md:gap-4 pr-2">
+                                        <div v-if="firstProjectLogo" class="h-14">
+                                            <img :src="firstProjectLogo" alt="Logo"
+                                                class="h-full w-14 rounded-lg object-fit border" />
                                         </div>
 
-                                        <div v-else class="w-14 h-14">
-                                            <ChartNoAxesCombined class=" w-full h-full rounded-lg border border-gray-200 object-cover object-center" />
+                                        <div v-else class="w-auto h-auto border"
+                                            :class="{ 'pl-3': currentPage === 'dashboard' }">
+                                            <BriefcaseBusiness :stroke-width="1.5" class=" object-center" />
                                         </div>
 
-                                        <h3 class="text-black text-lg font-semibold py-1">{{ firstProjectName }}</h3>
+                                        <div class=" flex flex-col text-left text-black text-ellipsis text-xs md:text-sm p-2"
+                                        style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                            <h3 class="text-lg font-semibold" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ firstProjectName }}</h3>
+                                            <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{firstProjectDescription}}</span>
+                                        </div>
                                     </div>
                                     <div v-else class="flex items-center gap-1 py-1 px-2">
                                         <Gauge class="h-7" />
@@ -65,7 +71,7 @@
                                 </div>
 
                                 <button @click="toggleProjectList"
-                                    class="w-1/5 bg-transparent border-none cursor-pointer "
+                                    class="w-1/5 bg-transparent border-none cursor-pointer border border-red-500"
                                     :class="{ 'text-black': currentPage === 'dashboard', 'text-gray-500': currentPage !== 'dashboard' }">
                                     <ChevronUp
                                         :class="{ 'chevron-down': !isProjectListVisible, 'chevron-up': isProjectListVisible }"
@@ -74,7 +80,7 @@
                             </button>
 
                             <div :class="{ block: isProjectListVisible, hidden: !isProjectListVisible }"
-                                class="absolute top-full left-0 w-full flex flex-col gap-2 p-2 bg-white shadow-sm border border-gray-300 rounded-lg z-10">
+                                class="absolute top-full left-0 w-full flex flex-col gap-2 p-2 mt-4 bg-white shadow-sm border border-gray-300 rounded-lg z-10">
                                 <!-- Projects List -->
                                 <div class="h-40 w-full flex flex-col gap-1 overflow-x-auto overflow-y-auto">
                                     <div v-for="project in displayedProjects" :key="project.id"
@@ -83,12 +89,13 @@
                                             { 'bg-gray-300': selectedProjectId === project.id, 'bg-gray-100': selectedProjectId !== project.id }
                                         ]">
                                         <div v-if="project.projectlogo" class="h-full">
-                                            <img :src="project.projectlogo" alt="Logo" class="h-full w-12 border rounded-lg object-cover" />
+                                            <img :src="project.projectlogo" alt="Logo"
+                                                class="h-full w-12 border rounded-lg object-cover" />
                                         </div>
-                                        <div v-else class="h-full">
-                                            <ChartNoAxesCombined class=" w-12 h-full border border-gray-200  rounded-lg object-cover object-center" />
+                                        <div v-else class="w-auto h-auto pl-3">
+                                            <BriefcaseBusiness :stroke-width="1.5" class=" object-center" />
                                         </div>
-                                        
+
                                         <p class="text-left text-black text-ellipsis text-xs md:text-sm p-2"
                                             style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                                             <span class="font-medium">{{ project.projectname }}</span><br />
@@ -116,6 +123,130 @@
                             </div>
                         </div>
                     </li>
+
+                    <!-- <li class="h-14 w-full flex flex-col gap-2">
+                        <div class="relative w-full flex flex-col">
+                            <div class="absolute w-full ">
+                                <button class="flex justify-between items-center w-full rounded md:gap-3"
+                                    :class="{ 'bg-gray-100 h-full w-full rounded-lg': currentPage === 'dashboard' }"
+                                    @click="showPage('dashboard')">
+                                    <div class="w-4/5 md:w-4/5">
+                                        <div v-if="firstProjectName" class="flex items-center gap-2 md:gap-4 pr-2">
+                                            <div v-if="firstProjectLogo" class="h-14">
+                                                <img :src="firstProjectLogo" alt="Logo"
+                                                    class="h-full w-14 rounded-lg object-fit border" />
+                                            </div>
+    
+                                            <div v-else class="w-auto h-auto border"
+                                                :class="{ 'pl-3': currentPage === 'dashboard' }">
+                                                <BriefcaseBusiness :stroke-width="1.5" class=" object-center" />
+                                            </div>
+    
+                                            <div class=" flex flex-col text-left text-black text-ellipsis text-xs md:text-sm p-2"
+                                            style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                                <h3 class="text-lg font-semibold" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ firstProjectName }}</h3>
+                                                <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">+-+-{{firstProjectDescription}}</span>
+                                            </div>
+                                        </div>
+                                        <div v-else class="flex items-center gap-1 py-1 px-2">
+                                            <Gauge class="h-7" />
+                                            <h3 class="text-black">Dashboard</h3>
+                                        </div>
+                                    </div>
+    
+                                    <button @click="toggleProjectList"
+                                        class="w-1/5 bg-transparent border-none cursor-pointer border border-red-500"
+                                        :class="{ 'text-black': currentPage === 'dashboard', 'text-gray-500': currentPage !== 'dashboard' }">
+                                        <ChevronUp
+                                            :class="{ 'chevron-down': !isProjectListVisible, 'chevron-up': isProjectListVisible }"
+                                            class="w-full h-4 transition-transform" />
+                                    </button>
+                                </button>
+                            </div>
+    
+                            <div class="fixed inset-0 backdrop-blur-sm flex items-start justify-start z-50 pt-14 px-2" :class="{ block: isProjectListVisible, hidden: !isProjectListVisible }">
+                                <div class="relative w-60 ">
+                                    <button class="flex justify-between items-center w-full rounded md:gap-3"
+                                        :class="{ 'bg-gray-100 h-full w-full rounded-lg': currentPage === 'dashboard' }"
+                                        @click="showPage('dashboard')">
+                                        <div class="w-4/5 md:w-4/5">
+                                            <div v-if="firstProjectName" class="flex items-center gap-2 md:gap-4 pr-2">
+                                                <div v-if="firstProjectLogo" class="h-14">
+                                                    <img :src="firstProjectLogo" alt="Logo"
+                                                        class="h-full w-14 rounded-lg object-fit border" />
+                                                </div>
+        
+                                                <div v-else class="w-auto h-auto border"
+                                                    :class="{ 'pl-3': currentPage === 'dashboard' }">
+                                                    <BriefcaseBusiness :stroke-width="1.5" class=" object-center" />
+                                                </div>
+        
+                                                <div class=" flex flex-col text-left text-black text-ellipsis text-xs md:text-sm p-2"
+                                                style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                                    <h3 class="text-lg font-semibold" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ firstProjectName }}</h3>
+                                                    <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{firstProjectDescription}}</span>
+                                                </div>
+                                            </div>
+                                            <div v-else class="flex items-center gap-1 py-1 px-2">
+                                                <Gauge class="h-7" />
+                                                <h3 class="text-black">Dashboard</h3>
+                                            </div>
+                                        </div>
+        
+                                        <button @click="toggleProjectList"
+                                            class="w-1/5 bg-transparent border-none cursor-pointer border border-red-500"
+                                            :class="{ 'text-black': currentPage === 'dashboard', 'text-gray-500': currentPage !== 'dashboard' }">
+                                            <ChevronUp
+                                                :class="{ 'chevron-down': !isProjectListVisible, 'chevron-up': isProjectListVisible }"
+                                                class="w-full h-4 transition-transform" />
+                                        </button>
+                                    </button>
+        
+                                    <div :class="{ block: isProjectListVisible, hidden: !isProjectListVisible }"
+                                        class="absolute top-full left-0 w-full flex flex-col gap-2 p-2 mt-4 bg-white shadow-sm border border-gray-300 rounded-lg z-10">
+                                        
+                                        <div class="h-40 w-full flex flex-col gap-1 overflow-x-auto overflow-y-auto">
+                                            <div v-for="project in displayedProjects" :key="project.id"
+                                                @click="selectProject(project.id)" :class="[
+                                                    'h-14 flex items-center border-b border-gray-50 cursor-pointer rounded-lg pr-2',
+                                                    { 'bg-gray-300': selectedProjectId === project.id, 'bg-gray-100': selectedProjectId !== project.id }
+                                                ]">
+                                                <div v-if="project.projectlogo" class="h-full">
+                                                    <img :src="project.projectlogo" alt="Logo"
+                                                        class="h-full w-12 border rounded-lg object-cover" />
+                                                </div>
+                                                <div v-else class="w-auto h-auto pl-3">
+                                                    <BriefcaseBusiness :stroke-width="1.5" class=" object-center" />
+                                                </div>
+        
+                                                <p class="text-left text-black text-ellipsis text-xs md:text-sm p-2"
+                                                    style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                                    <span class="font-medium">{{ project.projectname }}</span><br />
+                                                    {{ project.description }}
+                                                </p>
+                                            </div>
+                                        </div>
+        
+                                        <div class="w-full pt-2 flex flex-col gap-2 border-t border-gray-200">
+                                            <button
+                                                class="addProjectbtn flex justify-between items-center w-full bg-transparent border-none cursor-pointer text-xs"
+                                                @click="showModal1">
+                                                Créer un Projet
+                                                <SquarePlus class="w-4 h-4" />
+                                            </button>
+        
+                                            <button
+                                                class="addProjectbtn flex justify-between items-center w-full bg-transparent border-none cursor-pointer text-xs"
+                                                @click="ShowInvitation()">
+                                                Nouveau projet invité
+                                                <FolderGit2 class="w-4 h-4" />
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li> -->
 
                     <!-- Backlogs -->
                     <li class="w-full">
@@ -418,7 +549,7 @@
 
                     <div class="w-full flex flex-col items-center gap-3">
                         <!-- Profile Image -->
-                        <div class="w-20 h-20  rounded-full">
+                        <div class="w-20 h-20  rounded-full" @click="exitEnterprise">
                             <div v-if="loading">Loading...</div>
                             <div v-else>
                                 <!-- <img :src="'data:image/jpeg;base64,' + profile.profileImage" alt="Profile Image"
@@ -451,21 +582,27 @@
                                         class=" w-full h-5 transition-transform" />
                                 </button>
                             </div>
-                            <div class="w-full h-40 flex flex-col overflow-y-auto" v-if="isEntreprisesListVisible">
 
+                            <div class="w-full h-40 flex flex-col overflow-y-auto" v-if="isEntreprisesListVisible">
                                 <div v-for="entreprise in entreprises" :key="entreprise.id"
                                     @click="selectEntreprise(entreprise.id)"
-                                    class="flex items-center border-b border-gray-200 py-1 px-2 gap-4 cursor-pointer">
-                                    <div class="w-10 h-10">
-                                        <img class="border w-10 h-10 border-gray-200 rounded-full"
-                                            :src="entreprise.logo" alt="logo Entreprise" />
+                                    class=" flex justify-between items-center border-b border-gray-200 py-1 px-2 gap-4 cursor-pointer">
+                                    <div class="flex items-center  gap-4">
+                                        <div class="w-10 h-10 ">
+                                            <img class="border w-10 h-10 border-gray-200 rounded-full"
+                                                :src="entreprise.logo" alt="logo Entreprise" />
+                                        </div>
+                                        <div class="flex flex-col">
+                                            <span class="font-medium truncate">{{ entreprise.name }}</span>
+                                            <span class="text-xs">{{ entreprise.email }}</span>
+                                        </div>
                                     </div>
-                                    <div class="flex flex-col">
-                                        <span class="font-medium truncate">{{ entreprise.name }}</span>
-                                        <span class="text-xs">{{ entreprise.email }}</span>
-                                    </div>
-                                </div>
 
+                                    <div v-if="entreprise.id === selectedEntrepriseId" class=" w-3 h-full flex justify-between items-center">
+                                        <span  class=" w-full h-3 bg-green-500 rounded-full"></span>
+                                    </div>
+                                    
+                                </div>
                             </div>
                         </div>
 
@@ -564,7 +701,7 @@
             <div class="fixed inset-0 bg-black/50 flex items-start justify-end z-50 pt-12 px-2 md:pr-5 overflow-y-scroll no-scrollbar"
                 v-if="notificationModal">
                 <div
-                    class="bg-white flex flex-col py-6 gap-2 rounded-lg shadow-lg animate__animated animate__fadeInDown w-full max-w-sm">
+                    class="bg-white flex flex-col py-6 gap-2 rounded-lg shadow-lg animate__animated animate__fadeInDown w-full max-w-sm ">
                     <div class="flex justify-between border-b-2 border-b-gray-100">
                         <div class="px-6">
                             <h5 class="font-semibold text-xl pb-2">Notification(s)</h5>
@@ -572,12 +709,12 @@
                                 <!-- :class="{ 'bg-gray-100 h-full w-full rounded-lg': currentPage === 'dashboard' }"
                                 @click="showPage('dashboard') -->
                                 <button @click="showNotifications('unread')"
-                                    :class="{ 'bg-gray-200': selectedTab === 'unread', 'hover:bg-gray-200': true, 'rounded': true, 'px-2': true }">
-                                    Non lus
+                                    :class="{ 'border-blue-300': selectedTab === 'unread', 'border': selectedTab === 'unread', 'hover:text-blue-500': true, 'rounded-t-md': true, 'px-2': true }">
+                                    Non lus ( {{ notificationCount }} )
                                 </button>
 
                                 <button @click="showNotifications('all')"
-                                    :class="{ 'bg-gray-200': selectedTab === 'all', 'hover:bg-gray-200': true, 'rounded': true, 'px-2': true }">
+                                    :class="{ 'border-blue-300': selectedTab === 'all', 'border': selectedTab === 'all', 'hover:text-blue-500': true, 'rounded-t-md': true, 'px-2': true }">
                                     Tout
                                 </button>
                             </div>
@@ -588,97 +725,190 @@
                         </button>
                     </div>
 
-                    <div v-if="selectedTab === 'unread'">
-                        <div v-if="notifications.length > 0" >
-                            <div v-for="notification in notifications" :key="notification.id">
-                                <div v-if="notification.type === 'Projet'" @click="readNotification(notification.id)"
-                                    class="flex gap-2 pl-5 pr-1 pb-1 items-center border-b-2 border-b-gray-200">
-                                    <div>
-                                        <div v-if="notification.projectImg" class="w-14 h-14">
-                                            <img :src="notification.projectImg" alt="logo"
-                                                class="w-full h-full rounded-full border object-cover object-center">
+                    <div class="max-h-96 overflow-y-auto">
+                        <div v-if="selectedTab === 'unread'">
+                            <div v-if="notifications.length > 0">
+                                <div v-for="notification in notifications" :key="notification.id"
+                                    @click="readNotification(notification)">
+                                    <div v-if="notification.type === 'Projet'"
+                                        class="flex gap-2 pl-5 pr-1 pb-1 items-center border-b-2 border-b-gray-200">
+                                        <div>
+                                            <div v-if="notification.projectImg" class="w-14 h-14">
+                                                <img :src="notification.projectImg" alt="logo"
+                                                    class="w-full h-full rounded-full border object-cover object-center">
+                                            </div>
+                                            <div v-else class="w-8 h-8 ">
+                                                <BriefcaseBusiness :stroke-width="1.5"
+                                                    class=" w-full h-full object-center" />
+                                            </div>
                                         </div>
-                                        <div v-else class="w-14 h-14">
-                                            <ChartNoAxesCombined
-                                                class=" w-full h-full border border-gray-200 object-cover object-center" />
-                                            <!-- <img :src="require(`@/assets/images/Project-Icon.png`)" alt="logo" class="border-red-500 w-full h-full rounded-full border object-cover object-center"> -->
+                                        <div>
+                                            <p>Vous avez cree le projet {{ notification.projectName }}</p>
+                                            <span class="px-2 pb-1 bg-gray-200 rounded-xl">
+                                                Plus ...
+                                            </span>
                                         </div>
                                     </div>
-                                    <div>
-                                        <p>Vous avez cree le projet {{ notification.projectName }}</p>
-                                        <span class="px-2 pb-1 bg-gray-200 rounded-xl">Plus ...</span>
+                                    <div v-else-if="notification.type === 'Tasks'"
+                                        class="flex gap-2 pl-5 items-center pb-1 border-b-2 border-b-gray-200">
+                                        <ListTodo class="w-8 h-8 md:w-11 md:h-11" />
+                                        <div class="flex flex-col">
+                                            <p>Une tache vous as été affecté sur le projet {{ notification.tasksName }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div v-else-if="notification.type === 'Team-Members'"
+                                        class="flex gap-2 pl-5 items-center pb-1 border-b-2 border-b-gray-200">
+                                        <div>
+                                            <div v-if="notification.projectImg" class="w-14 h-14">
+                                                <img :src="notification.projectImg" alt="logo"
+                                                    class="w-full h-full rounded-full border object-cover object-center">
+                                            </div>
+                                            <div v-else class="w-8 h-8 ">
+                                                <BriefcaseBusiness :stroke-width="1.5"
+                                                    class=" w-full h-full object-center" />
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <p>Bienvenue sur le projet {{ notification.projectName }}</p>
+                                            <!-- <p>Vous avez été ajouté au projet {{ notification.projectName }} par {{ notification.nameSender }} en temp que {{ notification.roleName }}</p> -->
+                                            <span class="px-2 pb-1 bg-gray-200 rounded-xl">Plus ...</span>
+                                        </div>
                                     </div>
                                 </div>
-                                <div v-else-if="notification.type === 'task'" @click="readNotification(notification.id)"
-                                    class="flex gap-2 pl-5 items-center pb-1 border-b-2 border-b-gray-200">
-                                    <ListTodo class="w-8 h-8 md:w-11 md:h-11" />
-                                    <div class="flex flex-col">
-                                        <p>Une tache vous as été affecté sur le projet {{ notification.tasksName }}</p>
-                                    </div>
-                                </div>
-                                <div v-else-if="notification.type === 'Team-Members'" class="flex gap-2 pl-5 items-center pb-1 border-b-2 border-b-gray-200" @click="readNotification(notification.id)" >
-                                    <div>
-                                        <div v-if="notification.projectImg" class="w-14 h-14">
-                                            <img :src="notification.projectImg" alt="logo"
-                                                class="w-full h-full rounded-full border object-cover object-center">
+                            </div>
+
+                            <div v-else>
+                                <span class="pl-4">Vous avez aucune nouvelle notification</span>
+                            </div>
+                        </div>
+
+                        <div v-if="selectedTab === 'all'">
+                            <div v-if="notifications.length === 0">
+                                <span class="pl-4">Vous n'avez pas encore de notification</span>
+                            </div>
+
+                            <div v-else>
+                                <div v-for="notification in notifications" :key="notification.id">
+                                    <div v-if="notification.type === 'Projet'"
+                                        class="flex gap-2 pl-5 pr-1 pb-1 items-center border-b-2 border-b-gray-200">
+                                        <div>
+                                            <div v-if="notification.projectImg" class="w-14 h-14">
+                                                <img :src="notification.projectImg" alt="logo"
+                                                    class="w-full h-full rounded-full border object-cover object-center">
+                                            </div>
+                                            <div v-else class="w-8 h-8 ">
+                                                <BriefcaseBusiness :stroke-width="1.5"
+                                                    class=" w-full h-full object-center" />
+                                            </div>
                                         </div>
-                                        <div v-else class="w-14 h-14">
-                                            <ChartNoAxesCombined
-                                                class=" w-full h-full border border-gray-200 object-cover object-center" />
+                                        <div>
+                                            <p>Vous avez été ajouté au projet {{ notification.projectName }} par {{
+                                                notification.nameSender }}</p>
+                                            <span class="px-2 pb-1 bg-gray-200 rounded-xl">Plus ...</span>
                                         </div>
                                     </div>
-                                    <div>
-                                        <p>Bienvenue sur le projet {{ notification.projectName }}</p>
-                                        <!-- <p>Vous avez été ajouté au projet {{ notification.projectName }} par {{ notification.nameSender }} en temp que {{ notification.roleName }}</p> -->
-                                        <span class="px-2 pb-1 bg-gray-200 rounded-xl">Plus ...</span>
+                                    <div v-else-if="notification.type === 'Tasks'"
+                                        class="flex gap-2 pl-5 items-center pb-1 border-b-2 border-b-gray-200">
+                                        <ListTodo class="w-8 h-8 md:w-11 md:h-11" />
+                                        <div class="flex flex-col">
+                                            <p>Une tache vous as été affecté sur le projet {{ notification.tasksName }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div v-else-if="notification.type === 'Team-Members'"
+                                        class="flex gap-2 pl-5 items-center pb-1 border-b-2 border-b-gray-200">
+                                        <div>
+                                            <div v-if="notification.projectImg" class="w-14 h-14">
+                                                <img :src="notification.projectImg" alt="logo"
+                                                    class="w-full h-full rounded-full border object-cover object-center">
+                                            </div>
+                                            <div v-else class="w-8 h-8 ">
+                                                <BriefcaseBusiness :stroke-width="1.5"
+                                                    class=" w-full h-full object-center" />
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <p>Bienvenue sur le projet {{ notification.projectName }}</p>
+                                            <!-- <p>Vous avez été ajouté au projet {{ notification.projectName }} par {{ notification.nameSender }} en temp que {{ notification.roleName }}</p> -->
+                                            <span class="px-2 pb-1 bg-gray-200 rounded-xl">Plus ...</span>
+                                        </div>
+                                    </div>
+                                    <div v-else>
+                                        <p>Unknown notification type: {{ notification.type }}</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
 
-                        <div v-else>
-                            <span class="pl-4">Vous avez aucune notification</span>
-                        </div>
+            <div class="fixed inset-0 backdrop-blur-sm flex justify-end z-50 overflow-y-scroll no-scrollbar"
+                v-if="modalModifyData">
+                <button @click="closeModifyData" class="self-start p-6">
+                    <span class="text-black text-2xl">×</span>
+                </button>
+
+                <div
+                    class="flex flex-col h-full md:h-auto bg-white p-6 gap-5 rounded-lg shadow-lg animate__animated animate__fadeInDown w-full max-w-4xl">
+                    <div class="flex justify-between">
+                        <h1 class="text-center text-2xl text-black">COMPTE</h1>
+                        <button class="px-3 bg-black text-white rounded hover:bg-gray-600"
+                            @click="modifyProfile">sauvegarder</button>
                     </div>
 
-                    <div v-if="selectedTab === 'all'">
-                        <div v-if="notifications.length === 0">
-                            <span class="pl-4">Vous avez aucune notificationaaaaa</span>
-                        </div>
+                    <form @submit.prevent="modifyProfile" class="flex flex-col gap-4">
+                        <div
+                            class="flex flex-row gap-4 border-t border-b border-gray-300 py-3 justify-between items-center">
+                            <div class="flex flex-col gap-3 items-center md:flex-row">
+                                <img :src="profileImageUrl" alt="Profile Image"
+                                    class="w-16 h-16 rounded-full border object-cover object-center" />
+                                <span>PHOTO DE PROFIL</span>
+                            </div>
 
-                        <div v-else>
-                            <div v-for="notification in notifications" :key="notification.id">
-                                <div v-if="notification.type === 'Projet'"
-                                    class="flex gap-2 pl-5 pr-1 pb-1 items-center border-b-2 border-b-gray-200">
-                                    <div>
-                                        <div v-if="notification.projectImg" class="w-14 h-14">
-                                            <img :src="notification.projectImg" alt="logo"
-                                                class="w-full h-full rounded-full border object-cover object-center">
-                                        </div>
-                                        <div v-else class="w-14 h-14">
-                                            <ChartNoAxesCombined class=" w-full h-full object-cover object-center" />
-                                            <!-- <img :src="require(`@/assets/images/Project-Icon.png`)" alt="logo" class="border-red-500 w-full h-full rounded-full border object-cover object-center"> -->
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <p>Vous avez été ajouté au projet {{ notification.projectName }} par {{
-                                            notification.nameSender }}</p>
-                                        <span class="px-2 pb-1 bg-gray-200 rounded-xl">Plus ...</span>
-                                    </div>
-                                </div>
-                                <div v-else-if="notification.type === 'task'"
-                                    class="flex gap-2 pl-5 items-center pb-1 border-b-2 border-b-gray-200">
-                                    <ListTodo class="w-8 h-8 md:w-11 md:h-11" />
-                                    <div class="flex flex-col">
-                                        <p>Une tache vous as été affecté sur le projet {{ notification.tasksName }}</p>
-                                    </div>
-                                </div>
-                                <div v-else>
-                                    <p>Unknown notification type: {{ notification.type }}</p>
-                                </div>
+                            <div class="flex gap-4">
+                                <input type="file" ref="fileInput" @change="changeProfileImage" class="hidden">
+                                <button type="button"
+                                    class="px-3 bg-white text-black border border-gray-100 rounded hover:bg-gray-600"
+                                    @click="triggerFileInput">Modifier</button>
+                                <button type="button" class="px-3 py-1 bg-gray-300 text-black rounded hover:bg-gray-600"
+                                    @click="removeProfileImage">Supprimer</button>
                             </div>
                         </div>
-                    </div>
+
+                        <div class="w-full flex md:flex-row gap-5 md:gap-14">
+                            <div class="w-full">
+                                <label for="firstName" class="block text-gray-700 text-sm font-bold mb-2">Nom</label>
+                                <input type="text" v-model="firstName"
+                                    class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-200" />
+                            </div>
+
+                            <div class="w-full">
+                                <label for="lastName" class="block text-gray-700 text-sm font-bold mb-2">Prenom</label>
+                                <input type="text" v-model="lastName"
+                                    class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-200" />
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col md:flex-row gap-5 md:gap-14">
+                            <div class="w-full md:w-1/2">
+                                <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email</label>
+                                <input type="text" v-model="email"
+                                    class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-200" />
+                            </div>
+
+                            <div class="w-full md:w-1/2 relative">
+                                <label for="phoneNumber" class="block text-gray-700 text-sm font-bold mb-2">Numéro
+                                    de téléphone</label>
+                                <input type="text" v-model="phoneNumber"
+                                    class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-200" />
+                            </div>
+                        </div>
+
+                        <router-link to="/Updatepassword" class="w-full text-right text-blue-600">MODIFIER VOTRE MOT
+                            DE PASSE</router-link>
+                    </form>
                 </div>
             </div>
         </div>
@@ -747,6 +977,7 @@ export default {
             projects: [], // Liste des projets
             firstProjectName: '',
             firstProjectLogo: '',
+            firstProjectDescription: '',
             entreprises: [], // Liste des entreprises
             selectedProjectId: '', // ID du projet sélectionné
             projectId: '',
@@ -772,6 +1003,7 @@ export default {
             projectlogo: '',
 
             notificationCount: 0,
+            notificationCountBell: 0,
             notifications: [],
             selectedTab: 'unread',
             displayNotifications: false,
@@ -845,14 +1077,19 @@ export default {
             this.modalIdentity = false;
         },
         handleButtonClick() {
-            if (localStorage.getItem('selectedEntrepriseId')) {
-                localStorage.removeItem('selectedEntrepriseId');
-                window.location.reload();
-            }
             this.showIdentity();
         },
         showIdentity() {
             this.modalIdentity = true;
+        },
+        exitEnterprise() {
+            if (localStorage.getItem('selectedEntrepriseId')) {
+                localStorage.removeItem('selectedEntrepriseId');
+                localStorage.removeItem('currentProject');
+                localStorage.removeItem('projectId');
+                this.fetchProjects();
+                window.location.reload();
+            }
         },
         addEntreprise() {
             this.modalEntreprise = true;
@@ -874,6 +1111,7 @@ export default {
             this.notificationModal = true;
             this.selectedTab = notif;
             this.viewTypeOfNotifications();
+            this.notificationCountBell = 0;
         },
         closeNotificationModal() {
             this.notificationModal = false;
@@ -945,42 +1183,93 @@ export default {
 
         async createNewProject() {
             this.projectLoading = true;
-            try {
-                const token = localStorage.getItem('token');
-                const response = await axios.post(`${config.apiBaseUrl}/projects`, {
-                    projectname: this.projectname,
-                    description: this.description,
-                    start_date: new Date(this.start_date), // Conversion en objet Date
-                    end_date: new Date(this.end_date), // Conversion en objet Date
-                    budget: this.budget,
-                    entrepriseId: this.entrepriseId,
-                    projectType: this.projectType,
-                    projectPrivacyPolicy: this.projectPrivacyPolicy,
-                    downloadUrlLink: this.downloadUrlLink,
-                    userId: this.userId, // Assure-toi d'inclure l'ID de l'utilisateur
-                }, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                this.success = true;
-                this.modalmembers = true;
-                this.successMessage = response.data.message;
-                // this.projectId = response.data.id;
-                console.log('Project creation response:', response.data);
+            if (localStorage.getItem('selectedEntrepriseId')) {
+                try {
+                    const token = localStorage.getItem('token');
+                    const entrepriseId = localStorage.getItem('selectedEntrepriseId')
+                    const response = await axios.post(`${config.apiBaseUrl}/projects`, {
+                        projectname: this.projectname,
+                        description: this.description,
+                        start_date: new Date(this.start_date),
+                        end_date: new Date(this.end_date),
+                        budget: this.budget,
+                        entrepriseId: `${entrepriseId}`,
+                        projectType: this.projectType,
+                        projectPrivacyPolicy: this.projectPrivacyPolicy,
+                        downloadUrlLink: this.downloadUrlLink,
+                        userId: this.userId,
+                    }, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    this.success = true;
+                    this.modalmembers = true;
+                    this.successMessage = response.data.message;
+                    // this.projectId = response.data.id;
+                    console.log('Project creation response:', response.data);
 
-                //saves image if there were added
-                console.log("here is the project id logo before the If", response.data.id);
-                if (this.selectedImage) {
-                    console.log("here is the project id logo before uploding", response.data.id);
-                    await this.uploadImage(response.data.id); 
+                    //saves image if there were added
+                    console.log("??????????????????????", entrepriseId);
+
+                    console.log("here is the project id logo before the If", response.data.id);
+                    if (this.selectedImage) {
+                        console.log("here is the project id logo before uploding", response.data.id);
+                        await this.uploadImage(response.data.id);
+                    }
+                    this.fetchProjects();
+                    this.clearProjectFormField();
+                } catch (error) {
+                    this.error = true;
+                    this.errorMessage = error.response ? error.response.data.message : error.message;
+                    console.log("here is the project error", error);
+
+                    this.projectLoading = false;
                 }
-                this.fetchProjects();
-                this.clearProjectFormField();
-            } catch (error) {
-                this.error = true;
-                this.errorMessage = error.response ? error.response.data.message : error.message;
-                this.projectLoading = false;
+            } else {
+                try {
+                    const token = localStorage.getItem('token');
+                    // const entrepriseId = localStorage.getItem('entrepriseId')
+                    const response = await axios.post(`${config.apiBaseUrl}/projects`, {
+                        projectname: this.projectname,
+                        description: this.description,
+                        start_date: new Date(this.start_date),
+                        end_date: new Date(this.end_date),
+                        budget: this.budget,
+                        // entrepriseId: `${entrepriseId}`,
+                        projectType: this.projectType,
+                        projectPrivacyPolicy: this.projectPrivacyPolicy,
+                        downloadUrlLink: this.downloadUrlLink,
+                        userId: this.userId,
+                    }, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    this.success = true;
+                    this.modalmembers = true;
+                    this.successMessage = response.data.message;
+                    // this.projectId = response.data.id;
+                    console.log('Project creation response:', response.data);
+
+                    //saves image if there were added
+                    // console.log("??????????????????????", entrepriseId);
+
+                    console.log("here is the project id logo before the If", response.data.id);
+                    if (this.selectedImage) {
+                        console.log("here is the project id logo before uploding", response.data.id);
+                        await this.uploadImage(response.data.id);
+                    }
+                    this.fetchProjects();
+                    window.location.reload();
+                    this.clearProjectFormField();
+                } catch (error) {
+                    this.error = true;
+                    this.errorMessage = error.response ? error.response.data.message : error.message;
+                    console.log("here is the project error", error);
+
+                    this.projectLoading = false;
+                }
             }
         },
 
@@ -1018,8 +1307,8 @@ export default {
                 reader.onload = async (e) => {
                     const base64Image = e.target.result;
                     const token = localStorage.getItem('token');
-                    // console.log('here is the project image logoId',projectId);
-                    //     console.log('Base64 Image:', base64Image); // Log the base64 image data
+                    console.log('here is the project image logoId', projectId);
+                    console.log('Base64 Image:', base64Image); // Log the base64 image data
                     const response = await axios.post(`${config.apiBaseUrl}/projects/setProjectLogo`, {
                         file: base64Image,
                         fileName: this.selectedImage.name,
@@ -1131,7 +1420,7 @@ export default {
         async fetchProjects() {
             try {
                 const token = localStorage.getItem('token'); // or another method to retrieve the token
-                const entrepriseId = localStorage.getItem('entrepriseId');
+                const entrepriseId = localStorage.getItem('selectedEntrepriseId');
 
                 if (entrepriseId) {
                     // Fetch projects by enterprise
@@ -1145,14 +1434,18 @@ export default {
                     console.log(this.projects);
 
                     const savedProject = JSON.parse(localStorage.getItem('currentProject'));
+                    console.log("savedProject isssssssss",savedProject);
+                    
                     if (savedProject) {
                         this.setFirstProject(savedProject);
                     } else if (this.projects.length > 0) {
                         this.setFirstProject(this.projects[0]);
                     }
+                    // this.filterProjects();
+                    this.updateDisplayedProjects();
                 } else {
                     // Fetch user projects
-                    const responseCreated = await axios.get(`${config.apiBaseUrl}/projects/user/${this.userId}`, {
+                    const responseCreated = await axios.get(`${config.apiBaseUrl}/projects/allProjByNoEnt/${this.userId}`, {
                         headers: {
                             'Authorization': `Bearer ${token}`
                         }
@@ -1163,6 +1456,8 @@ export default {
                     console.log("Projets récupérés ++++++++++++++++: ", this.projects);
 
                     const savedProject = JSON.parse(localStorage.getItem('currentProject'));
+                    console.log("savedProject isssssssss", savedProject);
+                    
                     if (savedProject) {
                         this.setFirstProject(savedProject);
                         console.log("currentProject is set <><><>>>><><><<>><><>>><><><>>><><><><><>>");
@@ -1247,9 +1542,18 @@ export default {
         setFirstProject(project) {
             this.firstProjectName = project.projectname;
             this.firstProjectLogo = project.projectlogo; // Assuming the project object has a 'logo' property
-            this.projects = this.projects.filter(p => p.id !== project.id);
-            localStorage.setItem('currentProject', JSON.stringify(project));
-            localStorage.setItem('projectId', project.id); // Ajouter cette ligne pour stocker l'ID du projet
+            this.firstProjectDescription = project.description;
+            
+            const entrepriseId = localStorage.getItem('selectedEntrepriseId');
+            if (entrepriseId) {
+                this.projects = this.projects.filter(p => p.id !== project.id);
+                localStorage.setItem('currentProject', JSON.stringify(project));
+                localStorage.setItem('projectId', project.id);
+            } else {
+                this.projects = this.projects.filter(p => p.id !== project.id);
+                localStorage.setItem('currentProject', JSON.stringify(project));
+                localStorage.setItem('projectId', project.id); // Ajouter cette ligne pour stocker l'ID du projet
+            }
         },
 
         // filterProjects() {
@@ -1266,7 +1570,8 @@ export default {
                 this.projects.push({
                     id: this.selectedProjectId,
                     projectname: this.firstProjectName,
-                    projectlogo: this.firstProjectLogo
+                    projectlogo: this.firstProjectLogo,
+                    projectDescription: this.projectDescription,
                 });
                 this.setFirstProject(selectedProject);
                 this.selectedProjectId = projectId;
@@ -1281,15 +1586,16 @@ export default {
         updateDisplayedProjects() {
             console.log("bonjour>>>>>>>>>>>>>>>>>>>>>>>");
             console.log("Début de updateDisplayedProjects");
-            console.log("selectedEntrepriseId:", this.selectedEntrepriseId);
-            console.log("projectsEntrepriseses:", this.projectsEntreprise);
+            // console.log("selectedEntrepriseId:", this.selectedEntrepriseId);
+            // console.log("projectsEntrepriseses:", this.projectsEntreprise);
+            const entrepriseId = localStorage.getItem('selectedEntrepriseId');
 
-            if (this.selectedEntrepriseId) {
-                console.log("voici l'id de l'entreprise selectionnée>>>>>>>>>>>>: ");
+            if (entrepriseId) {
+                console.log("voici l'id de l'entreprise selectionnée>>>>>>>>>>>>: ", entrepriseId);
                 console.log(this.selectedEntrepriseId);
                 // Filtrer les projets de l'entreprise sélectionnée
                 this.displayedProjects = this.projects.filter(project => project.entrepriseId === this.selectedEntrepriseId);
-                console.log("Projets de l'entreprise sélectionnée: £££££££££££££££££££££££ ");
+                console.log("Projets de l'entreprise sélectionnée: **************** ");
                 console.log(this.displayedProjects);
             } else {
                 // Filtrer les projets sans entreprise
@@ -1316,6 +1622,8 @@ export default {
 
         selectEntreprise(entrepriseId) {
             this.selectedEntrepriseId = entrepriseId;
+            localStorage.removeItem('currentProject');
+            localStorage.removeItem('projectId');
             console.log("Entreprise sélectionnée ID:", this.selectedEntrepriseId);
             localStorage.setItem('selectedEntrepriseId', entrepriseId);
             this.updateDisplayedProjects(); // Mettre à jour les projets affichés
@@ -1325,6 +1633,7 @@ export default {
             } else {
                 this.firstProjectName = '';
                 this.firstProjectLogo = '';
+                this.firstProjectDescription = '';
             }
             this.modalIdentity = false;
             window.location.reload();
@@ -1376,7 +1685,7 @@ export default {
                 console.log("the avatar is : ", imageResponse.data);
 
 
-                const response = await axios.post(`${config.apiBaseUrl}/users/${this.userId}`, {
+                const response = await axios.patch(`${config.apiBaseUrl}/users/${this.userId}`, {
                     firstname: this.firstName,
                     lastname: this.lastName,
                     email: this.email,
@@ -1486,6 +1795,7 @@ export default {
                     }
                 });
                 this.notificationCount = response.data;
+                this.notificationCountBell = this.notificationCount;
                 console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>", response.data);
             } catch (error) {
                 console.error('Error fetching notification count:', error);
@@ -1512,7 +1822,7 @@ export default {
             try {
                 this.selectedTab = 'unread';
                 const token = localStorage.getItem('token');
-                const response = await axios.get(`${config.apiBaseUrl}/notifications/allNotByUserId/${this.userId}`, {
+                const response = await axios.get(`${config.apiBaseUrl}/notifications/allNotByUserIdStatus/${this.userId}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -1524,22 +1834,28 @@ export default {
             }
         },
 
-        async readNotification() {
+        async readNotification(notification) {
+            this.selectedNotificationId = notification.id;
+            console.log("here is the notifId", this.selectedNotificationId);
             try {
-                this.selectedTab = 'unread';
+                // this.selectedTab = 'unread';
                 const token = localStorage.getItem('token');
-                const response = await axios.post(`${config.apiBaseUrl}/notifications/allNotByUserId/${this.userId}`, {
+                // notification.
+                const response = await axios.patch(`${config.apiBaseUrl}/notifications/updateNotStatus/${this.selectedNotificationId}`, {
+                    status: "true",
+                }, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
                 });
                 console.log("sends the notif enpoint stop modify this", response.data);
-                this.notifications = response.data
+                this.fetchUnreadNotifications();
+                this.fetchNotificationCount();
+                this.notifications = response.data;
             } catch (error) {
                 console.error('Error fetching unread notifications:', error);
             }
         },
-
 
         async logout() {
             this.logoutLoader = true;

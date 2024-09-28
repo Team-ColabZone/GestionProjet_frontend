@@ -504,8 +504,13 @@ export default {
                     console.log("Réponse des membres performants :", response.data);
     
                     // Compter le nombre de membres performants
-                    this.powerMembersCount = response.data.length;
-                    console.log("Nombre de membres performants :", this.powerMembersCount);
+                    if (response.data.length === undefined || response.data.length === null) {
+                        this.powerMembersCount = 0;
+                        console.log("Nombre de membres performants :", this.powerMembersCount);
+                    } else {
+                        this.powerMembersCount = response.data.length;
+                        console.log("Nombre de membres performants :", this.powerMembersCount);
+                    }
     
                     // Initialiser powerMembers avec les données reçues
                     this.powerMembers = response.data;

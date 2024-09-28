@@ -302,11 +302,13 @@ export default {
 
         async addMember() {
             this.membreLoading = true;
-            try {
+            if (localStorage.getItem('selectedEntrepriseId')) {
+                try {
                 const token = localStorage.getItem('token');
                 // const userId = localStorage.getItem('IdCollaborateur');
-
+                const entrepriseId = localStorage.getItem('selectedEntrepriseId');
                 const response = await axios.post(`${config.apiBaseUrl}/team-members`, {
+                    entrepriseId: `${entrepriseId}`,
                     projectId: this.projectId,
                     roleId: this.roleId,
                     userId: this.userId,
@@ -330,6 +332,36 @@ export default {
                 console.log("Erreur lors de l'ajout du membre");
                 console.log(error);
                 this.membreLoading = false;
+            }
+            } else {
+                try {
+                    const token = localStorage.getItem('token');
+                    // const userId = localStorage.getItem('IdCollaborateur');
+                    const response = await axios.post(`${config.apiBaseUrl}/team-members`, {
+                        projectId: this.projectId,
+                        roleId: this.roleId,
+                        userId: this.userId,
+                        usercreatedId: this.usercreatedId,
+                    }, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    this.success = true;
+                    this.successMessage = response.data.message;
+                    this.membreLoading = false;
+                    console.log("Membre ajouter au project avec succces!!!")
+                    // Réinitialiser les champs du formulaire
+                    this.email = '';
+                    this.roleId = '';
+                    this.fetchProjectMembers();
+                } catch (error) {
+                    this.error = true;
+                    this.errorMessage = error.response ? error.response.data.message : error.message;
+                    console.log("Erreur lors de l'ajout du membre");
+                    console.log(error);
+                    this.membreLoading = false;
+                }
             }
         },
 

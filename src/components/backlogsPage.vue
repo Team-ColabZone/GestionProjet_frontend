@@ -376,7 +376,12 @@ export default {
 
         async fetchUserData() {
             try {
-                const response = await axios.get(`${config.apiBaseUrl}/users/${this.userId}`);
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`${config.apiBaseUrl}/users/${this.userId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 this.userData = response.data;
             } catch (error) {
                 this.errorMessage = 'Erreur lors de la récupération des données utilisateur : ' + error.response.data.message;
@@ -385,18 +390,18 @@ export default {
 
         async fetchProjects() {
             try {
-                const response = await axios.get(`${config.apiBaseUrl}/projects/user/:userId`);
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`${config.apiBaseUrl}/projects/user/${this.userId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 this.projects = response.data;
                 console.log(this.userId)
             } catch (error) {
                 this.errorMessage = 'Erreur lors de la récupération des projets : ' + error.response.data.message;
             }
         },
-        // selectProject(projectId) {
-        //     this.selectedProjectId = projectId;
-        //     localStorage.setItem('projectId', projectId); // Stocker l'ID du projet dans le localStorage
-        //     this.$router.push('/Home'); // Rediriger vers la page des détails du projet
-        // },
         async fetchPendingTasksCount() {
             try {
                 const token = localStorage.getItem('token');
@@ -455,7 +460,6 @@ export default {
         },
         async createNewTask() {
             try {
-
                 const token = localStorage.getItem('token');
                 const response = await axios.post(`${config.apiBaseUrl}/tasks`, {
                     taskname: this.taskname,
