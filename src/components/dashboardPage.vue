@@ -78,7 +78,7 @@ import { Users, Gauge, CircleGauge, ClockArrowDown, UserRoundCheck, Logs, Trendi
         </div>
 
         <!-- Task Sections -->
-        <div class="flex flex-wrap md:flex-nowrap gap-4 w-full h-full">
+        <div class="flex flex-wrap md:flex-nowrap gap-4 w-full h-full md:max-h-80">
             <!-- Current Tasks -->
             <div class="task-box w-full lg:w-1/2">
                 <div class="flex justify-between items-center border-b border-gray-300 p-2">
@@ -91,7 +91,7 @@ import { Users, Gauge, CircleGauge, ClockArrowDown, UserRoundCheck, Logs, Trendi
                         <ChevronUp />
                     </button>
                 </div>
-                <div class="h-full p-4">
+                <div class="h-full p-4 overflow-y-auto currentTaskTable" >
                     <div v-for="task in commonTasks" :key="task.id" class="flex justify-between items-center mb-2">
                         <div :class="[getPriorityClass(task.priority), 'priority-bar']"></div>
                         <div class="flex-1 ml-2">
@@ -614,5 +614,12 @@ export default {
     border-radius: 50%;
     border: 1px solid #d1d5db;
     /* Couleur grise légère */
+}
+
+.currentTaskTable{
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
 }
 </style>

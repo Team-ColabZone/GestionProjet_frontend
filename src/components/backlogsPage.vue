@@ -400,6 +400,8 @@ export default {
                 console.log(this.userId)
             } catch (error) {
                 this.errorMessage = 'Erreur lors de la récupération des projets : ' + error.response.data.message;
+                console.log(error);
+                
             }
         },
         async fetchPendingTasksCount() {
@@ -494,28 +496,28 @@ export default {
                 this.end_date = '';
                 this.budget = '';
                 // Assigner la tâche au membre sélectionné
-                // if (this.userAssignId === "" || this.userAssignId === null) {
-                //     console.log("the task hasn't been assigned to any body");
-                // } else {
-                // }
-                await axios.post(`${config.apiBaseUrl}/tasks-assignments`, {
-                    taskId: taskId,
-                    userId: this.userAssignId
-                }, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-
-                this.success = true;
-                this.successMessage = response.data.message;
-                console.log("tache crée et affectée avec success ")
-                this.userAssignId = '';
+                  
+                if (this.userAssignId === "" || this.userAssignId === null) {
+                    console.log("the task hasn't been assigned to any body");
+                } else {
+                    await axios.post(`${config.apiBaseUrl}/tasks-assignments`, {
+                        taskId: taskId,
+                        userId: this.userAssignId
+                    }, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+    
+                    this.success = true;
+                    this.successMessage = response.data.message;
+                    console.log("tache crée et affectée avec success ")
+                    this.userAssignId = '';
+                }
             } catch (error) {
                 this.error = true;
                 this.errorMessage = error.response ? error.response.data.message : error.message;
                 console.log(error);
-                
             }
         },
         async getUserInfo() {
@@ -618,8 +620,6 @@ export default {
                     return '';
             }
         },
-
-
 
     }
 };

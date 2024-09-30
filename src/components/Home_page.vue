@@ -88,9 +88,9 @@
                                             'h-14 flex items-center border-b border-gray-50 cursor-pointer rounded-lg pr-2',
                                             { 'bg-gray-300': selectedProjectId === project.id, 'bg-gray-100': selectedProjectId !== project.id }
                                         ]">
-                                        <div v-if="project.projectlogo" class="h-full">
+                                        <div v-if="project.projectlogo" class="h-full w-12">
                                             <img :src="project.projectlogo" alt="Logo"
-                                                class="h-full w-12 border rounded-lg object-cover" />
+                                                class="h-full w-full border rounded-lg object-cover" />
                                         </div>
                                         <div v-else class="w-auto h-auto pl-3">
                                             <BriefcaseBusiness :stroke-width="1.5" class=" object-center" />
@@ -844,7 +844,7 @@
                 </div>
             </div>
 
-            <div class="fixed inset-0 backdrop-blur-sm flex justify-end z-50 overflow-y-scroll no-scrollbar"
+            <!-- <div class="fixed inset-0 backdrop-blur-sm flex justify-end z-50 overflow-y-scroll no-scrollbar"
                 v-if="modalModifyData">
                 <button @click="closeModifyData" class="self-start p-6">
                     <span class="text-black text-2xl">×</span>
@@ -910,7 +910,7 @@
                             DE PASSE</router-link>
                     </form>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 </template>
@@ -944,7 +944,7 @@ export default {
             enterpriseLoading: false,
             projectLoading: false,
             logoutLoader: false,
-            currentPage: 'dashboard',
+            currentPage: 'tasks',
             selectedButton: 'button4',
             // teamMemberCount: 0,
             taskCount: 0,
@@ -1261,7 +1261,7 @@ export default {
                         await this.uploadImage(response.data.id);
                     }
                     this.fetchProjects();
-                    window.location.reload();
+                    // window.location.reload();
                     this.clearProjectFormField();
                 } catch (error) {
                     this.error = true;
@@ -1639,31 +1639,62 @@ export default {
             window.location.reload();
         },
 
-        // async fetchProjectsByEntreprise() {
-        //     try {
-        //         const token = localStorage.getItem('token'); 
-        //         const response = await axios.get(`${config.apiBaseUrl}/projects/byEntreprise/${this.entrepriseId}`, {
-        //             headers: {
-        //                 'Authorization': `Bearer ${token}`
-        //             }
-        //         });
-        //         this.projectsEntreprise = response.data;
-        //         console.log("Projects d'entreprise méthode fetchProjectsByEntreprise :<<<<<<<<");
-        //         console.log(this.projectsEntreprise);
-        //         const savedProject = JSON.parse(localStorage.getItem('currentProject'));
 
-        //         if (savedProject) {
-        //             this.setFirstProject(savedProject);
-        //         } else if (this.projectsEntreprise.length > 0) {
-        //             this.setFirstProject(this.projectsEntreprise[0]);
+        // async fetchProjects() {
+        //     try {
+        //         const token = localStorage.getItem('token'); // or another method to retrieve the token
+        //         const entrepriseId = localStorage.getItem('selectedEntrepriseId');
+
+        //         if (entrepriseId) {
+        //             // Fetch projects by enterprise
+        //             const response = await axios.get(`${config.apiBaseUrl}/projects/byEntreprise/${entrepriseId}`, {
+        //                 headers: {
+        //                     'Authorization': `Bearer ${token}`
+        //                 }
+        //             });
+        //             this.projects = response.data;
+        //             console.log("Projects d'entreprise méthode fetchProjectsByEntreprise :>>>><<<<<<<<");
+        //             console.log(this.projects);
+
+        //             const savedProject = JSON.parse(localStorage.getItem('currentProject'));
+        //             console.log("savedProject isssssssss",savedProject);
+                    
+        //             if (savedProject) {
+        //                 this.setFirstProject(savedProject);
+        //             } else if (this.projects.length > 0) {
+        //                 this.setFirstProject(this.projects[0]);
+        //             }
+        //             // this.filterProjects();
+        //             this.updateDisplayedProjects();
+        //         } else {
+        //             // Fetch user projects
+        //             const responseCreated = await axios.get(`${config.apiBaseUrl}/projects/allProjByNoEnt/${this.userId}`, {
+        //                 headers: {
+        //                     'Authorization': `Bearer ${token}`
+        //                 }
+        //             });
+        //             console.log("Projets personnels de l'utilisateur:", responseCreated.data);
+
+        //             this.projects = responseCreated.data;
+        //             console.log("Projets récupérés ++++++++++++++++: ", this.projects);
+
+        //             const savedProject = JSON.parse(localStorage.getItem('currentProject'));
+        //             console.log("savedProject isssssssss", savedProject);
+                    
+        //             if (savedProject) {
+        //                 this.setFirstProject(savedProject);
+        //                 console.log("currentProject is set <><><>>>><><><<>><><>>><><><>>><><><><><>>");
+        //             } else if (this.projects.length > 0) {
+        //                 this.setFirstProject(this.projects[0]);
+        //             }
+        //             // this.filterProjects();
+        //             this.updateDisplayedProjects();
         //         }
-        //         this.updateDisplayedProjects();
         //     } catch (error) {
-        //         this.errorMessage = 'Erreur lors de la récupération des projets d entreprise : ' + (error.response ? error.response.data.message : error.message);
+        //         this.errorMessage = 'Erreur lors de la récupération des projets : ' + (error.response ? error.response.data.message : error.message);
         //     }
         // },
-
-
+        
         async modifyProfile() {
             try {
                 const token = localStorage.getItem('token');

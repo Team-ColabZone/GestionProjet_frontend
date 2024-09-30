@@ -64,10 +64,12 @@ import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
                                         <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
                                             <button @click="fetchTaskDetailsView()">Voir détails</button>
                                         </li>
-                                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                                            <button @click="fetchTaskDetails()">Modifier</button>
-                                        </li>
-                                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                                        <div v-if="assignedUserId === userId"> //|| userRoleNom === 'admin' || userRoleNom === 'chef_projet'
+                                            <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                                                <button @click="fetchTaskDetails()">Modifier</button>
+                                            </li>
+                                        </div>
+                                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer" v-if="userRoleNom === 'admin'">
                                             <button @click="deleteTask()">Supprimer</button>
                                         </li>
                                     </ul>
@@ -120,12 +122,15 @@ import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
                                         <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
                                             <button @click="fetchTaskDetailsView()">Voir détails</button>
                                         </li>
-                                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                                            <button @click="fetchTaskDetails()">Modifier</button>
-                                        </li>
-                                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                                            <button @click="deleteTask()">Supprimer</button>
-                                        </li>
+                                        <div
+                                            v-if="userId === assignedUserId || userRoleNom === 'proprietaire_projet' || userRoleNom === 'admin'">
+                                            <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                                                <button @click="fetchTaskDetails()">Modifier</button>
+                                            </li>
+                                            <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                                                <button @click="deleteTask()">Supprimer</button>
+                                            </li>
+                                        </div>
                                     </ul>
                                 </div>
                             </div>
@@ -176,10 +181,20 @@ import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
                                         <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
                                             <button @click="fetchTaskDetailsView()">Voir détails</button>
                                         </li>
-                                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                                        <!-- <div v-if="userId === assignedUserId">
+                                            <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer" >
                                             <button @click="fetchTaskDetails()">Modifier</button>
                                         </li>
-                                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer" >
+                                            <button @click="deleteTask()">Supprimer</button>
+                                        </li>
+                                        </div> -->
+                                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                                            v-if="userRoleNom === 'admin' || userRoleNom === 'chef_Projet' || userId === assignedUserId">
+                                            <button @click="fetchTaskDetails()">Modifier</button>
+                                        </li>
+                                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                                            v-if="userRoleNom === 'admin' || userRoleNom === 'chef_Projet'">
                                             <button @click="deleteTask()">Supprimer</button>
                                         </li>
                                     </ul>
@@ -204,13 +219,15 @@ import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
             </div>
         </div>
     </div>
+
     <!--formulaire de modification d'une tache-->
     <modal class="fixed inset-0 backdrop-blur-sm flex justify-end z-50" v-if="modalEditTasks">
         <button @click="closeEditTask()" class="self-start p-6">
             <X class="text-black text-2xl" />
         </button>
 
-        <div class="flex flex-col bg-white p-6 gap-5 rounded-lg shadow-lg animate__animated animate__fadeInDown w-full max-w-4xl h-full">
+        <div
+            class="flex flex-col bg-white p-6 gap-5 rounded-lg shadow-lg animate__animated animate__fadeInDown w-full max-w-4xl h-full">
 
             <div class="flex justify-between">
                 <h1 class="text-center text-2xl text-gray-800 ">MODIFIER UNE TACHE</h1>
@@ -301,11 +318,12 @@ import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
                             class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-300">
                     </div>
                 </div>
-                
+
                 <div class="w-full flex flex-col md:flex-row gap-5">
                     <div class="w-full md:w-1/2">
                         <label for="piece" class="block text-gray-700 text-sm font-bold mb-2">Piece jointe</label>
-                        <input type="file" class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-300">
+                        <input type="file"
+                            class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-300">
                     </div>
 
                 </div>
@@ -458,11 +476,13 @@ export default defineComponent({
             taskType: '',
             priority: '',
             projectMembers: [],
+            userRoleNom: '',
             modalEditTasks: false,
             showMenu: false,
             modalDetailTasks: false,
             taskDetails: [], // details de la tache
             assignedUserDetails: [], //details de l'utilisateurs a qui on a affecté une tache
+            assignedUserId: '',
 
         };
     },
@@ -476,7 +496,7 @@ export default defineComponent({
             this.errorMessage = 'Utilisateur non connecté';
             this.$router.push('/auth'); // Rediriger vers la page de connexion
         }
-        this.fetchProjects();
+        // this.fetchProjects();
         this.fetchPendingTasksCount();
         this.fetchInProgressTasksCount();
         this.fetchCompletedTasksCount();
@@ -484,6 +504,7 @@ export default defineComponent({
         this.fetchPendingTasks();
         this.fetchInProgressTasks();
         this.fetchCompletedTasks();
+        this.fetchProjectMembers();
     },
     methods: {
         isConnected() {
@@ -519,7 +540,9 @@ export default defineComponent({
                     }
                 });
                 this.projects = response.data;
-                console.log(this.userId)
+                console.log("asdas", this.userId);
+                console.log("qqqqqqqqqqqqqqqqq", response.data);
+
             } catch (error) {
                 this.errorMessage = 'Erreur lors de la récupération des projets : ' + error.response.data.message;
                 console.log("unable to fetchProjects");
@@ -533,6 +556,43 @@ export default defineComponent({
         //     localStorage.setItem('taskId', taskId); // Stocker l'ID du projet dans le localStorage
         //     this.$router.push('/accueilPage'); // Rediriger vers la page des détails du projet
         // },
+
+        async fetchProjectMembers() {
+            console.log("Id projet selectionné backlogs");
+            console.log(this.projectId);
+            try {
+                console.log(this.projectId);
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`${config.apiBaseUrl}/team-members/project/${this.projectId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                this.projectMembers = response.data;
+                console.log("Bonsoir");
+                console.log("Voici la liste des membre dans taskspage ++++++++++++++++");
+                console.log("12345678901234678890", this.projectMembers);
+
+                const getRoleByUserId = (userId) => {
+                    const member = this.projectMembers.find(member => member.userId === userId);
+                    return member ? member.Role.nom : null;
+                };
+
+                const getMemberEmail = (userId) => {
+                    const member = this.projectMembers.find(member => member.userId === userId);
+                    return member ? member.userMember.email : null;
+                };
+
+                const userId = localStorage.getItem('userId'); // Replace with the actual userId you want to check
+                this.userRoleNom = getRoleByUserId(userId);
+                this.userEmail = getMemberEmail(userId);
+                console.log("Role Nom:", this.userRoleNom);
+                console.log("User Email:", this.userEmail);
+
+            } catch (error) {
+                this.errorMessage = 'Erreur lors de la récupération des membres du projet : ' + (error.response ? error.response.data.message : error.message);
+            }
+        },
 
         async fetchPendingTasksCount() {
             try {
@@ -605,8 +665,9 @@ export default defineComponent({
                             'Authorization': `Bearer ${token}`
                         }
                     });
-                    const assignedUserId = assignmentResponse.data.userId;
-                    console.log(`ID de l'utilisateur assigné pour la tâche ${task.id} :`, assignedUserId);
+                    this.assignedUserId = assignmentResponse.data.userId;
+                    const assignedUserId = this.assignedUserId;
+                    console.log(`ID de l'utilisateur assigné pour la tâche ${task.id} :`, this.assignedUserId);
 
                     if (assignedUserId) {
                         const userResponse = await axios.get(`${config.apiBaseUrl}/users/${assignedUserId}`, {
@@ -642,8 +703,9 @@ export default defineComponent({
                             'Authorization': `Bearer ${token}`
                         }
                     });
-                    const assignedUserId = assignmentResponse.data.userId;
-                    console.log(`ID de l'utilisateur assigné pour la tâche ${task.id} :`, assignedUserId);
+                    this.assignedUserId = assignmentResponse.data.userId;
+                    const assignedUserId = this.assignedUserId;
+                    console.log(`ID de l'utilisateur assigné pour la tâche ${task.id} :`, this.assignedUserId);
 
                     if (assignedUserId) {
                         const userResponse = await axios.get(`${config.apiBaseUrl}/users/${assignedUserId}`, {
@@ -679,8 +741,9 @@ export default defineComponent({
                             'Authorization': `Bearer ${token}`
                         }
                     });
-                    const assignedUserId = assignmentResponse.data.userId;
-                    console.log(`ID de l'utilisateur assigné pour la tâche ${task.id} :`, assignedUserId);
+                    this.assignedUserId = assignmentResponse.data.userId;
+                    const assignedUserId = this.assignedUserId;
+                    console.log(this.userId, ` est ID de l'utilisateur assigné pour la tâche00000000000000000 ${task.id} :`, this.assignedUserId);
 
                     if (assignedUserId) {
                         const userResponse = await axios.get(`${config.apiBaseUrl}/users/${assignedUserId}`, {
@@ -804,7 +867,7 @@ export default defineComponent({
                 const token = localStorage.getItem('token');
                 console.log("trying to git task details");
                 console.log(this.movedItemId);
-                
+
                 const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.movedItemId}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
@@ -911,26 +974,6 @@ export default defineComponent({
 
             } catch (error) {
                 console.error('Erreur lors de la modification de la tâche :', error);
-            }
-        },
-
-        async fetchProjectMembers() {
-            console.log("Id projet selectionné backlogs");
-            console.log(this.projectId)
-            try {
-                console.log(this.projectId)
-                const token = localStorage.getItem('token');
-                const response = await axios.get(`${config.apiBaseUrl}/team-members/project/${this.projectId}`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                this.projectMembers = response.data;
-                console.log("Bonsoir")
-                console.log("Voici la liste des membre dans taskspage ++++++++++++++++");
-                console.log(this.projectMembers);
-            } catch (error) {
-                this.errorMessage = 'Erreur lors de la récupération des membres du projet : ' + (error.response ? error.response.data.message : error.message);
             }
         },
 

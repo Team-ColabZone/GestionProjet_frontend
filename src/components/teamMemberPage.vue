@@ -175,6 +175,7 @@ export default {
             userId: '',
             usercreatedId: '',
             emails: [], // This should be fetched from the system
+            memberImg : '',
             filteredEmails: [],
             roles: [],
             userData: null,
@@ -376,9 +377,15 @@ export default {
                     }
                 });
                 this.projectMembers = response.data;
+                // const getMemberImg = (userId) => {
+                //     const member = this.projectMembers.find(member => member.userId === userId);
+                //     return member ? member.userMember.avatar : null;
+                // };
+                
                 console.log("Bonsoir");
                 console.log("Voici la liste des membres d'équipe");
                 console.log(this.projectMembers);
+                // this.memberImg = getMemberImg(userId);
             } catch (error) {
                 this.errorMessage = 'Erreur lors de la récupération des membres du projet : ' + (error.response ? error.response.data.message : error.message);
             }
