@@ -218,6 +218,8 @@ export default {
             // Check if there are any validation errors
             if (Object.values(this.errors).every((error) => error === '')) {
                 this.loading = true;
+                console.log(this.email);
+                
                 try {
                     const response = await axios.post(`${config.apiBaseUrl}/users`, {
                         firstname: this.firstname,

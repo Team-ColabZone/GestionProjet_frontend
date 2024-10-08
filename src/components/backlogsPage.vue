@@ -1,53 +1,88 @@
 <script setup>
 import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs } from 'lucide-vue-next';
 </script>
-
-
 <template>
-    <div class="h-full w-full flex flex-col gap-4 p-2 min-h-screen">
+    <div class="h-full w-full flex flex-col gap-2 p-2 min-h-screen">
         <!-- Header Section -->
         <div class="flex items-center h-10 w-full gap-4 px-3 border rounded-lg">
             <SquarePlus class="ico-dash text-xl mr-2" />
             <p class="title_entete text-lg">Backlogs</p>
         </div>
 
-        <!-- Stat Cards Section -->
-        <div class="cont">
-            <div class="flex flex-wrap justify-between gap-4 w-full">
-                <!-- Card 1 -->
-                <div class="contex bg-blue-50 rounded-lg p-4 text-left w-40 md:w-44 lg:w-48 xl:w-52" >
-                    <div class="nbre_icons flex justify-between items-center">
-                        <h1 class="text-4xl font-bold">{{ pendingTasksCount }}</h1>
-                        <ListVideo class="w-10 h-9 md:h-10 md:w-12" />
+        <div class="flex flex-col gap-4 w-full h-full">
+            <!-- Stat Cards Section -->
+            <div class="cont">
+                <div class="flex flex-wrap justify-between gap-4 w-full">
+                    <!-- Card 1 -->
+                    <div class="contex bg-red-50 rounded-lg p-4 text-left w-40 md:w-44 lg:w-48 xl:w-52" v-if="!isLoading">
+                        <div class="nbre_icons flex justify-between items-center">
+                            <h1 class="text-4xl font-bold">{{ pendingTasksCount }}</h1>
+                            <ListVideo class="w-10 h-9 md:h-10 md:w-12" />
+                        </div>
+                        <h3 class="text-sm mt-2">Nombre de tache à faire</h3>
                     </div>
-                    <h3 class="text-sm mt-2">Nombre de tache à faire</h3>
-                </div>
+                    <div class="contex bg-gray-100 rounded-lg p-4 text-left w-40 md:w-44 lg:w-48 xl:w-52 animate-pulse"
+                        v-else>
+                        <div class="nbre_icons flex justify-between items-center">
+                            <div class="h-10 w-10 bg-gray-300 rounded-lg"></div>
+                            <div class="h-10 w-10 bg-gray-300 rounded "></div>
+                        </div>
+                        <div class="h-4 bg-gray-300 rounded w-3/4 mt-2"></div>
+                    </div>
 
-                <!-- Card 2 -->
-                <div class="contex bg-pink-100 rounded-lg p-4 text-left w-40 md:w-44 lg:w-48 xl:w-52" >
-                    <div class="nbre_icons flex justify-between items-center">
-                        <h1 class="text-4xl font-bold">{{ completedTasksCount }}</h1>
-                        <ListCheck class="w-10 h-9 md:h-10 md:w-12" />
+                    <!-- Card 2 -->
+                    <div class="contex bg-pink-100 rounded-lg p-4 text-left w-40 md:w-44 lg:w-48 xl:w-52"
+                        v-if="!isLoading">
+                        <div class="nbre_icons flex justify-between items-center">
+                            <h1 class="text-4xl font-bold">{{ completedTasksCount }}</h1>
+                            <ListCheck class="w-10 h-9 md:h-10 md:w-12" />
+                        </div>
+                        <h3 class="text-sm mt-2">Nombre de tache terminée</h3>
                     </div>
-                    <h3 class="text-sm mt-2">Nombre de tache terminée</h3>
-                </div>
+                    <div class="contex bg-gray-100 rounded-lg p-4 text-left w-40 md:w-44 lg:w-48 xl:w-52 animate-pulse"
+                        v-else>
+                        <div class="nbre_icons flex justify-between items-center">
+                            <div class="h-10 w-10 bg-gray-300 rounded-lg"></div>
+                            <div class="h-10 w-10 bg-gray-300 rounded "></div>
+                        </div>
+                        <div class="h-4 bg-gray-300 rounded w-3/4 mt-2"></div>
+                    </div>
 
-                <!-- Card 3 -->
-                <div class="contex bg-green-50 rounded-lg px-3 py-4 text-left w-40 md:w-44 lg:w-48 xl:w-52" >
-                    <div class="nbre_icons flex justify-between items-center">
-                        <h1 class="text-4xl font-bold">{{ tasklateCount }}</h1>
-                        <ClockArrowDown class="w-10 h-9 md:h-10 md:w-12" />
+                    <!-- Card 3 -->
+                    <div class="contex bg-green-50 rounded-lg px-3 py-4 text-left w-40 md:w-44 lg:w-48 xl:w-52"
+                        v-if="!isLoading">
+                        <div class="nbre_icons flex justify-between items-center">
+                            <h1 class="text-4xl font-bold">{{ tasklateCount }}</h1>
+                            <ClockArrowDown class="w-10 h-9 md:h-10 md:w-12" />
+                        </div>
+                        <h3 class="text-sm mt-2">Nombre de tache en retard</h3>
                     </div>
-                    <h3 class="text-sm mt-2">Nombre de tache en retard</h3>
-                </div>
+                    <div class="contex bg-gray-100 rounded-lg p-4 text-left w-40 md:w-44 lg:w-48 xl:w-52 animate-pulse"
+                        v-else>
+                        <div class="nbre_icons flex justify-between items-center">
+                            <div class="h-10 w-10 bg-gray-300 rounded-lg"></div>
+                            <div class="h-10 w-10 bg-gray-300 rounded "></div>
+                        </div>
+                        <div class="h-4 bg-gray-300 rounded w-3/4 mt-2"></div>
+                    </div>
 
-                <!-- Card 4 -->
-                <div class="contex bg-blue-100 rounded-lg p-4 text-left w-40 md:w-44 lg:w-48 xl:w-52" >
-                    <div class="nbre_icons flex justify-between items-center">
-                        <h1 class="text-4xl font-bold">{{ taskCount }}</h1>
-                        <Logs class="w-10 h-9 md:h-10 md:w-12" />
+                    <!-- Card 4 -->
+                    <div class="contex bg-blue-100 rounded-lg p-4 text-left w-40 md:w-44 lg:w-48 xl:w-52"
+                        v-if="!isLoading">
+                        <div class="nbre_icons flex justify-between items-center">
+                            <h1 class="text-4xl font-bold">{{ taskCount }}</h1>
+                            <Logs class="w-10 h-9 md:h-10 md:w-12" />
+                        </div>
+                        <h3 class="text-sm mt-2">Nombre de tache</h3>
                     </div>
-                    <h3 class="text-sm mt-2">Nombre de tache</h3>
+                    <div class="contex bg-gray-100 rounded-lg p-4 text-left w-40 md:w-44 lg:w-48 xl:w-52 animate-pulse"
+                        v-else>
+                        <div class="nbre_icons flex justify-between items-center">
+                            <div class="h-10 w-10 bg-gray-300 rounded-lg"></div>
+                            <div class="h-10 w-10 bg-gray-300 rounded "></div>
+                        </div>
+                        <div class="h-4 bg-gray-300 rounded w-3/4 mt-2"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -158,7 +193,8 @@ import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs } from 'lucide-v
 
                     <div class="w-full flex flex-col md:flex-row gap-5">
                         <div class="w-full">
-                            <label for="Attribuer" class="block text-gray-700 text-sm font-bold mb-2">Attribuer a</label>
+                            <label for="Attribuer" class="block text-gray-700 text-sm font-bold mb-2">Attribuer
+                                a</label>
                             <select v-model="userAssignId"
                                 class="block w-full px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-200 appearance-none">
                                 <option v-for="member in projectMembers" :key="member.userId" :value="member.userId">
@@ -274,6 +310,7 @@ import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs } from 'lucide-v
 <script>
 import axios from 'axios';
 import config from "../config";
+import { EventBus } from "../eventBus";
 
 export default {
     components: {
@@ -282,6 +319,7 @@ export default {
     data() {
         return {
             modalTasks: false,
+            isLoading: true,
             taskCount: 0,
             completedTasksCount: 0,
             pendingTasksCount: 0,
@@ -320,8 +358,19 @@ export default {
 
         };
     },
+    created() {
+        EventBus.on('setFirstProject2', this.refreshAllData);
+    },
 
     mounted() {
+        setTimeout(() => {
+            this.refreshAllData();
+            this.isLoading = false;
+        }, 2000);
+    },
+
+methods: {
+    refreshAllData() {
         if (this.isConnected()) {
             this.userId = localStorage.getItem('userId');
             this.projectId = localStorage.getItem('projectId');
@@ -338,290 +387,290 @@ export default {
             this.errorMessage = 'Utilisateur non connecté';
             this.$router.push('/auth'); // Rediriger vers la page de connexion
         }
-
+    },
+    isConnected() {
+        return localStorage.getItem('token') !== null;
     },
 
-    methods: {
-        isConnected() {
-            return localStorage.getItem('token') !== null;
-        },
+    selectButton(button) {
+        this.selectedButton = button;
+    },
+    showPage(page) {
+        this.currentPage = page;
+    },
 
-        selectButton(button) {
-            this.selectedButton = button;
-        },
-        showPage(page) {
-            this.currentPage = page;
-        },
+    addtask() {
+        this.modalTasks = true
+    },
 
-        addtask() {
-            this.modalTasks = true
-        },
+    closeNewTask() {
+        this.modalTasks = false;
+    },
 
-        closeNewTask() {
-            this.modalTasks = false;
-        },
+    toggleDropdown1() {
+        this.isDropdown1Open = !this.isDropdown1Open;
+    },
 
-        toggleDropdown1() {
-            this.isDropdown1Open = !this.isDropdown1Open;
-        },
+    toggleDropdown2() {
+        this.isPriorityOpen = !this.isPriorityOpen;
+    },
 
-        toggleDropdown2() {
-            this.isPriorityOpen = !this.isPriorityOpen;
-        },
-
-        selectStatus(status) {
-            this.selectedStatus = status;
-            this.isDropdown1Open = false;
-        },
+    selectStatus(status) {
+        this.selectedStatus = status;
+        this.isDropdown1Open = false;
+    },
 
         async fetchUserData() {
-            try {
-                const token = localStorage.getItem('token');
-                const response = await axios.get(`${config.apiBaseUrl}/users/${this.userId}`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                this.userData = response.data;
-            } catch (error) {
-                this.errorMessage = 'Erreur lors de la récupération des données utilisateur : ' + error.response.data.message;
-            }
-        },
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.get(`${config.apiBaseUrl}/users/${this.userId}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            this.userData = response.data;
+        } catch (error) {
+            this.errorMessage = 'Erreur lors de la récupération des données utilisateur : ' + error.response.data.message;
+        }
+    },
 
         async fetchProjects() {
-            try {
-                const token = localStorage.getItem('token');
-                const response = await axios.get(`${config.apiBaseUrl}/projects/user/${this.userId}`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                this.projects = response.data;
-                console.log(this.userId)
-            } catch (error) {
-                this.errorMessage = 'Erreur lors de la récupération des projets : ' + error.response.data.message;
-                console.log(error);
-                
-            }
-        },
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.get(`${config.apiBaseUrl}/projects/user/${this.userId}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            this.projects = response.data;
+            console.log(this.userId)
+        } catch (error) {
+            this.errorMessage = 'Erreur lors de la récupération des projets : ' + error.response.data.message;
+            console.log(error);
+
+        }
+    },
         async fetchPendingTasksCount() {
-            try {
-                const token = localStorage.getItem('token');
-                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/tasks/pending`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                this.pendingTasksCount = response.data.length;
-                console.log(this.pendingTasksCount);
-            } catch (error) {
-                console.error('Erreur lors de la récupération des tâches en attente :', error);
-            }
-        },
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/tasks/pending`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            this.pendingTasksCount = response.data.length;
+            console.log(this.pendingTasksCount);
+        } catch (error) {
+            console.error('Erreur lors de la récupération des tâches en attente :', error);
+        }
+    },
         async fetchInProgressTasksCount() {
-            try {
-                const token = localStorage.getItem('token');
-                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/tasks/in-progress`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                this.inProgressTasksCount = response.data.length;
-                console.log(this.inProgressTasksCount);
-            } catch (error) {
-                console.error('Erreur lors de la récupération des tâches en cours :', error);
-            }
-        },
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/tasks/in-progress`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            this.inProgressTasksCount = response.data.length;
+            console.log(this.inProgressTasksCount);
+        } catch (error) {
+            console.error('Erreur lors de la récupération des tâches en cours :', error);
+        }
+    },
         async fetchCompletedTasksCount() {
-            try {
-                const token = localStorage.getItem('token');
-                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/tasks/completed`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                this.completedTasksCount = response.data.length;
-                console.log(this.completedTasksCount);
-            } catch (error) {
-                console.error('Erreur lors de la récupération des tâches terminées :', error);
-            }
-        },
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/tasks/completed`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            this.completedTasksCount = response.data.length;
+            console.log(this.completedTasksCount);
+        } catch (error) {
+            console.error('Erreur lors de la récupération des tâches terminées :', error);
+        }
+    },
         async fetchTotalTasksCount() {
-            try {
-                const token = localStorage.getItem('token');
-                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/tasks/count`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                this.taskCount = response.data;
-                console.log(this.taskCount);
-            } catch (error) {
-                console.error('Erreur lors de la récupération du nombre total de tâches :', error);
-            }
-        },
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/tasks/count`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            this.taskCount = response.data;
+            console.log(this.taskCount);
+        } catch (error) {
+            console.error('Erreur lors de la récupération du nombre total de tâches :', error);
+        }
+    },
         async createNewTask() {
-            try {
-                const token = localStorage.getItem('token');
-                const response = await axios.post(`${config.apiBaseUrl}/tasks`, {
-                    taskname: this.taskname,
-                    description: this.description,
-                    start_date: new Date(this.start_date), // Conversion en objet Date
-                    end_date: new Date(this.end_date), // Conversion en objet Date
-                    projectId: this.projectId,
-                    status: this.status,
-                    budget: this.budget,
-                    taskType: this.taskType,
-                    priority: this.priority,
-                    // taskId: this.taskId,
-                    userId: this.userId // Assure-toi d'inclure l'ID de l'utilisateur
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.post(`${config.apiBaseUrl}/tasks`, {
+                taskname: this.taskname,
+                description: this.description,
+                start_date: new Date(this.start_date), // Conversion en objet Date
+                end_date: new Date(this.end_date), // Conversion en objet Date
+                projectId: this.projectId,
+                status: this.status,
+                budget: this.budget,
+                taskType: this.taskType,
+                priority: this.priority,
+                // taskId: this.taskId,
+                userId: this.userId // Assure-toi d'inclure l'ID de l'utilisateur
+            }, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            console.log("Tache crée avec succes ");
+            const taskId = response.data.id; // Récupérer l'ID de la tâche créée
+            console.log("Voici l'id de la tache crée");
+            console.log(taskId);
+            console.log(this.userAssignId);
+            // Réinitialiser les champs du formulaire
+            this.taskname = '';
+            this.description = '';
+            this.taskType = '';
+            this.status = '';
+            this.priority = '';
+            this.start_date = '';
+            this.end_date = '';
+            this.budget = '';
+            // Assigner la tâche au membre sélectionné
+
+            if (this.userAssignId === "" || this.userAssignId === null) {
+                console.log("the task hasn't been assigned to any body");
+            } else {
+                await axios.post(`${config.apiBaseUrl}/tasks-assignments`, {
+                    taskId: taskId,
+                    userId: this.userAssignId
                 }, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
                 });
 
-                console.log("Tache crée avec succes ");
-                const taskId = response.data.id; // Récupérer l'ID de la tâche créée
-                console.log("Voici l'id de la tache crée");
-                console.log(taskId);
-                console.log(this.userAssignId);
-                // Réinitialiser les champs du formulaire
-                this.taskname = '';
-                this.description = '';
-                this.taskType = '';
-                this.status = '';
-                this.priority = '';
-                this.start_date = '';
-                this.end_date = '';
-                this.budget = '';
-                // Assigner la tâche au membre sélectionné
-                  
-                if (this.userAssignId === "" || this.userAssignId === null) {
-                    console.log("the task hasn't been assigned to any body");
-                } else {
-                    await axios.post(`${config.apiBaseUrl}/tasks-assignments`, {
-                        taskId: taskId,
-                        userId: this.userAssignId
-                    }, {
-                        headers: {
-                            'Authorization': `Bearer ${token}`
-                        }
-                    });
-    
-                    this.success = true;
-                    this.successMessage = response.data.message;
-                    console.log("tache crée et affectée avec success ")
-                    this.userAssignId = '';
-                }
-            } catch (error) {
-                this.error = true;
-                this.errorMessage = error.response ? error.response.data.message : error.message;
-                console.log(error);
+                this.success = true;
+                this.successMessage = response.data.message;
+                console.log("tache crée et affectée avec success ")
+                this.userAssignId = '';
             }
-        },
+        } catch (error) {
+            this.error = true;
+            this.errorMessage = error.response ? error.response.data.message : error.message;
+            console.log(error);
+        }
+    },
         async getUserInfo() {
-            try {
-                const token = localStorage.getItem('token');
+        try {
+            const token = localStorage.getItem('token');
 
-                const response = await axios.get(`${config.apiBaseUrl}/users`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                const userInfo = response.data;
-                console.log(userInfo);
+            const response = await axios.get(`${config.apiBaseUrl}/users`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            const userInfo = response.data;
+            console.log(userInfo);
 
-            } catch (error) {
-                console.error('Erreur lors de la récupération des informations des l\'utilisateur :', error);
-            }
-        },
+        } catch (error) {
+            console.error('Erreur lors de la récupération des informations des l\'utilisateur :', error);
+        }
+    },
 
         async fetchProjectMembers() {
-            console.log("Id projet selectionné backlogs");
+        console.log("Id projet selectionné backlogs");
+        console.log(this.projectId)
+        try {
             console.log(this.projectId)
-            try {
-                console.log(this.projectId)
-                const token = localStorage.getItem('token');
-                const response = await axios.get(`${config.apiBaseUrl}/team-members/project/${this.projectId}`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                this.projectMembers = response.data;
-                console.log("Bonsoir")
-                console.log("Voici la liste des membre dans le backlogs");
-                console.log(this.projectMembers);
-            } catch (error) {
-                this.errorMessage = 'Erreur lors de la récupération des membres du projet : ' + (error.response ? error.response.data.message : error.message);
-            }
-        },
+            const token = localStorage.getItem('token');
+            const response = await axios.get(`${config.apiBaseUrl}/team-members/project/${this.projectId}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            this.projectMembers = response.data;
+            console.log("Bonsoir")
+            console.log("Voici la liste des membre dans le backlogs");
+            console.log(this.projectMembers);
+        } catch (error) {
+            this.errorMessage = 'Erreur lors de la récupération des membres du projet : ' + (error.response ? error.response.data.message : error.message);
+        }
+    },
         async fetchTasksLateCount() {
-            try {
-                const token = localStorage.getItem('token');
-                const response = await axios.get(`${config.apiBaseUrl}/tasks/allTasksLate/${this.projectId}`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                this.tasklateCount = response.data.length;
-                console.log("Voici le nombre de tache en retard:")
-                console.log(this.tasklateCount);
-            } catch (error) {
-                console.error('Erreur lors de la récupération du nombre de taches en retard :', error);
-            }
-        },
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.get(`${config.apiBaseUrl}/tasks/allTasksLate/${this.projectId}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            this.tasklateCount = response.data.length;
+            console.log("Voici le nombre de tache en retard:")
+            console.log(this.tasklateCount);
+        } catch (error) {
+            console.error('Erreur lors de la récupération du nombre de taches en retard :', error);
+        }
+    },
         async fetchTasksLate() {
-            try {
-                const token = localStorage.getItem('token');
-                const response = await axios.get(`${config.apiBaseUrl}/tasks/allTasksLate/${this.projectId}`, {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.get(`${config.apiBaseUrl}/tasks/allTasksLate/${this.projectId}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            this.taskslate = response.data;
+            console.log("Voici la liste des taches  en retard:")
+            console.log(this.taskslate);
+            // Récupérer les informations de l'utilisateur assigné pour chaque tâche
+            for (let task of this.taskslate) {
+                const assignmentResponse = await axios.get(`${config.apiBaseUrl}/tasks-assignments/task/${task.id}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
                 });
-                this.taskslate = response.data;
-                console.log("Voici la liste des taches  en retard:")
-                console.log(this.taskslate);
-                // Récupérer les informations de l'utilisateur assigné pour chaque tâche
-                for (let task of this.taskslate) {
-                    const assignmentResponse = await axios.get(`${config.apiBaseUrl}/tasks-assignments/task/${task.id}`, {
+                const assignedUserId = assignmentResponse.data.userId;
+                console.log(`ID de l'utilisateur assigné pour la tâche en retard ${task.id} :`, assignedUserId);
+
+                if (assignedUserId) {
+                    const userResponse = await axios.get(`${config.apiBaseUrl}/users/${assignedUserId}`, {
                         headers: {
                             'Authorization': `Bearer ${token}`
                         }
                     });
-                    const assignedUserId = assignmentResponse.data.userId;
-                    console.log(`ID de l'utilisateur assigné pour la tâche en retard ${task.id} :`, assignedUserId);
-
-                    if (assignedUserId) {
-                        const userResponse = await axios.get(`${config.apiBaseUrl}/users/${assignedUserId}`, {
-                            headers: {
-                                'Authorization': `Bearer ${token}`
-                            }
-                        });
-                        task.assignedUserDetails = userResponse.data;
-                        console.log(`Détails de l'utilisateur assigné pour la tâche en retard --- ${task.id} :`, task.assignedUserDetails);
-                    }
+                    task.assignedUserDetails = userResponse.data;
+                    console.log(`Détails de l'utilisateur assigné pour la tâche en retard --- ${task.id} :`, task.assignedUserDetails);
                 }
-
-                console.log("Tâches en attente avec détails des utilisateurs assignés :", this.pendingTasks);
-            } catch (error) {
-                console.error('Erreur lors de la récupération du nombre de taches en retard :', error);
             }
-        },
-        getStatusClass(status) {
-            switch (status) {
-                case 'EN_COURS':
-                    return 'status-en-cours';
-                case 'EN_ATTENTE':
-                    return 'status-en-attente';
-                case 'TERMINEE':
-                    return 'status-terminee';
-                default:
-                    return '';
-            }
-        },
 
-    }
+            console.log("Tâches en attente avec détails des utilisateurs assignés :", this.pendingTasks);
+        } catch (error) {
+            console.error('Erreur lors de la récupération du nombre de taches en retard :', error);
+        }
+    },
+    getStatusClass(status) {
+        switch (status) {
+            case 'EN_COURS':
+                return 'status-en-cours';
+            case 'EN_ATTENTE':
+                return 'status-en-attente';
+            case 'TERMINEE':
+                return 'status-terminee';
+            default:
+                return '';
+        }
+    },
+    beforeDestroy() {
+        EventBus.off('setFirstProject2', this.refreshAllData);
+    },
+
+}
 };
 
 </script>

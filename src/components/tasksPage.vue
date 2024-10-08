@@ -45,11 +45,11 @@ import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
                     </div>
                 </div>
 
-                <draggable style="height: 590px;"
+                <draggable v-if="!isLoading" style="height: 590px;"
                     class="h-80 overflow-y-auto flex flex-col gap-2 border border-gray-300 rounded-lg px-4 py-10 pendingTasks"
                     group="tasks" :list="pendingTasks" @change="log" @start="onStart" @end="onEnd">
                     <div class="flex flex-col border border-gray-300 py-2 px-3" v-for="task in pendingTasks"
-                        :key="task.id" :data-id="task.id" @click="storeTaskId(task.id)">
+                        :key="task.id" :data-id="task.id" @click="handleTaskClick(task)">
                         <div class="flex justify-between pb-2">
                             <div class="py-1 px-3 rounded-xl" :class="['priority', getPriorityClass(task.priority)]">
                                 Tache
@@ -59,24 +59,32 @@ import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
                                     <Ellipsis class="hover:bg-green-200 cursor-pointer" />
                                 </button>
                                 <div :class="{ block: task.showMenu, hidden: !task.showMenu }" v-if="task.showMenu"
-                                    class="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded-lg shadow-lg">
-                                    <ul>
+                                    class="absolute right-0 mt-2 w-auto md:w-48 bg-white border border-gray-300 rounded-lg shadow-lg">
+                                    <ul class="flex md:flex-col">
                                         <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                                            <button @click="fetchTaskDetailsView()">Voir détails</button>
+                                            <button @click="fetchTaskDetailsView()" class="flex gap-1">
+                                                <View />
+                                                <span class="hidden md:inline">Voir détails</span>
+                                            </button>
                                         </li>
-                                        <div v-if="assignedUserId === userId"> //|| userRoleNom === 'admin' || userRoleNom === 'chef_projet'
-                                            <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                                                <button @click="fetchTaskDetails()">Modifier</button>
-                                            </li>
-                                        </div>
-                                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer" v-if="userRoleNom === 'admin'">
-                                            <button @click="deleteTask()">Supprimer</button>
+                                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                                            v-if="assignedUserId === userId || userRoleNom === 'admin' || userRoleNom === 'chef_projet'">
+                                            <button @click="fetchTaskDetails()" class="flex gap-1">
+                                                <FilePenLine />
+                                                <span class="hidden md:inline">Modifier</span>
+                                            </button>
+                                        </li>
+                                        <li class="px-4 py-2 hover:bg-gray-100 hover:text-red-500 cursor-pointer"
+                                            v-if="userRoleNom === 'admin'">
+                                            <button @click="deleteTask()" class="flex gap-1">
+                                                <Trash2 />
+                                                <span class="hidden md:inline">Supprimer</span>
+                                            </button>
                                         </li>
                                     </ul>
                                 </div>
                             </div>
                         </div>
-
                         <div class="flex flex-col pb-2">
                             <span class="font-medium">{{ task.taskname }}</span>
                             <span>{{ task.description }}</span>
@@ -85,12 +93,31 @@ import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
                                 <div v-if="task.assignedUserDetails"
                                     class="w-10 h-10 rounded-full border border-gray-300 overflow-hidden">
                                     <img :src="task.assignedUserDetails.avatar" alt="Avatar"
-                                        class="w-full h-full object-cover">
+                                        class="w-full h-full object-cover" />
                                 </div>
                             </div>
                         </div>
                     </div>
                 </draggable>
+
+                <div v-else class="h-80 overflow-y-auto flex flex-col gap-2 border border-gray-300 rounded-lg px-4 py-10 pendingTasks">
+                    <div class="flex flex-col border border-gray-300 py-2 px-3 animate-pulse">
+                        <div class="flex justify-between pb-2">
+                            <div class="py-1 px-3 rounded-xl bg-gray-300 w-20 h-6"></div>
+                            <div class="relative">
+                                <div class="w-6 h-6 bg-gray-300 rounded-full"></div>
+                            </div>
+                        </div>
+                        <div class="flex flex-col pb-2">
+                            <div class="bg-gray-300 h-4 w-3/4 mb-2"></div>
+                            <div class="bg-gray-300 h-4 w-1/2"></div>
+                            <div class="flex justify-between items-center pb-2">
+                                <div class="bg-gray-300 h-4 w-1/4"></div>
+                                <div class="w-10 h-10 bg-gray-300 rounded-full"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- EN COURS Column -->
@@ -103,11 +130,11 @@ import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
                     </div>
                 </div>
 
-                <draggable style="height: 590px;"
+                <draggable v-if="!isLoading" style="height: 590px;"
                     class="h-80 overflow-y-auto flex flex-col gap-2 border border-gray-300 rounded-lg px-4 py-10 inProgressTasks"
                     group="tasks" :list="inProgressTasks" @change="log" @start="onStart" @end="onEnd">
                     <div class="flex flex-col border border-gray-300 py-2 px-3" v-for="task in inProgressTasks"
-                        :key="task.id" :data-id="task.id" @click="storeTaskId(task.id)">
+                        :key="task.id" :data-id="task.id" @click="handleTaskClick(task)">
                         <div class="flex justify-between pb-2">
                             <div class="py-1 px-3 rounded-xl" :class="['priority', getPriorityClass(task.priority)]">
                                 Tache
@@ -117,20 +144,36 @@ import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
                                     <Ellipsis class="hover:bg-green-200 cursor-pointer" />
                                 </button>
                                 <div :class="{ block: task.showMenu, hidden: !task.showMenu }" v-if="task.showMenu"
-                                    class="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded-lg shadow-lg">
-                                    <ul>
+                                    class="absolute right-0 mt-2 w-auto md:w-48 bg-white border border-gray-300 rounded-lg shadow-lg">
+                                    <ul class="flex md:flex-col">
                                         <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                                            <button @click="fetchTaskDetailsView()">Voir détails</button>
+                                            <button @click="fetchTaskDetailsView()" class="flex gap-1">
+                                                <View />
+                                                <span class="hidden md:inline ">
+                                                    Voir détails
+                                                </span>
+                                            </button>
                                         </li>
-                                        <div
-                                            v-if="userId === assignedUserId || userRoleNom === 'proprietaire_projet' || userRoleNom === 'admin'">
-                                            <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                                                <button @click="fetchTaskDetails()">Modifier</button>
-                                            </li>
-                                            <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                                                <button @click="deleteTask()">Supprimer</button>
-                                            </li>
-                                        </div>
+
+                                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer" v-if="task.assignedUserId === userId === userId || userRoleNom === 'admin' ||
+                                            userRoleNom === 'chef_projet'">
+                                            <button @click="fetchTaskDetails()" class="flex gap-1">
+                                                <FilePenLine />
+                                                <span class="hidden md:inline">
+                                                    Modifier
+                                                </span>
+                                            </button>
+                                        </li>
+
+                                        <li class="px-4 py-2 hover:bg-gray-100 hover:text-red-500 cursor-pointer"
+                                            v-if="userRoleNom === 'admin'">
+                                            <button @click="deleteTask()" class="flex gap-1">
+                                                <Trash2 />
+                                                <span class="hidden md:inline">
+                                                    Supprimer
+                                                </span>
+                                            </button>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
@@ -150,6 +193,25 @@ import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
                         </div>
                     </div>
                 </draggable>
+
+                <div v-else class="h-80 overflow-y-auto flex flex-col gap-2 border border-gray-300 rounded-lg px-4 py-10 pendingTasks">
+                    <div class="flex flex-col border border-gray-300 py-2 px-3 animate-pulse">
+                        <div class="flex justify-between pb-2">
+                            <div class="py-1 px-3 rounded-xl bg-gray-300 w-20 h-6"></div>
+                            <div class="relative">
+                                <div class="w-6 h-6 bg-gray-300 rounded-full"></div>
+                            </div>
+                        </div>
+                        <div class="flex flex-col pb-2">
+                            <div class="bg-gray-300 h-4 w-3/4 mb-2"></div>
+                            <div class="bg-gray-300 h-4 w-1/2"></div>
+                            <div class="flex justify-between items-center pb-2">
+                                <div class="bg-gray-300 h-4 w-1/4"></div>
+                                <div class="w-10 h-10 bg-gray-300 rounded-full"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- TERMINÉE Column -->
@@ -162,60 +224,90 @@ import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
                     </div>
                 </div>
 
-                <draggable style="height: 590px;"
-                    class="overflow-y-auto flex flex-col gap-2 border border-gray-300 rounded-lg px-4 py-10 completedTasks"
-                    group="tasks" :list="completedTasks" @change="log" @start="onStart" @end="onEnd">
-                    <div class="border border-gray-300 py-2 px-3" v-for="task in completedTasks" :key="task.id"
-                        :data-id="task.id" @click="storeTaskId(task.id)">
-                        <div class="flex justify-between pb-2">
-                            <div class="py-1 px-3 rounded-xl" :class="['priority', getPriorityClass(task.priority)]">
-                                Tache
+                <div  v-if="!isLoading">
+                    <draggable style="height: 590px;"
+                        class="overflow-y-auto flex flex-col gap-2 border border-gray-300 rounded-lg px-4 py-10 completedTasks"
+                        group="tasks" :list="completedTasks" @change="log" @start="onStart" @end="onEnd">
+                        <div class="border border-gray-300 py-2 px-3" v-for="task in completedTasks" :key="task.id"
+                            :data-id="task.id" @click="handleTaskClick(task)">
+                            <div class="flex justify-between pb-2">
+                                <div class="py-1 px-3 rounded-xl" :class="['priority', getPriorityClass(task.priority)]">
+                                    Tache
+                                </div>
+                                <div class="relative">
+                                    <button @click="toggleMenu(task.id)">
+                                        <Ellipsis class="hover:bg-green-200 cursor-pointer" />
+                                    </button>
+                                    <div :class="{ block: task.showMenu, hidden: !task.showMenu }" v-if="task.showMenu"
+                                        class="absolute right-0 mt-2 w-auto md:w-48 bg-white border border-gray-300 rounded-lg shadow-lg">
+                                        <ul class="flex md:flex-col">
+                                            <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                                                <button @click="fetchTaskDetailsView()" class="flex gap-1">
+                                                    <View />
+                                                    <span class="hidden md:inline">
+                                                        Voir détails
+                                                    </span>
+                                                </button>
+                                            </li>
+    
+                                            <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer" v-if="task.assignedUserId === userId === userId || userRoleNom === 'admin' ||
+                                                userRoleNom === 'chef_projet'">
+                                                <button @click="fetchTaskDetails()" class="flex gap-1">
+                                                    <FilePenLine />
+                                                    <span class="hidden md:inline">
+                                                        Modifier
+                                                    </span>
+                                                </button>
+                                            </li>
+    
+                                            <li class="px-4 py-2 hover:bg-gray-100 hover:text-red-500 cursor-pointer"
+                                                v-if="userRoleNom === 'admin'">
+                                                <button @click="deleteTask()" class="flex gap-1">
+                                                    <Trash2 />
+                                                    <span class="hidden md:inline">
+                                                        Supprimer
+                                                    </span>
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="relative">
-                                <button @click="toggleMenu(task.id)">
-                                    <Ellipsis class="hover:bg-green-200 cursor-pointer" />
-                                </button>
-                                <div :class="{ block: task.showMenu, hidden: !task.showMenu }" v-if="task.showMenu"
-                                    class="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded-lg shadow-lg">
-                                    <ul>
-                                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                                            <button @click="fetchTaskDetailsView()">Voir détails</button>
-                                        </li>
-                                        <!-- <div v-if="userId === assignedUserId">
-                                            <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer" >
-                                            <button @click="fetchTaskDetails()">Modifier</button>
-                                        </li>
-                                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer" >
-                                            <button @click="deleteTask()">Supprimer</button>
-                                        </li>
-                                        </div> -->
-                                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                                            v-if="userRoleNom === 'admin' || userRoleNom === 'chef_Projet' || userId === assignedUserId">
-                                            <button @click="fetchTaskDetails()">Modifier</button>
-                                        </li>
-                                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                                            v-if="userRoleNom === 'admin' || userRoleNom === 'chef_Projet'">
-                                            <button @click="deleteTask()">Supprimer</button>
-                                        </li>
-                                    </ul>
+    
+                            <div class="flex flex-col pb-2">
+                                <span class="font-medium">{{ task.taskname }}</span>
+                                <span>{{ task.description }}</span>
+                                <div class="flex justify-between items-center pb-2">
+                                    <span class="font-bold">Budget: {{ task.budget }}Frs</span>
+                                    <div v-if="task.assignedUserDetails"
+                                        class="w-10 h-10 rounded-full border border-gray-300 overflow-hidden">
+                                        <img :src="task.assignedUserDetails.avatar" alt="Avatar"
+                                            class="w-full h-full object-cover">
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                    </draggable>
+                </div>
 
+                <div v-else class="h-80 overflow-y-auto flex flex-col gap-2 border border-gray-300 rounded-lg px-4 py-10 pendingTasks">
+                    <div class="flex flex-col border border-gray-300 py-2 px-3 animate-pulse">
+                        <div class="flex justify-between pb-2">
+                            <div class="py-1 px-3 rounded-xl bg-gray-300 w-20 h-6"></div>
+                            <div class="relative">
+                                <div class="w-6 h-6 bg-gray-300 rounded-full"></div>
+                            </div>
+                        </div>
                         <div class="flex flex-col pb-2">
-                            <span class="font-medium">{{ task.taskname }}</span>
-                            <span>{{ task.description }}</span>
+                            <div class="bg-gray-300 h-4 w-3/4 mb-2"></div>
+                            <div class="bg-gray-300 h-4 w-1/2"></div>
                             <div class="flex justify-between items-center pb-2">
-                                <span class="font-bold">Budget: {{ task.budget }}Frs</span>
-                                <div v-if="task.assignedUserDetails"
-                                    class="w-10 h-10 rounded-full border border-gray-300 overflow-hidden">
-                                    <img :src="task.assignedUserDetails.avatar" alt="Avatar"
-                                        class="w-full h-full object-cover">
-                                </div>
+                                <div class="bg-gray-300 h-4 w-1/4"></div>
+                                <div class="w-10 h-10 bg-gray-300 rounded-full"></div>
                             </div>
                         </div>
                     </div>
-                </draggable>
+                </div>
             </div>
         </div>
     </div>
@@ -369,10 +461,10 @@ import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
                     <p for="Attribuer" class="block text-gray-700 text-sm font-bold mb-2">Responsable(s)
                     </p>
 
-                    <ul class="block ">
-                        <li v-for="member in projectMembers" :key="member.userId" :value="member.userId">
-                            {{ member.userMember.email }}</li>
-                    </ul>
+                    <span class="block">
+                        <!-- add the assignedUserEmail later -->
+
+                    </span>
                 </div>
 
                 <div class="w-full relative">
@@ -424,15 +516,11 @@ import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
                     </p>
                 </div>
 
-                <!-- <div class="flex flex-col md:flex-row gap-5">
-                             -->
-
                 <div class="w-full md:w-1/2">
                     <p class="block text-gray-700 text-sm font-bold mb-2">Type de tache</p>
                     <p class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-300">{{ taskType
                         }}</p>
                 </div>
-                <!-- </div> -->
             </div>
 
         </div>
@@ -445,6 +533,7 @@ import axios from 'axios';
 import config from "../config";
 import { defineComponent } from 'vue';
 import { VueDraggableNext } from 'vue-draggable-next';
+import { EventBus } from "../eventBus";
 
 export default defineComponent({
     components: {
@@ -483,30 +572,42 @@ export default defineComponent({
             taskDetails: [], // details de la tache
             assignedUserDetails: [], //details de l'utilisateurs a qui on a affecté une tache
             assignedUserId: '',
+            theAssignedUserId: null,
+
+            isLoading: true,
 
         };
     },
+    created() {
+        EventBus.on('setFirstProject3', this.refreshAllData);
+    },
     mounted() {
-        if (this.isConnected()) {
-            this.userId = localStorage.getItem('userId');
-            this.projectId = localStorage.getItem('projectId');
-            this.movedItemId = localStorage.getItem('selectedTaskId');
-            this.fetchUserData();
-        } else {
-            this.errorMessage = 'Utilisateur non connecté';
-            this.$router.push('/auth'); // Rediriger vers la page de connexion
-        }
-        // this.fetchProjects();
-        this.fetchPendingTasksCount();
-        this.fetchInProgressTasksCount();
-        this.fetchCompletedTasksCount();
-        this.fetchTotalTasksCount();
-        this.fetchPendingTasks();
-        this.fetchInProgressTasks();
-        this.fetchCompletedTasks();
-        this.fetchProjectMembers();
+        setTimeout(() => {
+            this.refreshAllData();
+            this.isLoading = false;
+        }, 2000);
     },
     methods: {
+        refreshAllData() {
+            if (this.isConnected()) {
+                this.userId = localStorage.getItem('userId');
+                this.projectId = localStorage.getItem('projectId');
+                this.movedItemId = localStorage.getItem('selectedTaskId');
+                this.fetchUserData();
+            } else {
+                this.errorMessage = 'Utilisateur non connecté';
+                this.$router.push('/auth'); // Rediriger vers la page de connexion
+            }
+            // this.fetchProjects();
+            this.fetchPendingTasksCount();
+            this.fetchInProgressTasksCount();
+            this.fetchCompletedTasksCount();
+            this.fetchTotalTasksCount();
+            this.fetchPendingTasks();
+            this.fetchInProgressTasks();
+            this.fetchCompletedTasks();
+            this.fetchProjectMembers();
+        },
         isConnected() {
             return localStorage.getItem('token') !== null;
         },
@@ -551,11 +652,6 @@ export default defineComponent({
         showLateTaskList() {
             this.isTaskListLateVisible = !this.isTaskListLateVisible;
         },
-        // selectTask(taskId) {
-        //     this.selectedTaskId = taskId;
-        //     localStorage.setItem('taskId', taskId); // Stocker l'ID du projet dans le localStorage
-        //     this.$router.push('/accueilPage'); // Rediriger vers la page des détails du projet
-        // },
 
         async fetchProjectMembers() {
             console.log("Id projet selectionné backlogs");
@@ -665,12 +761,11 @@ export default defineComponent({
                             'Authorization': `Bearer ${token}`
                         }
                     });
-                    this.assignedUserId = assignmentResponse.data.userId;
-                    const assignedUserId = this.assignedUserId;
-                    console.log(`ID de l'utilisateur assigné pour la tâche ${task.id} :`, this.assignedUserId);
+                    task.assignedUserId = assignmentResponse.data.userId;
+                    console.log(`ID de l'utilisateur assigné pour la tâcheasd ${task.id} :`, task.assignedUserId);
 
-                    if (assignedUserId) {
-                        const userResponse = await axios.get(`${config.apiBaseUrl}/users/${assignedUserId}`, {
+                    if (task.assignedUserId) {
+                        const userResponse = await axios.get(`${config.apiBaseUrl}/users/${task.assignedUserId}`, {
                             headers: {
                                 'Authorization': `Bearer ${token}`
                             }
@@ -703,12 +798,11 @@ export default defineComponent({
                             'Authorization': `Bearer ${token}`
                         }
                     });
-                    this.assignedUserId = assignmentResponse.data.userId;
-                    const assignedUserId = this.assignedUserId;
-                    console.log(`ID de l'utilisateur assigné pour la tâche ${task.id} :`, this.assignedUserId);
+                    task.assignedUserId = assignmentResponse.data.userId;
+                    console.log(`ID de l'utilisateur assigné pour la tâche ${task.id} :`, task.assignedUserId);
 
-                    if (assignedUserId) {
-                        const userResponse = await axios.get(`${config.apiBaseUrl}/users/${assignedUserId}`, {
+                    if (task.assignedUserId) {
+                        const userResponse = await axios.get(`${config.apiBaseUrl}/users/${task.assignedUserId}`, {
                             headers: {
                                 'Authorization': `Bearer ${token}`
                             }
@@ -741,12 +835,11 @@ export default defineComponent({
                             'Authorization': `Bearer ${token}`
                         }
                     });
-                    this.assignedUserId = assignmentResponse.data.userId;
-                    const assignedUserId = this.assignedUserId;
-                    console.log(this.userId, ` est ID de l'utilisateur assigné pour la tâche00000000000000000 ${task.id} :`, this.assignedUserId);
+                    task.assignedUserId = assignmentResponse.data.userId;
+                    console.log(`ID de l'utilisateur assigné pour la tâche ${task.id} :`, task.assignedUserId);
 
-                    if (assignedUserId) {
-                        const userResponse = await axios.get(`${config.apiBaseUrl}/users/${assignedUserId}`, {
+                    if (task.assignedUserId) {
+                        const userResponse = await axios.get(`${config.apiBaseUrl}/users/${task.assignedUserId}`, {
                             headers: {
                                 'Authorization': `Bearer ${token}`
                             }
@@ -757,7 +850,6 @@ export default defineComponent({
                 }
 
                 console.log("Tâches terminée avec détails des utilisateurs assignés :", this.completedTasks);
-
 
             } catch (error) {
                 console.error('Erreur lors de la récupération des tâches terminées :', error);
@@ -777,13 +869,28 @@ export default defineComponent({
             }
         },
 
-        storeTaskId(taskid) {
-            localStorage.setItem('selectedTaskId', taskid);
-            console.log(`Task ID ${taskid} stored in local storage`);
+        handleTaskClick(task) {
+            // Store task ID
+            this.storeTaskId(task.id);
+
+            // Store assigned user ID
+            this.theAssignedUserId = task.assignedUserId;
+            console.log(`Assigned User ID for task ${task.id}:`, this.theAssignedUserId);
+        },
+        storeTaskId(taskId) {
+            localStorage.setItem('selectedTaskId', taskId);
+            console.log(`Task ID ${taskId} stored in local storage`);
         },
         onStart(event) {
             const taskId = event.item.getAttribute('data-id');
             this.storeTaskId(taskId);
+
+            // Find the task by ID and store the assigned user ID
+            const task = this.pendingTasks.find(t => t.id === taskId);
+            if (task) {
+                this.theAssignedUserId = task.assignedUserId;
+                console.log(`Assigned User ID for task ${task.id}:`, this.theAssignedUserId);
+            }
         },
         async onEnd(event) {
             const movedItemId = localStorage.getItem('selectedTaskId');
@@ -800,6 +907,7 @@ export default defineComponent({
             } else if (event.to.classList.contains('completedTasks')) {
                 newStatus = 'TERMINEE';
             }
+            console.log("heyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy", newStatus);
 
             try {
                 const token = localStorage.getItem('token');
@@ -861,27 +969,7 @@ export default defineComponent({
         closeDetailsTask() {
             this.modalDetailTasks = false;
         },
-        //details d'une tache
-        async fetchTaskDetails() {
-            try {
-                const token = localStorage.getItem('token');
-                console.log("trying to git task details");
-                console.log(this.movedItemId);
 
-                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.movedItemId}`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                this.taskDetails = response.data;
-                console.log("Voici les details de la tache selectionné:+++");
-                console.log(this.taskDetails);
-                this.showMenu = false;
-                this.openEditTaskModal();
-            } catch (error) {
-                console.error('Erreur lors de la récupération des détails de la tâche :', error);
-            }
-        },
         openViewTaskModal() {
             this.showMenu = false;
             this.taskname = this.taskDetails.taskname;
@@ -907,7 +995,7 @@ export default defineComponent({
                     }
                 });
                 this.taskDetails = response.data;
-                console.log("Voici les details de la tache selectionné:------")
+                console.log("Voici les details de la tache selectionné:------", this.taskDetails)
                 console.log(this.taskDetails);
                 this.openViewTaskModal();
                 this.showMenu = false;
@@ -933,11 +1021,33 @@ export default defineComponent({
             this.budget = this.taskDetails.budget;
             this.taskType = this.taskDetails.taskType;
             this.modalEditTasks = true;
-
+            console.log("Voici les details de la tache selectionné:---", this.userAssignId);
         },
         toISODate(dateString) {
             const [day, month, year] = dateString.split('/');
             return new Date(year, month - 1, day).toISOString();
+        },
+
+        //details d'une tache
+        async fetchTaskDetails() {
+            try {
+                const token = localStorage.getItem('token');
+                console.log("trying to git task details");
+                console.log(this.movedItemId);
+
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.movedItemId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                this.taskDetails = response.data;
+                console.log("Voici les details de la tache selectionné:+++", this.taskDetails);
+                console.log(this.taskDetails);
+                this.showMenu = false;
+                this.openEditTaskModal();
+            } catch (error) {
+                console.error('Erreur lors de la récupération des détails de la tâche :', error);
+            }
         },
 
         async editTask() {
@@ -976,6 +1086,9 @@ export default defineComponent({
                 console.error('Erreur lors de la modification de la tâche :', error);
             }
         },
+        beforeDestroy() {
+            EventBus.off('setFirstProject3', this.refreshAllData);
+        },
 
     },
 
@@ -983,7 +1096,9 @@ export default defineComponent({
         console.log(event);
     },
 
-
+    beforeUnmount() {
+        EventBus.off('setFirstProject3', this.refreshAllData);
+    }
 
 });
 </script>

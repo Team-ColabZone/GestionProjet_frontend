@@ -1,5 +1,6 @@
 <template>
-    <div class="flex flex-col w-full h-screen  bg-white monda-font ">
+    <h1 v-if="loading2">Chargement</h1>
+    <div v-else class="flex flex-col w-full h-screen  bg-white monda-font ">
         <header class="h-auto flex justify-between items-center w-full px-4 border-b border-gray-200 ">
             <img src="../assets/images/logoflysoft.png" alt="logo Entreprise" class="h-11">
 
@@ -59,9 +60,12 @@
                                         </div>
 
                                         <div class=" flex flex-col text-left text-black text-ellipsis text-xs md:text-sm p-2"
-                                        style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                                            <h3 class="text-lg font-semibold" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ firstProjectName }}</h3>
-                                            <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{firstProjectDescription}}</span>
+                                            style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                            <h3 class="text-lg font-semibold"
+                                                style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                                {{ firstProjectName }}</h3>
+                                            <span
+                                                style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ firstProjectDescription }}</span>
                                         </div>
                                     </div>
                                     <div v-else class="flex items-center gap-1 py-1 px-2">
@@ -123,130 +127,6 @@
                             </div>
                         </div>
                     </li>
-
-                    <!-- <li class="h-14 w-full flex flex-col gap-2">
-                        <div class="relative w-full flex flex-col">
-                            <div class="absolute w-full ">
-                                <button class="flex justify-between items-center w-full rounded md:gap-3"
-                                    :class="{ 'bg-gray-100 h-full w-full rounded-lg': currentPage === 'dashboard' }"
-                                    @click="showPage('dashboard')">
-                                    <div class="w-4/5 md:w-4/5">
-                                        <div v-if="firstProjectName" class="flex items-center gap-2 md:gap-4 pr-2">
-                                            <div v-if="firstProjectLogo" class="h-14">
-                                                <img :src="firstProjectLogo" alt="Logo"
-                                                    class="h-full w-14 rounded-lg object-fit border" />
-                                            </div>
-    
-                                            <div v-else class="w-auto h-auto border"
-                                                :class="{ 'pl-3': currentPage === 'dashboard' }">
-                                                <BriefcaseBusiness :stroke-width="1.5" class=" object-center" />
-                                            </div>
-    
-                                            <div class=" flex flex-col text-left text-black text-ellipsis text-xs md:text-sm p-2"
-                                            style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                                                <h3 class="text-lg font-semibold" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ firstProjectName }}</h3>
-                                                <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">+-+-{{firstProjectDescription}}</span>
-                                            </div>
-                                        </div>
-                                        <div v-else class="flex items-center gap-1 py-1 px-2">
-                                            <Gauge class="h-7" />
-                                            <h3 class="text-black">Dashboard</h3>
-                                        </div>
-                                    </div>
-    
-                                    <button @click="toggleProjectList"
-                                        class="w-1/5 bg-transparent border-none cursor-pointer border border-red-500"
-                                        :class="{ 'text-black': currentPage === 'dashboard', 'text-gray-500': currentPage !== 'dashboard' }">
-                                        <ChevronUp
-                                            :class="{ 'chevron-down': !isProjectListVisible, 'chevron-up': isProjectListVisible }"
-                                            class="w-full h-4 transition-transform" />
-                                    </button>
-                                </button>
-                            </div>
-    
-                            <div class="fixed inset-0 backdrop-blur-sm flex items-start justify-start z-50 pt-14 px-2" :class="{ block: isProjectListVisible, hidden: !isProjectListVisible }">
-                                <div class="relative w-60 ">
-                                    <button class="flex justify-between items-center w-full rounded md:gap-3"
-                                        :class="{ 'bg-gray-100 h-full w-full rounded-lg': currentPage === 'dashboard' }"
-                                        @click="showPage('dashboard')">
-                                        <div class="w-4/5 md:w-4/5">
-                                            <div v-if="firstProjectName" class="flex items-center gap-2 md:gap-4 pr-2">
-                                                <div v-if="firstProjectLogo" class="h-14">
-                                                    <img :src="firstProjectLogo" alt="Logo"
-                                                        class="h-full w-14 rounded-lg object-fit border" />
-                                                </div>
-        
-                                                <div v-else class="w-auto h-auto border"
-                                                    :class="{ 'pl-3': currentPage === 'dashboard' }">
-                                                    <BriefcaseBusiness :stroke-width="1.5" class=" object-center" />
-                                                </div>
-        
-                                                <div class=" flex flex-col text-left text-black text-ellipsis text-xs md:text-sm p-2"
-                                                style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                                                    <h3 class="text-lg font-semibold" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ firstProjectName }}</h3>
-                                                    <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{firstProjectDescription}}</span>
-                                                </div>
-                                            </div>
-                                            <div v-else class="flex items-center gap-1 py-1 px-2">
-                                                <Gauge class="h-7" />
-                                                <h3 class="text-black">Dashboard</h3>
-                                            </div>
-                                        </div>
-        
-                                        <button @click="toggleProjectList"
-                                            class="w-1/5 bg-transparent border-none cursor-pointer border border-red-500"
-                                            :class="{ 'text-black': currentPage === 'dashboard', 'text-gray-500': currentPage !== 'dashboard' }">
-                                            <ChevronUp
-                                                :class="{ 'chevron-down': !isProjectListVisible, 'chevron-up': isProjectListVisible }"
-                                                class="w-full h-4 transition-transform" />
-                                        </button>
-                                    </button>
-        
-                                    <div :class="{ block: isProjectListVisible, hidden: !isProjectListVisible }"
-                                        class="absolute top-full left-0 w-full flex flex-col gap-2 p-2 mt-4 bg-white shadow-sm border border-gray-300 rounded-lg z-10">
-                                        
-                                        <div class="h-40 w-full flex flex-col gap-1 overflow-x-auto overflow-y-auto">
-                                            <div v-for="project in displayedProjects" :key="project.id"
-                                                @click="selectProject(project.id)" :class="[
-                                                    'h-14 flex items-center border-b border-gray-50 cursor-pointer rounded-lg pr-2',
-                                                    { 'bg-gray-300': selectedProjectId === project.id, 'bg-gray-100': selectedProjectId !== project.id }
-                                                ]">
-                                                <div v-if="project.projectlogo" class="h-full">
-                                                    <img :src="project.projectlogo" alt="Logo"
-                                                        class="h-full w-12 border rounded-lg object-cover" />
-                                                </div>
-                                                <div v-else class="w-auto h-auto pl-3">
-                                                    <BriefcaseBusiness :stroke-width="1.5" class=" object-center" />
-                                                </div>
-        
-                                                <p class="text-left text-black text-ellipsis text-xs md:text-sm p-2"
-                                                    style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                                                    <span class="font-medium">{{ project.projectname }}</span><br />
-                                                    {{ project.description }}
-                                                </p>
-                                            </div>
-                                        </div>
-        
-                                        <div class="w-full pt-2 flex flex-col gap-2 border-t border-gray-200">
-                                            <button
-                                                class="addProjectbtn flex justify-between items-center w-full bg-transparent border-none cursor-pointer text-xs"
-                                                @click="showModal1">
-                                                Créer un Projet
-                                                <SquarePlus class="w-4 h-4" />
-                                            </button>
-        
-                                            <button
-                                                class="addProjectbtn flex justify-between items-center w-full bg-transparent border-none cursor-pointer text-xs"
-                                                @click="ShowInvitation()">
-                                                Nouveau projet invité
-                                                <FolderGit2 class="w-4 h-4" />
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </li> -->
 
                     <!-- Backlogs -->
                     <li class="w-full">
@@ -323,7 +203,7 @@
             </nav>
 
             <!-- Main Content -->
-            <div class="w-full lg:w-5/6 bg-white shadow-md">
+            <div class="w-full h-full lg:w-5/6 bg-white shadow-md">
                 <div class="page" v-if="currentPage === 'dashboard'">
                     <dashboardPage />
                 </div>
@@ -481,7 +361,7 @@
                                 <div class="mb-4 w-1/2">
                                     <label for="email" class="block text-sm font-bold mb-2">Email
                                         :</label>
-                                    <input type="email" id="start_date" v-model="email" required
+                                    <input type="email" id="email" v-model="email" required
                                         class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-200">
                                 </div>
                                 <div class="mb-4 w-1/2">
@@ -532,14 +412,13 @@
                 </div>
             </div>
 
-            <div class="fixed inset-0 bg-black/50 flex items-start justify-end z-50 pt-12 px-2 md:pr-5 overflow-y-scroll no-scrollbar"
-                v-if="modalIdentity">
+            <div class="fixed inset-0 bg-black/50 flex items-start justify-end z-50 pt-12 px-2 md:pr-5 overflow-y-scroll no-scrollbar" v-if="modalIdentity">
                 <div
                     class="bg-white flex flex-col p-6 gap-5 rounded-lg shadow-lg animate__animated animate__fadeInDown w-full max-w-lg">
                     <div class="flex justify-between font-medium">
                         <span></span>
                         <!-- Displaying user's email -->
-                        <span>{{ profile.email }}</span>
+                        <span>{{ email }}</span>
 
                         <!-- Close button -->
                         <button @click="hideIdentity">
@@ -549,19 +428,18 @@
 
                     <div class="w-full flex flex-col items-center gap-3">
                         <!-- Profile Image -->
-                        <div class="w-20 h-20  rounded-full" @click="exitEnterprise">
+                        <div class="w-20 h-20  rounded-full">
                             <div v-if="loading">Loading...</div>
                             <div v-else>
                                 <!-- <img :src="'data:image/jpeg;base64,' + profile.profileImage" alt="Profile Image"
                                     class="h-20 w-20 rounded-full border object-contain"> -->
                                 <img :src="profileImageUrl" alt="Profile Image"
                                     class="w-20 h-20 rounded-full border object-cover object-center" />
-
                             </div>
                         </div>
 
                         <!-- Greeting with user's last name -->
-                        <span class="font-medium text-xl">{{ profile.lastname ? 'Bonjour ' + profile.lastname + ' !' :
+                        <span class="font-medium text-xl">{{ lastName ? 'Bonjour ' + lastName + ' !' :
                             '' }}</span>
 
                         <!-- Manage Account button -->
@@ -585,9 +463,8 @@
 
                             <div class="w-full h-40 flex flex-col overflow-y-auto" v-if="isEntreprisesListVisible">
                                 <div v-for="entreprise in entreprises" :key="entreprise.id"
-                                    @click="selectEntreprise(entreprise.id)"
-                                    class=" flex justify-between items-center border-b border-gray-200 py-1 px-2 gap-4 cursor-pointer">
-                                    <div class="flex items-center  gap-4">
+                                    class=" flex justify-between items-center border-b border-gray-200 py-1 pl-2 pr-5 gap-4 cursor-pointer">
+                                    <div class="flex items-center  gap-4" @click="selectEntreprise(entreprise.id)">
                                         <div class="w-10 h-10 ">
                                             <img class="border w-10 h-10 border-gray-200 rounded-full"
                                                 :src="entreprise.logo" alt="logo Entreprise" />
@@ -598,15 +475,15 @@
                                         </div>
                                     </div>
 
-                                    <div v-if="entreprise.id === selectedEntrepriseId" class=" w-3 h-full flex justify-between items-center">
-                                        <span  class=" w-full h-3 bg-green-500 rounded-full"></span>
+                                    <div v-if="entreprise.id === selectedEntrepriseId"
+                                        class=" w-auto h-full hover:bg-blue-100 px-1 flex justify-between items-center rounded-xl"
+                                        @click="exitEnterprise">
+                                        <LogOut class="w-full" />
                                     </div>
-                                    
+
                                 </div>
                             </div>
                         </div>
-
-
 
                         <button class="w-full flex gap-4 border-b border-gray-200 py-2 px-5 text-black font-medium"
                             @click="addEntreprise">
@@ -911,8 +788,12 @@
                     </form>
                 </div>
             </div> -->
+
+            <div class="fixed w-full h-full bg-black/50 flex items-start justify-end z-50 pt-12 px-2 md:pr-5 overflow-y-scroll no-scrollbar"
+                >asd</div>
         </div>
     </div>
+
 </template>
 
 <script>
@@ -923,6 +804,9 @@ import teamMemberPage from './teamMemberPage.vue';
 import entreprisePage from "./EntreprisePage.vue";
 import config from "../config";
 import axios from 'axios';
+import { EventBus } from "../eventBus";
+
+
 
 export default {
     components: {
@@ -944,7 +828,7 @@ export default {
             enterpriseLoading: false,
             projectLoading: false,
             logoutLoader: false,
-            currentPage: 'tasks',
+            currentPage: 'backlogs',
             selectedButton: 'button4',
             // teamMemberCount: 0,
             taskCount: 0,
@@ -972,6 +856,7 @@ export default {
             successMessage: '',
             error: false,
             errorMessage: '',
+            loading2: false,
 
             userId: '',
             projects: [], // Liste des projets
@@ -1011,41 +896,35 @@ export default {
         };
     },
 
-    // computed: {
-    //     filteredProjects() {
-    //         if (this.selectedEntrepriseId) {
-    //             return this.projects.filter(project => project.entrepriseId === this.selectedEntrepriseId);
-    //         }
-    //         return this.projects.filter(project => !project.entrepriseId);
-    //     },
-    // },
-
     mounted() {
-        if (this.isConnected()) {
-            this.userId = localStorage.getItem('userId');
-            this.projectId = localStorage.getItem('projectId');
-            this.entrepriseId = localStorage.getItem('selectedEntrepriseId');
-            this.selectedEntrepriseId = localStorage.getItem('selectedEntrepriseId');
-            this.fetchUserData();
-            this.fetchProjects();
-            this.fetchEntreprises();
-            // this.fetchTeamMemberCount();
-            this.fetchPendingTasksCount();
-            this.fetchInProgressTasksCount();
-            this.fetchCompletedTasksCount();
-            this.fetchTotalTasksCount();
-            // this.fetchProjectsByEntreprise();
-            this.fetchNotificationCount();
-            this.fetchAllNotifications();
-        } else {
-            this.errorMessage = 'Utilisateur non connecté';
-            this.$router.push('/auth'); // Rediriger vers la page de connexion
-        }
-        this.handleResize();
-        window.addEventListener("resize", this.handleResize);
+        this.mountedData();
     },
 
     methods: {
+        mountedData() {
+            if (this.isConnected()) {
+                this.userId = localStorage.getItem('userId');
+                this.projectId = localStorage.getItem('projectId');
+                this.entrepriseId = localStorage.getItem('selectedEntrepriseId');
+                this.selectedEntrepriseId = localStorage.getItem('selectedEntrepriseId');
+                this.fetchUserData();
+                this.fetchProjects();
+                this.fetchEntreprises();
+                // this.fetchTeamMemberCount();
+                this.fetchPendingTasksCount();
+                this.fetchInProgressTasksCount();
+                this.fetchCompletedTasksCount();
+                this.fetchTotalTasksCount();
+                // this.fetchProjectsByEntreprise();
+                this.fetchNotificationCount();
+                this.fetchAllNotifications();
+            } else {
+                this.errorMessage = 'Utilisateur non connecté';
+                this.$router.push('/auth'); // Rediriger vers la page de connexion
+            }
+            this.handleResize();
+            window.addEventListener("resize", this.handleResize);
+        },
         toggleNav() {
             this.isNavOpen = !this.isNavOpen;
         },
@@ -1087,8 +966,8 @@ export default {
                 localStorage.removeItem('selectedEntrepriseId');
                 localStorage.removeItem('currentProject');
                 localStorage.removeItem('projectId');
-                this.fetchProjects();
-                window.location.reload();
+                this.mountedData();
+                this.modalIdentity= false;
             }
         },
         addEntreprise() {
@@ -1132,14 +1011,6 @@ export default {
             this.isEntreprisesListVisible = !this.isEntreprisesListVisible;
         },
 
-        // showPage(page) {
-        //     this.currentPage = page;
-        // },
-
-        // showNotif(notif){
-        //     this.selectedTab = notif;
-        // },
-
         viewTypeOfNotifications() {
             if (this.selectedTab === 'all') {
                 this.displayAllNotifications = true;
@@ -1152,12 +1023,6 @@ export default {
             }
 
         },
-
-        // viewAllNotifications(){
-        //     this.displayAllNotifications = true;
-        //     this.displayUnreadNotifications=false;
-        //     this.fetchAllNotifications();
-        // },
 
         async fetchUserData() {
             try {
@@ -1341,6 +1206,7 @@ export default {
             this.enterpriseLoading = true;
             try {
                 const token = localStorage.getItem('token');
+
                 const response = await axios.post(`${config.apiBaseUrl}/entreprises`, {
                     name: this.name,
                     description: this.description,
@@ -1434,8 +1300,8 @@ export default {
                     console.log(this.projects);
 
                     const savedProject = JSON.parse(localStorage.getItem('currentProject'));
-                    console.log("savedProject isssssssss",savedProject);
-                    
+                    console.log("savedProject isssssssss", savedProject);
+
                     if (savedProject) {
                         this.setFirstProject(savedProject);
                     } else if (this.projects.length > 0) {
@@ -1457,7 +1323,7 @@ export default {
 
                     const savedProject = JSON.parse(localStorage.getItem('currentProject'));
                     console.log("savedProject isssssssss", savedProject);
-                    
+
                     if (savedProject) {
                         this.setFirstProject(savedProject);
                         console.log("currentProject is set <><><>>>><><><<>><><>>><><><>>><><><><><>>");
@@ -1472,78 +1338,11 @@ export default {
             }
         },
 
-        // async fetchProjects() {
-        //     try {
-        //         const token = localStorage.getItem('token');
-        //         const entrepriseId = localStorage.getItem('entrepriseId');
-
-        //         if (entrepriseId) {
-        //             const response = await axios.get(`${config.apiBaseUrl}/projects/byEntreprise/${entrepriseId}`, {
-        //                 headers: {
-        //                     'Authorization': `Bearer ${token}`
-        //                 }
-        //             });
-        //             this.projects = response.data;
-        //             console.log("Projects d'entreprise méthode fetchProjectsByEntreprise :>>>><<<<<<<<");
-        //             console.log(this.projects);
-
-        //             const savedProject = JSON.parse(localStorage.getItem('currentProject'));
-        //             if (savedProject) {
-        //                 this.setFirstProject(savedProject);
-        //             } else if (this.projects.length > 0) {
-        //                 this.setFirstProject(this.projects[0]);
-        //             }
-        //         } else {
-        //             const responseCreated = await axios.get(`${config.apiBaseUrl}/projects/user/${this.userId}`, {
-        //                 headers: {
-        //                     'Authorization': `Bearer ${token}`
-        //                 }
-        //             });
-        //             console.log("Projets personnels de l'utilisateur:", responseCreated.data);
-
-        //             const responseMember = await axios.get(`${config.apiBaseUrl}/team-members/user/${this.userId}/projects`, {
-        //                 headers: {
-        //                     'Authorization': `Bearer ${token}`
-        //                 }
-        //             });
-        //             console.log("Projets dans lesquels l'utilisateur a été invité:", responseMember.data);
-
-        //             const invitedProjects = responseMember.data.map(member => member.Project).filter(project => project !== null);
-        //             console.log("Voici l'extraction des projects invités: ", invitedProjects);
-
-        //             this.projects = [...responseCreated.data, ...invitedProjects];
-        //             console.log("Projets récupérés ++++++++++++++++: ", this.projects);
-
-        //             const savedProject = JSON.parse(localStorage.getItem('currentProject'));
-        //             if (savedProject) {
-        //                 this.setFirstProject(savedProject);
-        //                 console.log("currentProject is set <><><>>>><><><<>><><>>><><><>>><><><><><>>");
-        //             } else if (this.projects.length > 0) {
-        //                 this.setFirstProject(this.projects[0]);
-        //             }
-        //             this.updateDisplayedProjects();
-        //         }
-        //     } catch (error) {
-        //         this.errorMessage = 'Erreur lors de la récupération des projets : ' + (error.response ? error.response.data.message : error.message);
-        //     }
-        // },
-
-        // setInitialProject() {
-        //     const noEntrepriseProjects = this.projects.filter(project => !project.entrepriseId);
-        //     if (noEntrepriseProjects.length > 0) {
-        //         this.setFirstProject(noEntrepriseProjects[0]);
-        //     } else {
-        //         this.firstProjectName = '';
-        //         this.firstProjectLogo = '';
-        //     }
-        //     this.filterProjects();  
-        // },
-
         setFirstProject(project) {
             this.firstProjectName = project.projectname;
             this.firstProjectLogo = project.projectlogo; // Assuming the project object has a 'logo' property
             this.firstProjectDescription = project.description;
-            
+
             const entrepriseId = localStorage.getItem('selectedEntrepriseId');
             if (entrepriseId) {
                 this.projects = this.projects.filter(p => p.id !== project.id);
@@ -1554,15 +1353,18 @@ export default {
                 localStorage.setItem('currentProject', JSON.stringify(project));
                 localStorage.setItem('projectId', project.id); // Ajouter cette ligne pour stocker l'ID du projet
             }
+            if (this.currentPage === 'dashboard') {
+            EventBus.emit('setFirstProject1');
+            } else if (this.currentPage === 'backlogs') {
+                EventBus.emit('setFirstProject2');
+            } else if (this.currentPage === 'tasks') {
+                EventBus.emit('setFirstProject3');
+            } else if (this.currentPage === 'team') {
+                EventBus.emit('setFirstProject4');
+            } else if (this.currentPage === 'entreprise') {
+                EventBus.emit('setFirstProject5');
+            }
         },
-
-        // filterProjects() {
-        //     if (this.selectedEntrepriseId) {
-        //         this.filteredProjects = this.projects.filter(project => project.entrepriseId === this.selectedEntrepriseId);
-        //     } else {
-        //         this.filteredProjects = this.projects.filter(project => !project.entrepriseId);
-        //     }
-        // },
 
         selectProject(projectId) {
             const selectedProject = this.projects.find(p => p.id === projectId);
@@ -1579,7 +1381,11 @@ export default {
                 console.log(this.selectedProjectId);
                 localStorage.setItem('projectId', projectId);
                 this.isProjectListVisible = false;
-                window.location.reload();
+                this.mountedData();
+                console.log("99999999999999999999999999999999999999999");
+
+                console.log("5555555555555555555555555555555555555555");
+
             }
         },
 
@@ -1609,18 +1415,24 @@ export default {
             try {
                 const token = localStorage.getItem('token'); // or another method to retrieve the token
                 const response = await axios.get(`${config.apiBaseUrl}/entreprises/user/${this.userId}`, {
+
+
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
                 });
+                console.log({ 'yooooooolooooolllllll': this.userId });
                 this.entreprises = response.data;
                 this.isEntreprisesListVisible = this.entreprises.length > 0;
+                console.log("yooooooooooooooooooooooooooyyyyyyyyyyyyy", this.entreprises);
+
             } catch (error) {
                 this.errorMessage = 'Erreur lors de la récupération des entreprises : ' + (error.response ? error.response.data.message : error.message);
             }
         },
 
         selectEntreprise(entrepriseId) {
+            this.loading2 = true;
             this.selectedEntrepriseId = entrepriseId;
             localStorage.removeItem('currentProject');
             localStorage.removeItem('projectId');
@@ -1629,72 +1441,24 @@ export default {
             this.updateDisplayedProjects(); // Mettre à jour les projets affichés
             const entrepriseProjects = this.displayedProjects;
             if (entrepriseProjects.length > 0) {
+                this.mountedData();
                 this.setFirstProject(entrepriseProjects[0]);
+                this.modalIdentity = false;
+                this.loading2 = false;
             } else {
+                this.mountedData();
                 this.firstProjectName = '';
                 this.firstProjectLogo = '';
                 this.firstProjectDescription = '';
+                this.modalIdentity = false;
+                this.loading2 = false;
             }
-            this.modalIdentity = false;
-            window.location.reload();
+
+
+
+            // window.location.reload();
         },
 
-
-        // async fetchProjects() {
-        //     try {
-        //         const token = localStorage.getItem('token'); // or another method to retrieve the token
-        //         const entrepriseId = localStorage.getItem('selectedEntrepriseId');
-
-        //         if (entrepriseId) {
-        //             // Fetch projects by enterprise
-        //             const response = await axios.get(`${config.apiBaseUrl}/projects/byEntreprise/${entrepriseId}`, {
-        //                 headers: {
-        //                     'Authorization': `Bearer ${token}`
-        //                 }
-        //             });
-        //             this.projects = response.data;
-        //             console.log("Projects d'entreprise méthode fetchProjectsByEntreprise :>>>><<<<<<<<");
-        //             console.log(this.projects);
-
-        //             const savedProject = JSON.parse(localStorage.getItem('currentProject'));
-        //             console.log("savedProject isssssssss",savedProject);
-                    
-        //             if (savedProject) {
-        //                 this.setFirstProject(savedProject);
-        //             } else if (this.projects.length > 0) {
-        //                 this.setFirstProject(this.projects[0]);
-        //             }
-        //             // this.filterProjects();
-        //             this.updateDisplayedProjects();
-        //         } else {
-        //             // Fetch user projects
-        //             const responseCreated = await axios.get(`${config.apiBaseUrl}/projects/allProjByNoEnt/${this.userId}`, {
-        //                 headers: {
-        //                     'Authorization': `Bearer ${token}`
-        //                 }
-        //             });
-        //             console.log("Projets personnels de l'utilisateur:", responseCreated.data);
-
-        //             this.projects = responseCreated.data;
-        //             console.log("Projets récupérés ++++++++++++++++: ", this.projects);
-
-        //             const savedProject = JSON.parse(localStorage.getItem('currentProject'));
-        //             console.log("savedProject isssssssss", savedProject);
-                    
-        //             if (savedProject) {
-        //                 this.setFirstProject(savedProject);
-        //                 console.log("currentProject is set <><><>>>><><><<>><><>>><><><>>><><><><><>>");
-        //             } else if (this.projects.length > 0) {
-        //                 this.setFirstProject(this.projects[0]);
-        //             }
-        //             // this.filterProjects();
-        //             this.updateDisplayedProjects();
-        //         }
-        //     } catch (error) {
-        //         this.errorMessage = 'Erreur lors de la récupération des projets : ' + (error.response ? error.response.data.message : error.message);
-        //     }
-        // },
-        
         async modifyProfile() {
             try {
                 const token = localStorage.getItem('token');

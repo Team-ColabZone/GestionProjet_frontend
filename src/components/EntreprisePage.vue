@@ -1,50 +1,39 @@
 <template>
     <div class="flex flex-col gap-4 w-full h-full p-2">
-        <div class="w-full flex items-center gap-2 p-2 border corder-gray-200 rounded">
+        <div class="w-full h-1/6  flex items-center gap-2 p-2 border corder-gray-200 rounded">
             <Building2 />
             <span>Entreprises</span>
         </div>
 
-        <div class="flex flex-col md:flex-row w-full gap-4 md:gap-8">
+        <div class="flex flex-col h-1/6 md:flex-row w-full gap-4 md:gap-8">
             <form action="" class="flex flex-col md:flex-row w-full md:w-1/2 gap-4">
-                <div class="relative flex items-center w-full sm:w-3/4 ">
+                <div class="relative flex items-center w-full sm:w-3/4">
                     <Search class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                     <input type="search" id="search-input" v-model="searchQuery" @input="filterEntreprises"
                         class="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:border-gray-500 text-base"
                         placeholder="Rechercher..." />
                 </div>
-                
                 <ul v-if="filteredEntreprises.length && searchQuery.trim()"
                     class="absolute bg-white border border-gray-300 rounded-lg mt-10 z-10">
-                    <li v-for="entreprise in filteredEntreprises" :key="entreprise.id" @click="selectEntreprise(entreprise)"
-                        class="px-4 py-2 cursor-pointer hover:bg-gray-100">
-                        {{ entreprise.name }} - {{ entreprise.email}}
+                    <li v-for="entreprise in filteredEntreprises" :key="entreprise.id"
+                        @click="selectEntreprise(entreprise)" class="px-4 py-2 cursor-pointer hover:bg-gray-100">
+                        {{ entreprise.name }} - {{ entreprise.email }}
                     </li>
                 </ul>
-                <!-- <input type="submit" value="Rechercher"
-                    class="w-full md:w-1/4 h-11 bg-black text-white font-bold rounded-lg hover:bg-slate-600 focus:outline-none"> -->
             </form>
-
-            <!-- <div class="w-full md:w-1/2 flex justify-end mt-4 md:mt-0">
-                <button
-                    class="flex items-center bg-black rounded-lg p-2 h-full text-white hover:bg-slate-600 focus:outline-none"
-                    @click="showModal2">
-                    <Plus />
-                    <span>Ajoute une entreprise</span>
-                </button>
-            </div> -->
         </div>
 
-        <div class=" mt-8 flex-grow flex">
+        <div class="mt-8 flex-grow flex h-4/6">
             <div class="border border-gray-300 rounded-lg p-2 w-full flex flex-col">
                 <div class="flex justify-between items-center border-b border-gray-300 pb-1 mb-2">
                     <div class="flex items-center">
                         <building2 class="task text-xl text-black mr-2" />
                         <p class="text-black text-sm font-bold">Listes des entreprise</p>
                     </div>
-                    <button @click="toggleteamEntrepriseList()" class="flex gap-1  text-black px-3 py-2 rounded-lg">
+                    <button @click="toggleteamEntrepriseList" class="flex gap-1 text-black px-3 py-2 rounded-lg">
                         <ChevronUp :class="{
-                            'chevron-down': !isEntrepriseListVisible, 'chevron-up': isEntrepriseListVisible,
+                            'chevron-down': !isEntrepriseListVisible,
+                            'chevron-up': isEntrepriseListVisible,
                         }" class="w-full h-6 transition-transform" />
                     </button>
                 </div>
@@ -62,20 +51,38 @@
                                     <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody class="bg-white divide-y divide-gray-200">
+                            <tbody class="bg-white divide-y divide-gray-200" v-if="!isLoading">
                                 <tr v-for="entreprise in entreprises" :key="entreprise.id" class="hover:bg-gray-50">
                                     <td class="px-6 py-4 whitespace-nowrap">{{ entreprise.name }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">{{ entreprise.email }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">{{ entreprise.pobox }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <button type="button" class="text-black hover:text-green-900"
-                                            @click="showMemberDetails()">
+                                            @click="showMemberDetails">
                                             <Eye class="w-full h-6" />
                                         </button>
                                     </td>
                                 </tr>
                             </tbody>
+
+                            <tbody class="bg-white divide-y divide-gray-200" v-else>
+                                <tr v-for="n in 5" :key="n" class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="h-4 bg-gray-300 rounded w-3/4"></div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="h-4 bg-gray-300 rounded w-3/4"></div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="h-4 bg-gray-300 rounded w-3/4"></div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="h-4 bg-gray-300 rounded w-3/4"></div>
+                                    </td>
+                                </tr>
+                            </tbody>
                         </table>
+
                     </div>
                 </div>
             </div>
@@ -86,6 +93,7 @@
 <script>
 import config from "../config";
 import axios from 'axios';
+import { EventBus } from "../eventBus";
 
 export default {
     components: {
@@ -93,6 +101,7 @@ export default {
     data() {
         return {
             isEntrepriseListVisible: true,
+            isLoading : true,
             entrepriseId: '',
             entreprises: [], // Liste des entreprises
 
@@ -101,12 +110,21 @@ export default {
             searchedEntrepriseId: null,
         }
     },
+    created() {
+        EventBus.on('setFirstProject5', this.refreshAllData);
+    },
     mounted() {
-        this.userId = localStorage.getItem('userId');
-        this.entrepriseId = localStorage.getItem('entrepriseId');
-        this.fetchEntreprises();
+        setTimeout(() => {
+            this.refreshAllData();
+            this.isLoading = false;
+        }, 2000);
     },
     methods: {
+        refreshAllData() {
+            this.userId = localStorage.getItem('userId');
+            this.entrepriseId = localStorage.getItem('entrepriseId');
+            this.fetchEntreprises();
+        },
         showModal2() {
             this.modalVisible = true
         },
@@ -125,7 +143,7 @@ export default {
                 });
                 this.entreprises = response.data;
                 console.log(response.data);
-                
+
                 console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
             } catch (error) {
                 this.errorMessage = 'Erreur lors de la récupération des entreprises : ' + (error.response ? error.response.data.message : error.message);
@@ -155,6 +173,9 @@ export default {
                     element.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }
             });
+        },
+        beforeDestroy() {
+            EventBus.off('setFirstProject5', this.refreshAllData);
         },
     }
 }

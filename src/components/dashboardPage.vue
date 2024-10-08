@@ -12,53 +12,106 @@ import { Users, Gauge, CircleGauge, ClockArrowDown, UserRoundCheck, Logs, Trendi
 
         <!-- Statistics Section -->
         <div class="flex flex-wrap justify-between gap-3 md:gap-4 w-full">
-            <div class="stat-box bg-indigo-100 rounded-lg p-4 text-left w-40 md:w-44 lg:w-48 xl:w-52">
+            <!-- Stat Box 1 -->
+            <div class="stat-box bg-indigo-100 rounded-lg p-4 text-left w-40 md:w-44 lg:w-48 xl:w-52" v-if="!isLoading">
                 <div class="flex justify-between items-center">
                     <h1 class="text-4xl font-bold">{{ teamMemberCount }}</h1>
                     <Users class="w-10 h-9 md:h-10 md:w-12" />
                 </div>
                 <h3 class="text-sm mt-2">Nombre de membre</h3>
             </div>
+            <div class="stat-box bg-gray-100 rounded-lg p-4 text-left w-40 md:w-44 lg:w-48 xl:w-52 animate-pulse"
+                v-else>
+                <div class="flex justify-between items-center">
+                    <div class="h-10 w-10 bg-gray-300 rounded-full"></div>
+                    <div class="h-6 bg-gray-300 rounded w-1/2"></div>
+                </div>
+                <div class="h-4 bg-gray-300 rounded w-3/4 mt-2"></div>
+            </div>
 
-            <div class="stat-box bg-pink-100 rounded-lg p-4 text-left w-40 md:w-44 lg:w-48 xl:w-52">
+            <!-- Stat Box 2 -->
+            <div class="stat-box bg-pink-100 rounded-lg p-4 text-left w-40 md:w-44 lg:w-48 xl:w-52" v-if="!isLoading">
                 <div class="flex justify-between items-center gap-3 md:gap-5">
                     <h1 class="text-4xl font-bold">{{ (realisationRate).toFixed(0) }}%</h1>
                     <CircleGauge class="w-10 h-9 md:h-10 md:w-12" />
                 </div>
                 <h3 class="text-sm mt-2">Pourcentage de réalisation</h3>
             </div>
-
-            <div class="stat-box bg-green-100 rounded-lg p-4 text-left w-40 md:w-44 lg:w-48 xl:w-52">
+            <div class="stat-box bg-gray-100 rounded-lg p-4 text-left w-40 md:w-44 lg:w-48 xl:w-52 animate-pulse"
+                v-else>
                 <div class="flex justify-between items-center">
-                    <h1 class="text-4xl font-bold">{{ (taskRate).toFixed(2) }}t/j
-                    </h1>
+                    <div class="h-10 w-10 bg-gray-300 rounded-full"></div>
+                    <div class="h-6 bg-gray-300 rounded w-1/2"></div>
+                </div>
+                <div class="h-4 bg-gray-300 rounded w-3/4 mt-2"></div>
+            </div>
+
+            <!-- Stat Box 3 -->
+            <div class="stat-box bg-green-100 rounded-lg p-4 text-left w-40 md:w-44 lg:w-48 xl:w-52" v-if="!isLoading">
+                <div class="flex justify-between items-center">
+                    <h1 class="text-4xl font-bold">{{ (taskRate).toFixed(2) }}t/j</h1>
                     <ClockArrowDown class="w-10 h-9 md:h-10 md:w-12" />
                 </div>
                 <h3 class="text-sm mt-2">Taux de tache journaliere</h3>
             </div>
+            <div class="stat-box bg-gray-100 rounded-lg p-4 text-left w-40 md:w-44 lg:w-48 xl:w-52 animate-pulse"
+                v-else>
+                <div class="flex justify-between items-center">
+                    <div class="h-10 w-10 bg-gray-300 rounded-full"></div>
+                    <div class="h-6 bg-gray-300 rounded w-1/2"></div>
+                </div>
+                <div class="h-4 bg-gray-300 rounded w-3/4 mt-2"></div>
+            </div>
 
-            <div class="stat-box bg-pink-50 rounded-lg p-4 text-left w-40 md:w-44 lg:w-48 xl:w-52">
+            <!-- Stat Box 4 -->
+            <div class="stat-box bg-pink-50 rounded-lg p-4 text-left w-40 md:w-44 lg:w-48 xl:w-52" v-if="!isLoading">
                 <div class="flex justify-between items-center gap-3 md:gap-5 px-2 lg:px-4">
                     <h1 class="text-4xl font-bold">{{ powerMembersCount }}</h1>
                     <UserRoundCheck class="w-10 h-9 md:h-10 md:w-12" />
                 </div>
                 <h3 class="text-sm mt-2">Nombre de membres performant</h3>
             </div>
+            <div class="stat-box bg-gray-100 rounded-lg p-4 text-left w-40 md:w-44 lg:w-48 xl:w-52 animate-pulse"
+                v-else>
+                <div class="flex justify-between items-center">
+                    <div class="h-10 w-10 bg-gray-300 rounded-full"></div>
+                    <div class="h-6 bg-gray-300 rounded w-1/2"></div>
+                </div>
+                <div class="h-4 bg-gray-300 rounded w-3/4 mt-2"></div>
+            </div>
 
-            <div class="stat-box bg-blue-50 rounded-lg p-4 text-left w-40 md:w-44 lg:w-48 xl:w-52">
+            <!-- Stat Box 5 -->
+            <div class="stat-box bg-blue-50 rounded-lg p-4 text-left w-40 md:w-44 lg:w-48 xl:w-52" v-if="!isLoading">
                 <div class="flex justify-between items-center gap-3 md:gap-5">
                     <h1 class="text-4xl font-bold">0{{ taskCount }}</h1>
                     <Logs class="w-10 h-9 md:h-10 md:w-12" />
                 </div>
                 <h3 class="text-sm mt-2">Nombre de tache</h3>
             </div>
+            <div class="stat-box bg-gray-100 rounded-lg p-4 text-left w-40 md:w-44 lg:w-48 xl:w-52 animate-pulse"
+                v-else>
+                <div class="flex justify-between items-center">
+                    <div class="h-10 w-10 bg-gray-300 rounded-full"></div>
+                    <div class="h-6 bg-gray-300 rounded w-1/2"></div>
+                </div>
+                <div class="h-4 bg-gray-300 rounded w-3/4 mt-2"></div>
+            </div>
 
-            <div class="stat-box bg-lime-100 rounded-lg p-4 text-left w-40 md:w-44 lg:w-48 xl:w-52">
+            <!-- Stat Box 6 -->
+            <div class="stat-box bg-lime-100 rounded-lg p-4 text-left w-40 md:w-44 lg:w-48 xl:w-52" v-if="!isLoading">
                 <div class="flex justify-between items-center gap-3 md:gap-5">
                     <h1 class="text-4xl font-bold">{{ (reactivityRate).toFixed(0) }}%</h1>
                     <TrendingUp class="w-10 h-9 md:h-10 md:w-12" />
                 </div>
                 <h3 class="text-sm mt-2">Taux de reactivité</h3>
+            </div>
+            <div class="stat-box bg-gray-100 rounded-lg p-4 text-left w-40 md:w-44 lg:w-48 xl:w-52 animate-pulse"
+                v-else>
+                <div class="flex justify-between items-center">
+                    <div class="h-10 w-10 bg-gray-300 rounded-full"></div>
+                    <div class="h-6 bg-gray-300 rounded w-1/2"></div>
+                </div>
+                <div class="h-4 bg-gray-300 rounded w-3/4 mt-2"></div>
             </div>
         </div>
 
@@ -86,20 +139,34 @@ import { Users, Gauge, CircleGauge, ClockArrowDown, UserRoundCheck, Logs, Trendi
                         <ChartPie class="h-2/3 text-black" />
                         <p class="text-black text-base font-semibold">Tâches Courantes</p>
                     </div>
-                    <button class="icon-ChevronUp" @click="showTaskList()"
+                    <button class="icon-ChevronUp" @click="showTaskList"
                         style="border: none;background-color: transparent">
                         <ChevronUp />
                     </button>
                 </div>
-                <div class="h-full p-4 overflow-y-auto currentTaskTable" >
-                    <div v-for="task in commonTasks" :key="task.id" class="flex justify-between items-center mb-2">
-                        <div :class="[getPriorityClass(task.priority), 'priority-bar']"></div>
-                        <div class="flex-1 ml-2">
-                            <p class="font-semibold">{{ task.taskname }}</p>
-                            <p class="text-sm text-gray-600">{{ task.description }}</p>
+                <div class="h-full p-4 overflow-y-auto currentTaskTable">
+                    <div v-if="!isLoading">
+                        <div v-for="task in commonTasks" :key="task.id" class="flex justify-between items-center mb-2">
+                            <div :class="[getPriorityClass(task.priority), 'priority-bar']"></div>
+                            <div class="flex-1 ml-2">
+                                <p class="font-semibold">{{ task.taskname }}</p>
+                                <p class="text-sm text-gray-600">{{ task.description }}</p>
+                            </div>
+                            <div :class="getStatusClass(task.status)" class="w-24 text-center">
+                                {{ task.status }}
+                            </div>
                         </div>
-                        <div :class="getStatusClass(task.status)" class="w-24 text-center">
-                            {{ task.status }}
+                    </div>
+                    <div v-else class="animate-pulse">
+                        <div v-for="n in 5" :key="n" class="flex justify-between items-center mb-2">
+                            <div class="priority-bar bg-gray-300 h-4 w-1/12"></div>
+                            <div class="flex-1 ml-2">
+                                <div class="h-4 bg-gray-300 rounded w-3/4 mb-1"></div>
+                                <div class="h-3 bg-gray-300 rounded w-1/2"></div>
+                            </div>
+                            <div class="w-24 text-center">
+                                <div class="h-4 bg-gray-300 rounded w-full"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -112,27 +179,38 @@ import { Users, Gauge, CircleGauge, ClockArrowDown, UserRoundCheck, Logs, Trendi
                         <UserRoundCheck class="h-2/3 text-black" />
                         <p class="text-black text-base font-semibold">Meilleurs contributeurs</p>
                     </div>
-                    <button class="icon-ChevronUp" @click="showTaskList()"
+                    <button class="icon-ChevronUp" @click="showTaskList"
                         style="border: none;background-color: transparent">
                         <ChevronUp />
                     </button>
                 </div>
                 <div class="p-4">
-                    <div v-for="(member, userId) in powerMembers" :key="userId" class="flex items-center mb-4">
-                        <img v-if="member.details" :src="member.details.avatar" alt="Avatar"
-                            class="w-12 h-12 rounded-full border object-cover object-center border-gray-300 mr-4">
-                        <div class="flex-1">
-                            <p v-if="member.details" class="font-semibold">{{ member.details.firstname }} {{
-                                member.details.lastname }}</p>
-                            <p v-if="member.role" class="text-sm text-gray-600">{{ member.role }}</p>
+                    <div v-if="!isLoading">
+                        <div v-for="(member, userId) in powerMembers" :key="userId" class="flex items-center mb-4">
+                            <img v-if="member.details" :src="member.details.avatar" alt="Avatar"
+                                class="w-12 h-12 rounded-full border object-cover object-center border-gray-300 mr-4">
+                            <div class="flex-1">
+                                <p v-if="member.details" class="font-semibold">{{ member.details.firstname }} {{
+                                    member.details.lastname }}</p>
+                                <p v-if="member.role" class="text-sm text-gray-600">{{ member.role }}</p>
+                            </div>
+                            <p class="font-semibold">{{ Number(member.count).toFixed(2) }}%</p>
                         </div>
-                        <p class="font-semibold">{{ Number(member.count).toFixed(2) }}%</p>
+                    </div>
+                    <div v-else class="animate-pulse">
+                        <div v-for="n in 3" :key="n" class="flex items-center mb-4">
+                            <div class="w-12 h-12 bg-gray-300 rounded-full border mr-4"></div>
+                            <div class="flex-1">
+                                <div class="h-4 bg-gray-300 rounded w-3/4 mb-1"></div>
+                                <div class="h-3 bg-gray-300 rounded w-1/2"></div>
+                            </div>
+                            <div class="h-4 bg-gray-300 rounded w-1/4"></div>
+                        </div>
                     </div>
                 </div>
             </div>
 
 
-            <!-- Task Overview -->
             <div class="task-box w-full flex flex-col justify-between lg:w-1/4">
                 <div class="flex justify-between items-center border-b border-gray-300 p-2">
                     <div class="flex gap-2 items-center">
@@ -141,29 +219,54 @@ import { Users, Gauge, CircleGauge, ClockArrowDown, UserRoundCheck, Logs, Trendi
                         <p style="color: #000000; padding-left: 15px; font-size: 15px; font-weight: bold;">Bilan des
                             tâches</p>
                     </div>
-                    <button class="icon-ChevronUp" @click="showTaskList()"
+                    <button class="icon-ChevronUp" @click="showTaskList"
                         style="border: none;background-color: transparent; cursor: pointer;">
                         <ChevronUp class="task" style="width: 24px;height: 24px; color: #6F6F6F" />
                     </button>
                 </div>
-                <div class="flex flex-col gap-2 p-4">
-                    <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full bg-orange-200 flex items-center justify-center">
-                            <p class="text-black">{{ pendingTasksCount }}</p>
+                <div>
+                    <div v-if="!isLoading" class="flex flex-col gap-2 p-4">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-full bg-orange-200 flex items-center justify-center">
+                                <p class="text-black">{{ pendingTasksCount }}</p>
+                            </div>
+                            <p class="text-sm font-bold text-gray-600">Nombre de tâche en attente</p>
                         </div>
-                        <p class="text-sm font-bold text-gray-600">Nombre de tâche en attente</p>
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-full bg-green-200 flex items-center justify-center">
+                                <p class="text-black">{{ inProgressTasksCount }}</p>
+                            </div>
+                            <p class="text-sm font-bold text-gray-600">Nombre de tâche en cours</p>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-full bg-blue-200 flex items-center justify-center">
+                                <p class="text-black">{{ completedTasksCount }}</p>
+                            </div>
+                            <p class="text-sm font-bold text-gray-600">Nombre de tâche terminée</p>
+                        </div>
                     </div>
-                    <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full bg-green-200 flex items-center justify-center">
-                            <p class="text-black">{{ inProgressTasksCount }}</p>
+                    <div v-else class="animate-pulse">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-gray-300 rounded-full"></div>
+                            <div class="flex-1">
+                                <div class="h-4 bg-gray-300 rounded w-3/4 mb-1"></div>
+                                <div class="h-3 bg-gray-300 rounded w-1/2"></div>
+                            </div>
                         </div>
-                        <p class="text-sm font-bold text-gray-600">Nombre de tâche en cours</p>
-                    </div>
-                    <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-full bg-blue-200 flex items-center justify-center">
-                            <p class="text-black">{{ completedTasksCount }}</p>
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-gray-300 rounded-full"></div>
+                            <div class="flex-1">
+                                <div class="h-4 bg-gray-300 rounded w-3/4 mb-1"></div>
+                                <div class="h-3 bg-gray-300 rounded w-1/2"></div>
+                            </div>
                         </div>
-                        <p class="text-sm font-bold text-gray-600">Nombre de tâche terminée</p>
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-gray-300 rounded-full"></div>
+                            <div class="flex-1">
+                                <div class="h-4 bg-gray-300 rounded w-3/4 mb-1"></div>
+                                <div class="h-3 bg-gray-300 rounded w-1/2"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="p-2 border border-gray-200">
@@ -177,6 +280,7 @@ import { Users, Gauge, CircleGauge, ClockArrowDown, UserRoundCheck, Logs, Trendi
 <script>
 import axios from 'axios';
 import config from "../config";
+import { EventBus } from "../eventBus";
 
 export default {
     components: {
@@ -185,7 +289,8 @@ export default {
     data() {
         return {
             showMessagePage: false,
-            showNotificationPage: false,
+            showNotificationPage: true,
+            isLoading: true,
             currentPage: 'home',
             selectedButton: 'button4',
             teamMemberCount: 0,
@@ -213,32 +318,38 @@ export default {
             profile: {},
         };
     },
+    created() {
+        EventBus.on('setFirstProject1', this.refreshAllData);
+    },
     mounted() {
-        if (this.isConnected()) {
-            this.userId = localStorage.getItem('userId');
-            this.projectId = localStorage.getItem('projectId');
-            this.fetchUserData();
-        } else {
-            this.errorMessage = 'Utilisateur non connecté';
-            this.$router.push('/auth'); // Rediriger vers la page de connexion
-        }
-        this.fetchProjects();
-
-        this.fetchTeamMemberCount();
-        this.fetchPendingTasksCount();
-        this.fetchInProgressTasksCount();
-        this.fetchCompletedTasksCount();
-        this.fetchTotalTasksCount();
-        this.fetchTaskRate();
-        this.fetchCommonTasks();
-        // this.fetchTaskRate();
-        // this.fetchTaskRate1();
-        this.fetchReactivityRate();
-        this.fetchRealisationRate();
-        this.fetchPowerMembers();
+        setTimeout(() => {
+            this.refreshAllData();
+            this.isLoading = false;
+        }, 2000);
 
     },
     methods: {
+        refreshAllData() {
+            if (this.isConnected()) {
+                this.userId = localStorage.getItem('userId');
+                this.projectId = localStorage.getItem('projectId');
+                this.fetchUserData();
+            } else {
+                this.errorMessage = 'Utilisateur non connecté';
+                this.$router.push('/auth'); // Rediriger vers la page de connexion
+            }
+            console.log("NOOO WAYY");
+            this.fetchTeamMemberCount();
+            this.fetchPendingTasksCount();
+            this.fetchInProgressTasksCount();
+            this.fetchCompletedTasksCount();
+            this.fetchTotalTasksCount();
+            this.fetchTaskRate();
+            this.fetchCommonTasks();
+            this.fetchPowerMembers();
+            console.log("YESSS WAYY");
+
+        },
         isConnected() {
             return localStorage.getItem('token') !== null;
         },
@@ -318,7 +429,7 @@ export default {
                 const token = localStorage.getItem('token');
                 if (this.projectId === null) {
                     console.log("No project choosen");
-                    
+
                 } else {
                     const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/tasks/pending`, {
                         headers: {
@@ -398,7 +509,7 @@ export default {
                         }
                     });
                     this.taskRate = response.data;
-                    console.log("Voici le taux de tache journaliere: ")
+                    console.log("Voici le taux de tache journaliere: ", this.taskRate)
                     console.log(this.taskRate);
                 }
             } catch (error) {
@@ -451,13 +562,13 @@ export default {
                 if (this.projectId === null) {
                     console.log("No project choosen");
                 } else {
-                    const response = await axios.get(`${config.apiBaseUrl}/tasks/allTasksLive/${this.projectId}`, {
-                        headers: {
-                            'Authorization': `Bearer ${token}`
-                        }
-                    });
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/tasks/in-progress`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                     this.commonTasks = response.data;
-                    console.log("Voici les taches courantes de ce projet : ")
+                    console.log("Voici les taches courantes de ce projet : ", this.commonTasks)
                     console.log(this.commonTasks);
                 }
             } catch (error) {
@@ -502,7 +613,7 @@ export default {
                         }
                     });
                     console.log("Réponse des membres performants :", response.data);
-    
+
                     // Compter le nombre de membres performants
                     if (response.data.length === undefined || response.data.length === null) {
                         this.powerMembersCount = 0;
@@ -511,10 +622,10 @@ export default {
                         this.powerMembersCount = response.data.length;
                         console.log("Nombre de membres performants :", this.powerMembersCount);
                     }
-    
+
                     // Initialiser powerMembers avec les données reçues
                     this.powerMembers = response.data;
-    
+
                     // Convertir les valeurs de count en nombres et vérifier les userId
                     const powerMembersData = {};
                     for (const member of this.powerMembers) {
@@ -527,7 +638,7 @@ export default {
                     }
                     this.powerMembers = powerMembersData;
                     console.log("Membres performants après conversion :", this.powerMembers);
-    
+
                     // Récupérer les informations détaillées des membres performants
                     for (const userId of Object.keys(this.powerMembers)) {
                         const userResponse = await axios.get(`${config.apiBaseUrl}/users/${userId}`, {
@@ -536,14 +647,14 @@ export default {
                             }
                         });
                         console.log("Détails de l'utilisateur :", userResponse.data);
-    
+
                         const memberResponse = await axios.get(`${config.apiBaseUrl}/team-members/${this.projectId}/user/${userId}`, {
                             headers: {
                                 'Authorization': `Bearer ${token}`
                             }
                         });
                         console.log("Détails du membre de l'équipe :", memberResponse.data);
-    
+
                         // Assigner les détails de l'utilisateur et le rôle au membre performant
                         this.powerMembers[userId].details = userResponse.data;
                         if (memberResponse.data && memberResponse.data.Role) {
@@ -558,6 +669,9 @@ export default {
                 console.error('Erreur lors de la récupération des membres performants :', error);
             }
         },
+        beforeDestroy() {
+            EventBus.off('setFirstProject1', this.refreshAllData);
+        }
     }
 };
 </script>
@@ -616,7 +730,7 @@ export default {
     /* Couleur grise légère */
 }
 
-.currentTaskTable{
+.currentTaskTable {
     -ms-overflow-style: none;
     /* IE and Edge */
     scrollbar-width: none;

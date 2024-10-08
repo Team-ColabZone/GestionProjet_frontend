@@ -13,8 +13,8 @@ import { Users, List, Plus, Search, ChevronUp, Eye } from 'lucide-vue-next';
 
         <!-- Search Bar Section -->
         <div class="flex flex-col sm:flex-row justify-between">
-            <form class=" flex flex-1">
-                <div class="relative flex items-center w-full sm:w-3/4 ">
+            <form class="flex flex-1">
+                <div class="relative flex items-center w-full sm:w-3/4">
                     <Search class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                     <input type="search" id="search-input" v-model="searchQuery" @input="filterMembers"
                         class="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:border-gray-500 text-base"
@@ -30,36 +30,77 @@ import { Users, List, Plus, Search, ChevronUp, Eye } from 'lucide-vue-next';
                 </ul>
             </form>
 
-            <div class="mt-4 sm:mt-0 sm:ml-4">
+            <div class="mt-4 sm:mt-0 sm:ml-4" v-if="userRoleNom === 'admin' || userRoleNom === 'chef_projet'">
                 <button
-                    class="flex items-center justify-center w-full sm:w-auto bg-black text-white  py-2 px-4 rounded-lg cursor-pointer hover:bg-slate-600 focus:outline-none"
-                    @click="showModalMembers()">
+                    class="flex items-center justify-center w-full sm:w-auto bg-black text-white py-2 px-4 rounded-lg cursor-pointer hover:bg-slate-600 focus:outline-none"
+                    @click="showModalMembers">
                     <Plus class="mr-2 w-4 h-4" />
                     <p>Ajouter un membre</p>
                 </button>
             </div>
         </div>
+
         <!-- Team Section -->
-        <div class=" mt-8 flex-grow flex">
+        <div class="mt-8 flex-grow flex">
             <div class="border border-gray-300 rounded-lg p-2 w-full flex flex-col">
                 <div class="flex justify-between items-center border-b border-gray-300 pb-1 mb-2">
                     <div class="flex items-center">
                         <List class="task text-xl text-black mr-2" />
                         <p class="text-black text-sm font-bold">Listes des collaborateurs</p>
                     </div>
-                    <button @click="toggleteamMemberList()" class="flex gap-1  text-black px-3 py-2 rounded-lg">
+                    <button @click="toggleteamMemberList" class="flex gap-1 text-black px-3 py-2 rounded-lg">
                         <ChevronUp :class="{
                             'chevron-down': !isteamMemberListVisible,
                             'chevron-up': isteamMemberListVisible,
                         }" class="w-full h-6 transition-transform" />
-
                     </button>
                 </div>
 
-                <div :class="{ block: isteamMemberListVisible, hidden: !isteamMemberListVisible }" class="flex-grow"
-                    v-if="isteamMemberListVisible">
+                <div v-if="!isLoading">
+                    <div :class="{ block: isteamMemberListVisible, hidden: !isteamMemberListVisible }" class="flex-grow"
+                        v-if="isteamMemberListVisible">
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-gray-200 text-left">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Nom & Profil</th>
+                                        <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Email</th>
+                                        <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Contact</th>
+                                        <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Role</th>
+                                        <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    <tr v-for="member in projectMembers" :key="member.userId"
+                                        :data-member-id="member.userId"
+                                        :class="{ 'bg-gray-200': member.userId === selectedMemberId }"
+                                        class="hover:bg-gray-100">
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center space-x-2">
+                                                <img class="border border-gray-200 h-11 w-11 rounded-full object-cover object-center mr-5"
+                                                    :src="member.userMember.avatar" alt="profil" />
+                                                {{ member.userMember.firstname }} {{ member.userMember.lastname }}
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">{{ member.userMember.email }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">{{ member.userMember.phonenumber }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">{{ member.Role.nom }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <button type="button" class="text-black hover:text-green-900"
+                                                @click="showMemberDetails(member)">
+                                                <Eye class="w-full h-6" />
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div v-else class="flex-grow">
                     <div class="overflow-x-auto">
-                        <table class="min-w-full divide-gray-200 text-left">
+                        <table class="min-w-full divide-gray-200 text-left animate-pulse">
                             <thead class="bg-gray-50">
                                 <tr>
                                     <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Nom & Profil</th>
@@ -70,25 +111,25 @@ import { Users, List, Plus, Search, ChevronUp, Eye } from 'lucide-vue-next';
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
-                                <tr v-for="member in projectMembers" :key="member.userId"
-                                    :data-member-id="member.userId"
-                                    :class="{ 'bg-gray-200': member.userId === selectedMemberId }"
-                                    class="hover:bg-gray-100">
+                                <tr v-for="n in 5" :key="n" class="hover:bg-gray-100">
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="flex items-center space-x-2">
-                                            <img class="border border-gray-200 h-11 w-11 rounded-full object-cover object-center mr-5"
-                                                :src="member.userMember.avatar" alt="profil" />
-                                            {{ member.userMember.firstname }} {{ member.userMember.lastname }}
+                                            <div class="border border-gray-200 h-11 w-11 rounded-full bg-gray-300">
+                                            </div>
+                                            <div class="h-4 bg-gray-300 rounded w-3/4"></div>
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ member.userMember.email }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ member.userMember.phonenumber }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ member.Role.nom }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <button type="button" class="text-black hover:text-green-900"
-                                            @click="showMemberDetails(member)">
-                                            <Eye class="w-full h-6" />
-                                        </button>
+                                        <div class="h-4 bg-gray-300 rounded w-3/4"></div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="h-4 bg-gray-300 rounded w-3/4"></div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="h-4 bg-gray-300 rounded w-3/4"></div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="h-4 bg-gray-300 rounded w-3/4"></div>
                                     </td>
                                 </tr>
                             </tbody>
@@ -145,7 +186,8 @@ import { Users, List, Plus, Search, ChevronUp, Eye } from 'lucide-vue-next';
                             Ajouter
                         </span>
                         <div v-else class="flex justify-center">
-                            <span  class="inline-block w-6 h-6 border-4 border-gray-400 border-t-black border-b-black rounded-full animate-spin"></span>
+                            <span
+                                class="inline-block w-6 h-6 border-4 border-gray-400 border-t-black border-b-black rounded-full animate-spin"></span>
                         </div>
                     </button>
                 </div>
@@ -160,6 +202,7 @@ import { Users, List, Plus, Search, ChevronUp, Eye } from 'lucide-vue-next';
 
 import config from "../config";
 import axios from 'axios';
+import { EventBus } from "../eventBus";
 
 export default {
     components: {
@@ -175,35 +218,46 @@ export default {
             userId: '',
             usercreatedId: '',
             emails: [], // This should be fetched from the system
-            memberImg : '',
+            memberImg: '',
             filteredEmails: [],
             roles: [],
             userData: null,
             isteamMemberListVisible: true,
             projectMembers: [],//tableau des membres du projet
+            userRoleNom: '',
 
+            isLoading: true,
             searchQuery: '',
             filteredMembers: [],
             selectedMemberId: null,
         };
     },
+    created() {
+        EventBus.on('setFirstProject4', this.refreshAllData);
+    },
 
     mounted() {
-        if (this.isConnected()) {
-            this.usercreatedId = localStorage.getItem('userId');
-            this.projectId = localStorage.getItem('projectId');
-            this.userId = localStorage.getItem('IdCollaborateur')
-            this.fetchUserData();
-            this.fetchUsersEmails();
-            this.fetchAllRoles();
-            this.fetchProjectMembers();
-        } else {
-            this.errorMessage = 'Utilisateur non connecté';
-            this.$router.push('/auth'); // Rediriger vers la page de connexion
-        }
+        setTimeout(() => {
+            this.refreshAllData();
+            this.isLoading = false;
+        }, 2000);
     },
 
     methods: {
+        refreshAllData() {
+            if (this.isConnected()) {
+                this.usercreatedId = localStorage.getItem('userId');
+                this.projectId = localStorage.getItem('projectId');
+                this.userId = localStorage.getItem('IdCollaborateur')
+                this.fetchUserData();
+                this.fetchUsersEmails();
+                this.fetchAllRoles();
+                this.fetchProjectMembers();
+            } else {
+                this.errorMessage = 'Utilisateur non connecté';
+                this.$router.push('/auth'); // Rediriger vers la page de connexion
+            }
+        },
         hideModalmembers() {
             this.modalmembers = false;
         },
@@ -252,7 +306,7 @@ export default {
 
         async fetchUserData() {
             try {
-                const token = localStorage.getItem('token');                
+                const token = localStorage.getItem('token');
                 const response = await axios.get(`${config.apiBaseUrl}/users/${this.usercreatedId}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
@@ -305,35 +359,35 @@ export default {
             this.membreLoading = true;
             if (localStorage.getItem('selectedEntrepriseId')) {
                 try {
-                const token = localStorage.getItem('token');
-                // const userId = localStorage.getItem('IdCollaborateur');
-                const entrepriseId = localStorage.getItem('selectedEntrepriseId');
-                const response = await axios.post(`${config.apiBaseUrl}/team-members`, {
-                    entrepriseId: `${entrepriseId}`,
-                    projectId: this.projectId,
-                    roleId: this.roleId,
-                    userId: this.userId,
-                    usercreatedId: this.usercreatedId,
-                }, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                this.success = true;
-                this.successMessage = response.data.message;
-                this.membreLoading = false;
-                console.log("Membre ajouter au project avec succces!!!")
-                // Réinitialiser les champs du formulaire
-                this.email = '';
-                this.roleId = '';
-                this.fetchProjectMembers();
-            } catch (error) {
-                this.error = true;
-                this.errorMessage = error.response ? error.response.data.message : error.message;
-                console.log("Erreur lors de l'ajout du membre");
-                console.log(error);
-                this.membreLoading = false;
-            }
+                    const token = localStorage.getItem('token');
+                    // const userId = localStorage.getItem('IdCollaborateur');
+                    const entrepriseId = localStorage.getItem('selectedEntrepriseId');
+                    const response = await axios.post(`${config.apiBaseUrl}/team-members`, {
+                        entrepriseId: `${entrepriseId}`,
+                        projectId: this.projectId,
+                        roleId: this.roleId,
+                        userId: this.userId,
+                        usercreatedId: this.usercreatedId,
+                    }, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    this.success = true;
+                    this.successMessage = response.data.message;
+                    this.membreLoading = false;
+                    console.log("Membre ajouter au project avec succces!!!")
+                    // Réinitialiser les champs du formulaire
+                    this.email = '';
+                    this.roleId = '';
+                    this.fetchProjectMembers();
+                } catch (error) {
+                    this.error = true;
+                    this.errorMessage = error.response ? error.response.data.message : error.message;
+                    console.log("Erreur lors de l'ajout du membre");
+                    console.log(error);
+                    this.membreLoading = false;
+                }
             } else {
                 try {
                     const token = localStorage.getItem('token');
@@ -367,9 +421,10 @@ export default {
         },
 
         async fetchProjectMembers() {
-            console.log("Bonjour: Voici l'id du project sélectionné");
+            console.log("Id projet selectionné backlogs");
             console.log(this.projectId);
             try {
+                console.log(this.projectId);
                 const token = localStorage.getItem('token');
                 const response = await axios.get(`${config.apiBaseUrl}/team-members/project/${this.projectId}`, {
                     headers: {
@@ -377,15 +432,20 @@ export default {
                     }
                 });
                 this.projectMembers = response.data;
-                // const getMemberImg = (userId) => {
-                //     const member = this.projectMembers.find(member => member.userId === userId);
-                //     return member ? member.userMember.avatar : null;
-                // };
-                
                 console.log("Bonsoir");
-                console.log("Voici la liste des membres d'équipe");
-                console.log(this.projectMembers);
-                // this.memberImg = getMemberImg(userId);
+                console.log("Voici la liste des membre dans taskspage ++++++++++++++++");
+                console.log("12345678901234678890", this.projectMembers);
+
+                const getRoleByUserId = (userId) => {
+                    const member = this.projectMembers.find(member => member.userId === userId);
+                    return member ? member.Role.nom : null;
+                };
+
+
+                const userId = localStorage.getItem('userId'); // Replace with the actual userId you want to check
+                this.userRoleNom = getRoleByUserId(userId);
+                console.log("Role Nom:", this.userRoleNom);
+
             } catch (error) {
                 this.errorMessage = 'Erreur lors de la récupération des membres du projet : ' + (error.response ? error.response.data.message : error.message);
             }
@@ -419,6 +479,9 @@ export default {
             if (!this.$el.contains(event.target)) {
                 this.selectedMemberId = null;
             }
+        },
+        beforeDestroy() {
+            EventBus.off('setFirstProject4', this.refreshAllData);
         }
     }
 };
@@ -443,5 +506,4 @@ body {
     transition: transform 0.3s;
     transform: rotate(180deg);
 }
-
 </style>
