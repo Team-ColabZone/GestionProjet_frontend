@@ -95,12 +95,17 @@ import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
                                     <img :src="task.assignedUserDetails.avatar" alt="Avatar"
                                         class="w-full h-full object-cover" />
                                 </div>
+                                <button v-else class="w-10 h-10 overflow-hidden" @click="acceptTask">
+                                    <!-- <TicketPlus class="w-full h-full object-cover hover:text-blue-500"/> -->
+                                    <img src="../assets/icon/grab.png" alt="#" class="w-full h-full object-cover">
+                                </button>
                             </div>
                         </div>
                     </div>
                 </draggable>
 
-                <div v-else class="h-80 overflow-y-auto flex flex-col gap-2 border border-gray-300 rounded-lg px-4 py-10 pendingTasks">
+                <div v-else
+                    class="h-80 overflow-y-auto flex flex-col gap-2 border border-gray-300 rounded-lg px-4 py-10 pendingTasks">
                     <div class="flex flex-col border border-gray-300 py-2 px-3 animate-pulse">
                         <div class="flex justify-between pb-2">
                             <div class="py-1 px-3 rounded-xl bg-gray-300 w-20 h-6"></div>
@@ -155,7 +160,7 @@ import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
                                             </button>
                                         </li>
 
-                                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer" v-if="task.assignedUserId === userId === userId || userRoleNom === 'admin' ||
+                                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer" v-if="task.assignedUserId === userId || userRoleNom === 'admin' ||
                                             userRoleNom === 'chef_projet'">
                                             <button @click="fetchTaskDetails()" class="flex gap-1">
                                                 <FilePenLine />
@@ -187,14 +192,19 @@ import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
                                 <div v-if="task.assignedUserDetails"
                                     class="w-10 h-10 rounded-full border border-gray-300 overflow-hidden">
                                     <img :src="task.assignedUserDetails.avatar" alt="Avatar"
-                                        class="w-full h-full object-cover">
+                                        class="w-full h-full object-cover" />
                                 </div>
+                                <button v-else class="w-10 h-10 overflow-hidden" @click="acceptTask">
+                                    <!-- <TicketPlus class="w-full h-full object-cover hover:text-blue-500"/> -->
+                                    <img src="../assets/icon/grab.png" alt="#" class="w-full h-full object-cover">
+                                </button>
                             </div>
                         </div>
                     </div>
                 </draggable>
 
-                <div v-else class="h-80 overflow-y-auto flex flex-col gap-2 border border-gray-300 rounded-lg px-4 py-10 pendingTasks">
+                <div v-else
+                    class="h-80 overflow-y-auto flex flex-col gap-2 border border-gray-300 rounded-lg px-4 py-10 pendingTasks">
                     <div class="flex flex-col border border-gray-300 py-2 px-3 animate-pulse">
                         <div class="flex justify-between pb-2">
                             <div class="py-1 px-3 rounded-xl bg-gray-300 w-20 h-6"></div>
@@ -224,14 +234,15 @@ import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
                     </div>
                 </div>
 
-                <div  v-if="!isLoading">
+                <div v-if="!isLoading">
                     <draggable style="height: 590px;"
                         class="overflow-y-auto flex flex-col gap-2 border border-gray-300 rounded-lg px-4 py-10 completedTasks"
                         group="tasks" :list="completedTasks" @change="log" @start="onStart" @end="onEnd">
                         <div class="border border-gray-300 py-2 px-3" v-for="task in completedTasks" :key="task.id"
                             :data-id="task.id" @click="handleTaskClick(task)">
                             <div class="flex justify-between pb-2">
-                                <div class="py-1 px-3 rounded-xl" :class="['priority', getPriorityClass(task.priority)]">
+                                <div class="py-1 px-3 rounded-xl"
+                                    :class="['priority', getPriorityClass(task.priority)]">
                                     Tache
                                 </div>
                                 <div class="relative">
@@ -249,8 +260,8 @@ import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
                                                     </span>
                                                 </button>
                                             </li>
-    
-                                            <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer" v-if="task.assignedUserId === userId === userId || userRoleNom === 'admin' ||
+
+                                            <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer" v-if="task.assignedUserId === userId || userRoleNom === 'admin' ||
                                                 userRoleNom === 'chef_projet'">
                                                 <button @click="fetchTaskDetails()" class="flex gap-1">
                                                     <FilePenLine />
@@ -259,7 +270,7 @@ import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
                                                     </span>
                                                 </button>
                                             </li>
-    
+
                                             <li class="px-4 py-2 hover:bg-gray-100 hover:text-red-500 cursor-pointer"
                                                 v-if="userRoleNom === 'admin'">
                                                 <button @click="deleteTask()" class="flex gap-1">
@@ -273,7 +284,7 @@ import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
                                     </div>
                                 </div>
                             </div>
-    
+
                             <div class="flex flex-col pb-2">
                                 <span class="font-medium">{{ task.taskname }}</span>
                                 <span>{{ task.description }}</span>
@@ -290,7 +301,8 @@ import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
                     </draggable>
                 </div>
 
-                <div v-else class="h-80 overflow-y-auto flex flex-col gap-2 border border-gray-300 rounded-lg px-4 py-10 pendingTasks">
+                <div v-else
+                    class="h-80 overflow-y-auto flex flex-col gap-2 border border-gray-300 rounded-lg px-4 py-10 pendingTasks">
                     <div class="flex flex-col border border-gray-300 py-2 px-3 animate-pulse">
                         <div class="flex justify-between pb-2">
                             <div class="py-1 px-3 rounded-xl bg-gray-300 w-20 h-6"></div>
@@ -342,7 +354,9 @@ import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
                     <div class="w-full">
                         <label for="Attribuer" class="block text-gray-700 text-sm font-bold mb-2">Attribuer a</label>
                         <select v-model="userAssignId"
-                            class="block w-full px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-200 appearance-none">
+                            class="block w-full px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-200 appearance-none">{{
+                                userAssignEmail }}
+                            <option value="">non-attribuer</option>
                             <option v-for="member in projectMembers" :key="member.userId" :value="member.userId">
                                 {{ member.userMember.email }}</option>
                         </select>
@@ -353,9 +367,9 @@ import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
                             <label for="Status" class="block text-gray-700 text-sm font-bold mb-2">Statut de la
                                 tache
                             </label>
-                            <select v-model="status" required
-                                class="block w-full px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-200 appearance-none">
-
+                            <select required
+                                class="block w-full px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-200 appearance-none">{{
+                                    status }}
                                 <option value="EN_ATTENTE">En Attente</option>
                                 <option value="EN_COURS">En Cours</option>
                             </select>
@@ -460,10 +474,11 @@ import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
                 <div class="w-full">
                     <p for="Attribuer" class="block text-gray-700 text-sm font-bold mb-2">Responsable(s)
                     </p>
+                    <!-- <span v-if="">Aucune attribution</span> -->
 
                     <span class="block">
                         <!-- add the assignedUserEmail later -->
-
+                        {{ userAssignEmail }}
                     </span>
                 </div>
 
@@ -526,6 +541,99 @@ import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
         </div>
     </modal>
 
+    <!--Modal pour afficher le details de la tache-->
+    <modal class="fixed inset-0 backdrop-blur-sm flex justify-end z-50" v-if="modalAcceptTask">
+        <div
+            class="flex flex-col bg-white p-6 gap-5 rounded-lg shadow-lg animate__animated animate__fadeInDown w-full max-w-4xl h-full">
+
+            <div class="flex justify-between">
+                <h1 class="text-center text-2xl text-gray-800 ">DETAILS DE LA TACHE</h1>
+            </div>
+
+            <div class="w-full overflow-auto">
+                <div class="flex flex-col gap-4 border-t border-b border-gray-300">
+                    <p class=" text-gray-700 text-sm font-bold mb-2">Nom de la tache:</p>
+                    <p type="text" class="w-full p-2 focus:outline-none focus:ring focus:ring-gray-200">{{ taskname }}
+                    </p>
+                    <p class=" text-gray-700 text-sm font-bold mb-2">Description:</p>
+                    <p class="w-full p-2 focus:outline-none focus:ring focus:ring-gray-200">{{ description }}</p>
+                </div>
+
+                <div class="w-full flex flex-col md:flex-row gap-5">
+                    <div class="w-full ">
+                        <p class="block text-gray-700 text-sm font-bold mb-2">Type de tache</p>
+                        <p class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-300">{{
+                            taskType
+                            }}</p>
+                    </div>
+
+                    <div class="w-full relative">
+                        <div class="mb-2 w-full">
+                            <p for="Status" class="block text-gray-700 text-sm font-bold mb-2">Statut de la
+                                tache
+                            </p>
+                            <p
+                                class="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-200">
+                                {{ status }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col md:flex-row gap-5">
+                    <div class="w-full md:w-1/2">
+                        <div class="mb-4">
+                            <label for="Planing" class="block text-gray-700 text-sm font-bold mb-2">
+                                Date de fin
+                            </label>
+
+                            <div class="flex w-full gap-2">
+                                <p class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-200">
+                                    {{
+                                        end_date }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="w-full md:w-1/2 relative">
+                        <div class="mb-4 w-full">
+                            <p for="Priorité" class="block text-gray-700 text-sm font-bold mb-2"> Priorité de la tache
+                            </p>
+                            <p
+                                class="block w-full px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-200">
+                                {{ priority }}
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="w-full flex flex-col md:flex-row gap-5">
+                    <div class="w-full md:w-1/2">
+                        <p class="block text-gray-700 text-sm font-bold mb-2">
+                            Budget de la tache
+                        </p>
+                        <p class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-200">{{ budget
+                            }}
+                        </p>
+                    </div>
+
+                    <div class="w-full md:w-1/2">
+                        <p class="block text-gray-700 text-sm font-bold mb-2">Voulez vous prendre cette tache? </p>
+                        <!-- <p class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-300">{{ taskType
+                        }}</p> -->
+                        <div class="w-full gap-2 flex flex-row">
+                            <button @click="attributeTask()"
+                                class="w-full bg-green-600 text-white hover:text-2xl p-2">OUI</button>
+                            <button @click="refuseTask()"
+                                class="w-full bg-red-600 text-white hover:text-2xl p-2">NON</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </modal>
+
 </template>
 
 <script>
@@ -569,9 +677,11 @@ export default defineComponent({
             modalEditTasks: false,
             showMenu: false,
             modalDetailTasks: false,
+            modalAcceptTask: false,
             taskDetails: [], // details de la tache
             assignedUserDetails: [], //details de l'utilisateurs a qui on a affecté une tache
             assignedUserId: '',
+            assignedUserEmail: '',
             theAssignedUserId: null,
 
             isLoading: true,
@@ -616,6 +726,9 @@ export default defineComponent({
         },
         showPage(page) {
             this.currentPage = page;
+        },
+        refuseTask() {
+            this.modalAcceptTask = false;
         },
         async fetchUserData() {
             try {
@@ -666,8 +779,7 @@ export default defineComponent({
                 });
                 this.projectMembers = response.data;
                 console.log("Bonsoir");
-                console.log("Voici la liste des membre dans taskspage ++++++++++++++++");
-                console.log("12345678901234678890", this.projectMembers);
+                console.log("Voici la liste des membre dans taskspage ++++++++++++++++", this.projectMembers);
 
                 const getRoleByUserId = (userId) => {
                     const member = this.projectMembers.find(member => member.userId === userId);
@@ -729,6 +841,7 @@ export default defineComponent({
                 console.error('Erreur lors de la récupération du nombre de taches terminées :', error);
             }
         },
+
         async fetchTotalTasksCount() {
             try {
                 const token = localStorage.getItem('token');
@@ -772,6 +885,7 @@ export default defineComponent({
                         });
                         task.assignedUserDetails = userResponse.data;
                         console.log(`Détails de l'utilisateur assigné pour la tâche ${task.id} :`, task.assignedUserDetails);
+                        this.assignedUserEmail = task.assignedUserDetails.email;
                     }
                 }
 
@@ -780,6 +894,7 @@ export default defineComponent({
                 console.error('Erreur lors de la récupération des tâches en attente :', error);
             }
         },
+
         async fetchInProgressTasks() {
             try {
                 const token = localStorage.getItem('token');
@@ -799,7 +914,7 @@ export default defineComponent({
                         }
                     });
                     task.assignedUserId = assignmentResponse.data.userId;
-                    console.log(`ID de l'utilisateur assigné pour la tâche ${task.id} :`, task.assignedUserId);
+                    console.log(`ID de l'utilisateur assigné pour la tâcheqw ${task.id} :`, task.assignedUserId);
 
                     if (task.assignedUserId) {
                         const userResponse = await axios.get(`${config.apiBaseUrl}/users/${task.assignedUserId}`, {
@@ -808,7 +923,8 @@ export default defineComponent({
                             }
                         });
                         task.assignedUserDetails = userResponse.data;
-                        console.log(`Détails de l'utilisateur assigné pour la tâche ${task.id} :`, task.assignedUserDetails);
+                        console.log(`Détails de l'utilisateur assigné pour la tâchecc ${task.id} :`, task.assignedUserDetails);
+                        this.assignedUserEmail = task.assignedUserDetails.email;
                     }
                 }
 
@@ -846,6 +962,7 @@ export default defineComponent({
                         });
                         task.assignedUserDetails = userResponse.data;
                         console.log(`Détails de l'utilisateur assigné pour la tâche ${task.id} :`, task.assignedUserDetails);
+                        this.assignedUserEmail = task.assignedUserDetails.email;
                     }
                 }
 
@@ -853,6 +970,36 @@ export default defineComponent({
 
             } catch (error) {
                 console.error('Erreur lors de la récupération des tâches terminées :', error);
+            }
+        },
+
+        async fetchTask() {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/user/${this.userId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const userTasks = response.data;
+
+                console.log("Tâches filtrées :", userTasks);
+            } catch (error) {
+                console.error('Erreur lors de la récupération des tâches en attente :', error);
+            }
+        },
+
+        //filters out the user task
+        async showFilter() {
+            try {
+                const userId = localStorage.getItem('userId');
+                this.pendingTasks = this.pendingTasks.filter(task => task.assignedUserId === userId);
+                this.inProgressTasks = this.inProgressTasks.filter(task => task.assignedUserId === userId);
+                this.completedTasks = this.completedTasks.filter(task => task.assignedUserId === userId);
+
+                console.log("Tâches filtrées :", this.pendingTasks);
+            } catch (error) {
+                console.error('Erreur lors de la récupération des tâches en attente :', error);
             }
         },
 
@@ -942,8 +1089,8 @@ export default defineComponent({
             try {
                 const token = localStorage.getItem('token');
                 console.log("Voici l'id de la tache:");
-                console.log(this.movedItemId);
-                const response = await axios.delete(`${config.apiBaseUrl}/tasks/${this.movedItemId}`, {
+                const taskId = localStorage.getItem('selectedTaskId');
+                const response = await axios.delete(`${config.apiBaseUrl}/tasks/${taskId}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -972,24 +1119,35 @@ export default defineComponent({
 
         openViewTaskModal() {
             this.showMenu = false;
-            this.taskname = this.taskDetails.taskname;
-            this.description = this.taskDetails.description;
-            this.userAssignId = this.taskDetails.userAssignId;
-            this.status = this.taskDetails.status;
-            this.start_date = this.formatDate(this.taskDetails.start_date);
-            this.end_date = this.formatDate(this.taskDetails.end_date);
-            this.priority = this.taskDetails.priority;
-            this.budget = this.taskDetails.budget;
-            this.taskType = this.taskDetails.taskType;
-            this.modalDetailTasks = true;
+            this.taskname = this.taskDetails.task.taskname;
+            this.description = this.taskDetails.task.description;
 
+            const isUserAssigned = this.taskDetails.task.TaskAssignment;
+            if (!isUserAssigned || isUserAssigned.length === 0) {
+                // console.log("No assigned user No00123");
+                this.userAssignEmail = "Aucun utilisateur assigne"
+                console.log('asdasfasdasd', this.userAssignEmail);
+            } else {
+                this.userAssignId = this.taskDetails.task.TaskAssignment[0].userId;
+                this.userAssignEmail = this.taskDetails.assignUserDetails.email;
+                console.log('asdasfasdasd', this.userAssignEmail);
+            }
+
+            this.status = this.taskDetails.task.status;
+            this.start_date = this.formatDate(this.taskDetails.task.start_date);
+            this.end_date = this.formatDate(this.taskDetails.task.end_date);
+            this.priority = this.taskDetails.task.priority;
+            this.budget = this.taskDetails.task.budget;
+            this.taskType = this.taskDetails.task.taskType;
+            this.modalDetailTasks = true;
         },
         //Voir les details de la tache
         async fetchTaskDetailsView() {
             try {
                 const token = localStorage.getItem('token');
-                console.log(this.movedItemId)
-                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.movedItemId}`, {
+                const taskId = localStorage.getItem('selectedTaskId');
+                console.log('in the new world', this.movedItemId)
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/${taskId}/detail`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -1011,15 +1169,29 @@ export default defineComponent({
             return `${day}/${month}/${year}`;
         },
         openEditTaskModal() {
-            this.taskname = this.taskDetails.taskname;
-            this.description = this.taskDetails.description;
-            this.userAssignId = this.taskDetails.userAssignId;
-            this.status = this.taskDetails.status;
-            this.start_date = this.formatDate(this.taskDetails.start_date);
-            this.end_date = this.formatDate(this.taskDetails.end_date);
-            this.priority = this.taskDetails.priority;
-            this.budget = this.taskDetails.budget;
-            this.taskType = this.taskDetails.taskType;
+            this.showMenu = false;
+            this.taskname = this.taskDetails.task.taskname;
+            this.description = this.taskDetails.task.description;
+
+            const isUserAssigned = this.taskDetails.task.TaskAssignment;
+            console.log("assigned user Data", isUserAssigned);
+            if (!isUserAssigned || isUserAssigned.length === 0) {
+                console.log("No assigned user No00123");
+                this.email = "Aucun utilisateur assigne"
+                console.log('asdasfasdasdmm', this.email);
+            } else {
+                this.userAssignId = this.taskDetails.task.TaskAssignment[0].userId;
+                this.email = this.taskDetails.assignUserDetails.email;
+                console.log('asdasfasdasdrr', this.email);
+            }
+
+            this.userAssignEmail = this.email
+            this.status = this.taskDetails.task.status;
+            this.start_date = this.formatDate(this.taskDetails.task.start_date);
+            this.end_date = this.formatDate(this.taskDetails.task.end_date);
+            this.priority = this.taskDetails.task.priority;
+            this.budget = this.taskDetails.task.budget;
+            this.taskType = this.taskDetails.task.taskType;
             this.modalEditTasks = true;
             console.log("Voici les details de la tache selectionné:---", this.userAssignId);
         },
@@ -1032,10 +1204,11 @@ export default defineComponent({
         async fetchTaskDetails() {
             try {
                 const token = localStorage.getItem('token');
-                console.log("trying to git task details");
-                console.log(this.movedItemId);
+                console.log("trying to get task details");
+                // console.log(this.movedItemId);
+                const taskId = localStorage.getItem('selectedTaskId');
 
-                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.movedItemId}`, {
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/${taskId}/detail`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -1053,13 +1226,11 @@ export default defineComponent({
         async editTask() {
             try {
                 const token = localStorage.getItem('token');
-                // console.log("Voici l'id de la tache:");
-                // console.log(this.movedItemId);
-                const response = await axios.patch(`${config.apiBaseUrl}/tasks/${this.movedItemId}`, {
+                const taskId = localStorage.getItem('selectedTaskId');
+                const response = await axios.patch(`${config.apiBaseUrl}/tasks/${taskId}`, {
                     // Les données de la tâche à mettre à jour
                     taskname: this.taskname,
                     description: this.description,
-                    userAssignId: this.userAssignId,
                     status: this.status,
                     start_date: this.toISODate(this.start_date), // Conversion en format ISO-8601
                     end_date: this.toISODate(this.end_date), // Conversion en format ISO-8601
@@ -1071,6 +1242,50 @@ export default defineComponent({
                         'Authorization': `Bearer ${token}`
                     }
                 });
+                console.log("iddddddddd", this.userAssignId);
+                if (this.userAssignId === null || this.userAssignId === undefined) {
+                    console.log("iddddddddd", this.userAssignId);
+                    this.taskEdit = response.data;
+                    console.log(this.taskEdit)
+                    console.log("Tache modifiée avec succès");
+                    this.fetchPendingTasks();
+                    this.fetchInProgressTasks();
+                    this.fetchCompletedTasks();
+                    this.modalEditTasks = false;
+                } else {
+                    try {
+                        console.log("asdasddas", this.userId);
+                        const taskId = localStorage.getItem('selectedTaskId');
+                        console.log("23156341564", taskId);
+                        const token = localStorage.getItem('token');
+                        const response = await axios.post(`${config.apiBaseUrl}/tasks-assignments`, {
+                            taskId: taskId,
+                            userId: this.userAssignId
+                        }, {
+                            headers: {
+                                'Authorization': `Bearer ${token}`
+                            }
+                        });
+
+                        this.success = true;
+                        this.successMessage = response.data.message;
+                        console.log("tache crée et affectée avec success ")
+                        this.userAssignId = '';
+                        this.enterpriseLoading = false;
+                        this.taskEdit = response.data;
+                        console.log(this.taskEdit)
+                        console.log("Tache modifiée avec succès");
+                        this.fetchPendingTasks();
+                        this.fetchInProgressTasks();
+                        this.fetchCompletedTasks();
+                        this.modalEditTasks = false;
+                    } catch (error) {
+                        console.error('Erreur lors de lassignatuion de la tâche :', error);
+                    }
+                }
+
+
+
 
                 this.taskEdit = response.data;
                 console.log(this.taskEdit)
@@ -1080,10 +1295,85 @@ export default defineComponent({
                 this.fetchCompletedTasks();
                 this.modalEditTasks = false;
                 //methode pour recharger la page
-                window.location.reload();
+                // window.location.reload();
 
             } catch (error) {
                 console.error('Erreur lors de la modification de la tâche :', error);
+            }
+        },
+
+        openTaskDataModal() {
+            this.showMenu = false;
+            this.taskname = this.taskDetails.task.taskname;
+            this.description = this.taskDetails.task.description;
+
+            const isUserAssigned = this.taskDetails.task.TaskAssignment;
+            if (!isUserAssigned || isUserAssigned.length === 0) {
+                console.log("No assigned user No00123");
+                this.userAssignEmail = "Aucun utilisateur assigne"
+                console.log('asdasfasdasd', this.userAssignEmail);
+            } else {
+                this.userAssignId = this.taskDetails.task.TaskAssignment[0].userId;
+                this.userAssignEmail = this.taskDetails.assignUserDetails.email;
+                console.log('asdasfasdasd', this.userAssignEmail);
+            }
+
+            this.status = this.taskDetails.task.status;
+            this.start_date = this.formatDate(this.taskDetails.task.start_date);
+            this.end_date = this.formatDate(this.taskDetails.task.end_date);
+            this.priority = this.taskDetails.task.priority;
+            this.budget = this.taskDetails.task.budget;
+            this.taskType = this.taskDetails.task.taskType;
+            this.modalAcceptTask = true;
+        },
+
+        //Voir les details de la tache
+        async acceptTask() {
+            try {
+                const token = localStorage.getItem('token');
+                const taskId = localStorage.getItem('selectedTaskId');
+                console.log('in the new world', this.movedItemId)
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/${taskId}/detail`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                this.taskDetails = response.data;
+                console.log("Voici les details de la tache selectionné:-------", this.taskDetails)
+                console.log(this.taskDetails);
+                this.openTaskDataModal();
+                this.showMenu = false;
+            } catch (error) {
+                console.error('Erreur lors de la récupération des détails de la tâche :', error);
+            }
+        },
+
+        // recupere la tâche au membre
+        async attributeTask() {
+            try {
+                console.log("asdasddas", this.userId);
+                const taskId = localStorage.getItem('selectedTaskId');
+                const token = localStorage.getItem('token');
+                const res = {
+                    taskId: taskId,
+                    userId: this.userId,
+                    // creatBy:  this.userId,
+                };
+                console.log("kljkljkl", res);
+                
+                const response = await axios.post(`${config.apiBaseUrl}/tasks-assignments`, res , {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                this.success = true;
+                this.successMessage = response.data.message;
+                console.log("tache crée et affectée avec success ")
+                this.userAssignId = '';
+                this.enterpriseLoading = false;
+            } catch (error) {
+                console.error('Erreur lors de lassignatuion de la tâche :', error);
             }
         },
         beforeDestroy() {

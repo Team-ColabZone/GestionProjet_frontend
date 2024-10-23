@@ -2,10 +2,15 @@
 //     apiBaseUrl: 'https://colabzone-4c5861dbcf03.herokuapp.com' || 'http://localhost:3001',
 // };
 
-//Dimitry
+// my pc
 const config = {
-    apiBaseUrl:  'http://192.168.100.188:3010',
+    apiBaseUrl: 'http://localhost:3010',
 };
+
+//Dimitry
+// const config = {
+//     apiBaseUrl:  'http://192.168.100.188:3020',
+// };
 
 // const config = {
 //     apiBaseUrl:  'http://192.168.100.80:3001',

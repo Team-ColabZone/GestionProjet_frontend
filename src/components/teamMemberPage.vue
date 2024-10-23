@@ -63,7 +63,8 @@ import { Users, List, Plus, Search, ChevronUp, Eye } from 'lucide-vue-next';
                             <table class="min-w-full divide-gray-200 text-left">
                                 <thead class="bg-gray-50">
                                     <tr>
-                                        <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Nom & Profil</th>
+                                        <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Nom & Profil
+                                        </th>
                                         <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Email</th>
                                         <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Contact</th>
                                         <th class="px-6 py-3 text-xs text-black uppercase tracking-wider">Role</th>
@@ -260,6 +261,7 @@ export default {
         },
         hideModalmembers() {
             this.modalmembers = false;
+            this.clearInputs();
         },
         showModalMembers() {
             this.modalmembers = true;
@@ -360,13 +362,13 @@ export default {
             if (localStorage.getItem('selectedEntrepriseId')) {
                 try {
                     const token = localStorage.getItem('token');
-                    // const userId = localStorage.getItem('IdCollaborateur');
+                    const idCollaborateur = localStorage.getItem('IdCollaborateur');
                     const entrepriseId = localStorage.getItem('selectedEntrepriseId');
                     const response = await axios.post(`${config.apiBaseUrl}/team-members`, {
                         entrepriseId: `${entrepriseId}`,
                         projectId: this.projectId,
                         roleId: this.roleId,
-                        userId: this.userId,
+                        userId: idCollaborateur,
                         usercreatedId: this.usercreatedId,
                     }, {
                         headers: {
@@ -378,8 +380,7 @@ export default {
                     this.membreLoading = false;
                     console.log("Membre ajouter au project avec succces!!!")
                     // Réinitialiser les champs du formulaire
-                    this.email = '';
-                    this.roleId = '';
+                    this.clearInputs();
                     this.fetchProjectMembers();
                 } catch (error) {
                     this.error = true;
@@ -391,11 +392,11 @@ export default {
             } else {
                 try {
                     const token = localStorage.getItem('token');
-                    // const userId = localStorage.getItem('IdCollaborateur');
+                    const idCollaborateur = localStorage.getItem('IdCollaborateur');
                     const response = await axios.post(`${config.apiBaseUrl}/team-members`, {
                         projectId: this.projectId,
                         roleId: this.roleId,
-                        userId: this.userId,
+                        userId: idCollaborateur,
                         usercreatedId: this.usercreatedId,
                     }, {
                         headers: {
@@ -407,8 +408,7 @@ export default {
                     this.membreLoading = false;
                     console.log("Membre ajouter au project avec succces!!!")
                     // Réinitialiser les champs du formulaire
-                    this.email = '';
-                    this.roleId = '';
+                    this.clearInputs();
                     this.fetchProjectMembers();
                 } catch (error) {
                     this.error = true;
@@ -418,6 +418,10 @@ export default {
                     this.membreLoading = false;
                 }
             }
+        },
+        clearInputs() {
+            this.email = '';
+            this.roleId = '';
         },
 
         async fetchProjectMembers() {

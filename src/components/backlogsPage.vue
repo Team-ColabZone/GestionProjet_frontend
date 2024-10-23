@@ -14,7 +14,8 @@ import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs } from 'lucide-v
             <div class="cont">
                 <div class="flex flex-wrap justify-between gap-4 w-full">
                     <!-- Card 1 -->
-                    <div class="contex bg-red-50 rounded-lg p-4 text-left w-40 md:w-44 lg:w-48 xl:w-52" v-if="!isLoading">
+                    <div class="contex bg-red-50 rounded-lg p-4 text-left w-40 md:w-44 lg:w-48 xl:w-52"
+                        v-if="!isLoading">
                         <div class="nbre_icons flex justify-between items-center">
                             <h1 class="text-4xl font-bold">{{ pendingTasksCount }}</h1>
                             <ListVideo class="w-10 h-9 md:h-10 md:w-12" />
@@ -109,9 +110,9 @@ import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs } from 'lucide-v
                 <div class="title-div1 flex justify-between items-center border-b border-gray-300 pb-2 mb-4">
                     <div class="flex items-center">
                         <ClockArrowDown class="task text-xl text-black mr-2" />
-                        <p class="text-black text-sm font-bold">Tâches en Retard</p>
+                        <p class="text-black text-sm font-bold">Liste des Tâches</p>
                     </div>
-                    <button class="flex gap-1 bg-black hover:hover:bg-gray-600 text-white px-3 py-2 rounded-lg"
+                    <button v-if="userRoleNom === 'admin' || userRoleNom === 'chef_projet'" class="flex gap-1 bg-black hover:hover:bg-gray-600 text-white px-3 py-2 rounded-lg"
                         @click="addtask()">
                         <Plus class="h-6 " />
                         <span>Ajouter une tache</span>
@@ -133,7 +134,7 @@ import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs } from 'lucide-v
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
                                 <tr v-for="tasklate in taskslate" :key="tasklate.id" class="hover:bg-gray-50">
-                                    <td class="px-6 py-3 whitespace-nowrap">{{ tasklate.taskname }}</td>
+                                    <td class="px-6 py-3 whitespace-nowrap text-xl">{{ tasklate.taskname }}</td>
                                     <td class="px-6 py-3 whitespace-nowrap">
                                         <div v-if="tasklate.assignedUserDetails" class="flex items-center">
                                             <div class="w-10 h-10 rounded-full border border-gray-300 overflow-hidden">
@@ -146,7 +147,7 @@ import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs } from 'lucide-v
                                         </div>
                                         <div v-else class="text-gray-400">tache non affectée</div>
                                     </td>
-                                    <td class="px-6 py-3 whitespace-nowrap">{{ tasklate.budget }}</td>
+                                    <td class="px-6 py-3 whitespace-nowrap">FCFA {{ tasklate.budget }} </td>
                                     <td class="px-4 py-3 whitespace-nowrap">
                                         <div :class="getStatusClass(tasklate.status)" class="ml-2 text-center">
                                             {{ tasklate.status }}
@@ -197,6 +198,7 @@ import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs } from 'lucide-v
                                 a</label>
                             <select v-model="userAssignId"
                                 class="block w-full px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-200 appearance-none">
+                                <option value="">non-attribuer</option>
                                 <option v-for="member in projectMembers" :key="member.userId" :value="member.userId">
                                     {{ member.userMember.email }}</option>
 
@@ -320,6 +322,7 @@ export default {
         return {
             modalTasks: false,
             isLoading: true,
+            enterpriseLoading: false,
             taskCount: 0,
             completedTasksCount: 0,
             pendingTasksCount: 0,
@@ -328,6 +331,7 @@ export default {
             // selectedProjectId: '', // ID du projet sélectionné
             userId: '',
             projectId: '',
+            userRoleNom: '',
 
             userData: null,
 
@@ -369,329 +373,393 @@ export default {
         }, 2000);
     },
 
-methods: {
-    refreshAllData() {
-        if (this.isConnected()) {
-            this.userId = localStorage.getItem('userId');
-            this.projectId = localStorage.getItem('projectId');
-            this.fetchUserData();
-            this.fetchProjectMembers();
-            this.fetchProjects();
-            this.fetchPendingTasksCount();
-            this.fetchInProgressTasksCount();
-            this.fetchCompletedTasksCount();
-            this.fetchTotalTasksCount();
-            this.fetchTasksLateCount();
-            this.fetchTasksLate();
-        } else {
-            this.errorMessage = 'Utilisateur non connecté';
-            this.$router.push('/auth'); // Rediriger vers la page de connexion
-        }
-    },
-    isConnected() {
-        return localStorage.getItem('token') !== null;
-    },
+    methods: {
+        refreshAllData() {
+            if (this.isConnected()) {
+                this.userId = localStorage.getItem('userId');
+                this.projectId = localStorage.getItem('projectId');
+                this.fetchUserData();
+                this.fetchProjectMembers();
+                this.fetchProjects();
+                this.fetchPendingTasksCount();
+                // this.fetchInProgressTasksCount();
+                this.fetchCompletedTasksCount();
+                this.fetchTotalTasksCount();
+                this.fetchTasksLateCount();
+                this.fetchAllTasks();
+            } else {
+                this.errorMessage = 'Utilisateur non connecté';
+                this.$router.push('/auth'); // Rediriger vers la page de connexion
+            }
+        },
+        isConnected() {
+            return localStorage.getItem('token') !== null;
+        },
 
-    selectButton(button) {
-        this.selectedButton = button;
-    },
-    showPage(page) {
-        this.currentPage = page;
-    },
+        selectButton(button) {
+            this.selectedButton = button;
+        },
+        showPage(page) {
+            this.currentPage = page;
+        },
 
-    addtask() {
-        this.modalTasks = true
-    },
+        addtask() {
+            this.modalTasks = true
+        },
 
-    closeNewTask() {
-        this.modalTasks = false;
-    },
+        closeNewTask() {
+            this.modalTasks = false;
+        },
 
-    toggleDropdown1() {
-        this.isDropdown1Open = !this.isDropdown1Open;
-    },
+        toggleDropdown1() {
+            this.isDropdown1Open = !this.isDropdown1Open;
+        },
 
-    toggleDropdown2() {
-        this.isPriorityOpen = !this.isPriorityOpen;
-    },
+        toggleDropdown2() {
+            this.isPriorityOpen = !this.isPriorityOpen;
+        },
 
-    selectStatus(status) {
-        this.selectedStatus = status;
-        this.isDropdown1Open = false;
-    },
+        selectStatus(status) {
+            this.selectedStatus = status;
+            this.isDropdown1Open = false;
+        },
 
         async fetchUserData() {
-        try {
-            const token = localStorage.getItem('token');
-            const response = await axios.get(`${config.apiBaseUrl}/users/${this.userId}`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            this.userData = response.data;
-        } catch (error) {
-            this.errorMessage = 'Erreur lors de la récupération des données utilisateur : ' + error.response.data.message;
-        }
-    },
+            try {
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`${config.apiBaseUrl}/users/${this.userId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                this.userData = response.data;
+                console.log("asdasdasd",this.userData);
+                
+            } catch (error) {
+                this.errorMessage = 'Erreur lors de la récupération des données utilisateur : ' + error.response.data.message;
+            }
+        },
 
         async fetchProjects() {
-        try {
-            const token = localStorage.getItem('token');
-            const response = await axios.get(`${config.apiBaseUrl}/projects/user/${this.userId}`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            this.projects = response.data;
-            console.log(this.userId)
-        } catch (error) {
-            this.errorMessage = 'Erreur lors de la récupération des projets : ' + error.response.data.message;
-            console.log(error);
+            try {
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`${config.apiBaseUrl}/projects/user/${this.userId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                this.projects = response.data;
+                console.log("Yesssssssss");
+                console.log(this.userId)
+            } catch (error) {
+                this.errorMessage = 'Erreur lors de la récupération des projets : ' + error.response.data.message;
+                console.log(error);
+                console.log("Noooooooooo");
 
-        }
-    },
+            }
+        },
         async fetchPendingTasksCount() {
-        try {
-            const token = localStorage.getItem('token');
-            const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/tasks/pending`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            this.pendingTasksCount = response.data.length;
-            console.log(this.pendingTasksCount);
-        } catch (error) {
-            console.error('Erreur lors de la récupération des tâches en attente :', error);
-        }
-    },
-        async fetchInProgressTasksCount() {
-        try {
-            const token = localStorage.getItem('token');
-            const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/tasks/in-progress`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            this.inProgressTasksCount = response.data.length;
-            console.log(this.inProgressTasksCount);
-        } catch (error) {
-            console.error('Erreur lors de la récupération des tâches en cours :', error);
-        }
-    },
+            try {
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/tasks/pending`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                this.pendingTasksCount = response.data.length;
+                console.log(this.pendingTasksCount);
+            } catch (error) {
+                console.error('Erreur lors de la récupération des tâches en attente :', error);
+            }
+        },
+        // async fetchInProgressTasksCount() {
+        //     try {
+        //         const token = localStorage.getItem('token');
+        //         const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/tasks/in-progress`, {
+        //             headers: {
+        //                 'Authorization': `Bearer ${token}`
+        //             }
+        //         });
+        //         this.inProgressTasksCount = response.data.length +"bv";
+        //         console.log(this.inProgressTasksCount);
+        //     } catch (error) {
+        //         console.error('Erreur lors de la récupération des tâches en cours :', error);
+        //     }
+        // },
         async fetchCompletedTasksCount() {
-        try {
-            const token = localStorage.getItem('token');
-            const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/tasks/completed`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            this.completedTasksCount = response.data.length;
-            console.log(this.completedTasksCount);
-        } catch (error) {
-            console.error('Erreur lors de la récupération des tâches terminées :', error);
-        }
-    },
+            try {
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/tasks/completed`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                this.completedTasksCount = response.data.length;
+                console.log(this.completedTasksCount);
+            } catch (error) {
+                console.error('Erreur lors de la récupération des tâches terminées :', error);
+            }
+        },
+        async fetchTasksLateCount() {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/allTasksLate/${this.projectId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                this.tasklateCount = response.data.length;
+                console.log("Voici le nombre de tache en retard:")
+                console.log(this.tasklateCount);
+            } catch (error) {
+                console.error('Erreur lors de la récupération du nombre de taches en retard :', error);
+            }
+        },
         async fetchTotalTasksCount() {
-        try {
-            const token = localStorage.getItem('token');
-            const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/tasks/count`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            this.taskCount = response.data;
-            console.log(this.taskCount);
-        } catch (error) {
-            console.error('Erreur lors de la récupération du nombre total de tâches :', error);
-        }
-    },
+            try {
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/${this.projectId}/tasks/count`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                this.taskCount = response.data;
+                console.log(this.taskCount);
+            } catch (error) {
+                console.error('Erreur lors de la récupération du nombre total de tâches :', error);
+            }
+        },
         async createNewTask() {
-        try {
-            const token = localStorage.getItem('token');
-            const response = await axios.post(`${config.apiBaseUrl}/tasks`, {
-                taskname: this.taskname,
-                description: this.description,
-                start_date: new Date(this.start_date), // Conversion en objet Date
-                end_date: new Date(this.end_date), // Conversion en objet Date
-                projectId: this.projectId,
-                status: this.status,
-                budget: this.budget,
-                taskType: this.taskType,
-                priority: this.priority,
-                // taskId: this.taskId,
-                userId: this.userId // Assure-toi d'inclure l'ID de l'utilisateur
-            }, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-
-            console.log("Tache crée avec succes ");
-            const taskId = response.data.id; // Récupérer l'ID de la tâche créée
-            console.log("Voici l'id de la tache crée");
-            console.log(taskId);
-            console.log(this.userAssignId);
-            // Réinitialiser les champs du formulaire
-            this.taskname = '';
-            this.description = '';
-            this.taskType = '';
-            this.status = '';
-            this.priority = '';
-            this.start_date = '';
-            this.end_date = '';
-            this.budget = '';
-            // Assigner la tâche au membre sélectionné
-
+            this.enterpriseLoading = true;
             if (this.userAssignId === "" || this.userAssignId === null) {
                 console.log("the task hasn't been assigned to any body");
-            } else {
-                await axios.post(`${config.apiBaseUrl}/tasks-assignments`, {
-                    taskId: taskId,
-                    userId: this.userAssignId
-                }, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-
-                this.success = true;
-                this.successMessage = response.data.message;
-                console.log("tache crée et affectée avec success ")
-                this.userAssignId = '';
-            }
-        } catch (error) {
-            this.error = true;
-            this.errorMessage = error.response ? error.response.data.message : error.message;
-            console.log(error);
-        }
-    },
-        async getUserInfo() {
-        try {
-            const token = localStorage.getItem('token');
-
-            const response = await axios.get(`${config.apiBaseUrl}/users`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            const userInfo = response.data;
-            console.log(userInfo);
-
-        } catch (error) {
-            console.error('Erreur lors de la récupération des informations des l\'utilisateur :', error);
-        }
-    },
-
-        async fetchProjectMembers() {
-        console.log("Id projet selectionné backlogs");
-        console.log(this.projectId)
-        try {
-            console.log(this.projectId)
-            const token = localStorage.getItem('token');
-            const response = await axios.get(`${config.apiBaseUrl}/team-members/project/${this.projectId}`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            this.projectMembers = response.data;
-            console.log("Bonsoir")
-            console.log("Voici la liste des membre dans le backlogs");
-            console.log(this.projectMembers);
-        } catch (error) {
-            this.errorMessage = 'Erreur lors de la récupération des membres du projet : ' + (error.response ? error.response.data.message : error.message);
-        }
-    },
-        async fetchTasksLateCount() {
-        try {
-            const token = localStorage.getItem('token');
-            const response = await axios.get(`${config.apiBaseUrl}/tasks/allTasksLate/${this.projectId}`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            this.tasklateCount = response.data.length;
-            console.log("Voici le nombre de tache en retard:")
-            console.log(this.tasklateCount);
-        } catch (error) {
-            console.error('Erreur lors de la récupération du nombre de taches en retard :', error);
-        }
-    },
-        async fetchTasksLate() {
-        try {
-            const token = localStorage.getItem('token');
-            const response = await axios.get(`${config.apiBaseUrl}/tasks/allTasksLate/${this.projectId}`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            this.taskslate = response.data;
-            console.log("Voici la liste des taches  en retard:")
-            console.log(this.taskslate);
-            // Récupérer les informations de l'utilisateur assigné pour chaque tâche
-            for (let task of this.taskslate) {
-                const assignmentResponse = await axios.get(`${config.apiBaseUrl}/tasks-assignments/task/${task.id}`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                const assignedUserId = assignmentResponse.data.userId;
-                console.log(`ID de l'utilisateur assigné pour la tâche en retard ${task.id} :`, assignedUserId);
-
-                if (assignedUserId) {
-                    const userResponse = await axios.get(`${config.apiBaseUrl}/users/${assignedUserId}`, {
+                try {
+                    const token = localStorage.getItem('token');
+                    const response = await axios.post(`${config.apiBaseUrl}/tasks`, {
+                        taskname: this.taskname,
+                        description: this.description,
+                        start_date: new Date(this.start_date), // Conversion en objet Date
+                        end_date: new Date(this.end_date), // Conversion en objet Date
+                        projectId: this.projectId,
+                        status: this.status,
+                        budget: this.budget,
+                        taskType: this.taskType,
+                        priority: this.priority,
+                        // taskId: this.taskId,
+                        userId: this.userId // Assure-toi d'inclure l'ID de l'utilisateur
+                    }, {
                         headers: {
                             'Authorization': `Bearer ${token}`
                         }
                     });
-                    task.assignedUserDetails = userResponse.data;
-                    console.log(`Détails de l'utilisateur assigné pour la tâche en retard --- ${task.id} :`, task.assignedUserDetails);
+
+                    console.log("Tache crée avec succes ");
+                    const taskId = response.data.id; // Récupérer l'ID de la tâche créée
+                    console.log("Voici l'id de la tache crée");
+                    console.log(taskId);
+                    console.log(this.userAssignId);
+                    // Réinitialiser les champs du formulaire
+                    this.taskname = '';
+                    this.description = '';
+                    this.taskType = '';
+                    this.status = '';
+                    this.priority = '';
+                    this.start_date = '';
+                    this.end_date = '';
+                    this.budget = '';
+                    // Assigner la tâche au membre sélectionné
+
+
+                } catch (error) {
+                    this.error = true;
+                    this.errorMessage = error.response ? error.response.data.message : error.message;
+                    console.log(error);
                 }
+            } else {
+                try {
+                    const token = localStorage.getItem('token');
+                    const response = await axios.post(`${config.apiBaseUrl}/tasks`, {
+                        taskname: this.taskname,
+                        description: this.description,
+                        start_date: new Date(this.start_date), // Conversion en objet Date
+                        end_date: new Date(this.end_date), // Conversion en objet Date
+                        projectId: this.projectId,
+                        status: this.status,
+                        budget: this.budget,
+                        taskType: this.taskType,
+                        priority: this.priority,
+                        // taskId: this.taskId,
+                        userId: this.userId // Assure-toi d'inclure l'ID de l'utilisateur
+                    }, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+
+                    console.log("Tache crée avec succes ");
+                    const taskId = response.data.id; // Récupérer l'ID de la tâche créée
+                    console.log("Voici l'id de la tache crée");
+                    console.log(taskId);
+                    console.log(this.userAssignId);
+
+                    await axios.post(`${config.apiBaseUrl}/tasks-assignments`, {
+                        taskId: taskId,
+                        userId: this.userAssignId
+                    }, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+
+                    this.success = true;
+                    this.successMessage = response.data.message;
+                    console.log("tache crée et affectée avec success ")
+                    this.userAssignId = '';
+                    // Réinitialiser les champs du formulaire
+                    this.taskname = '';
+                    this.description = '';
+                    this.taskType = '';
+                    this.status = '';
+                    this.priority = '';
+                    this.start_date = '';
+                    this.end_date = '';
+                    this.budget = '';
+                    // Assigner la tâche au membre sélectionné
+
+                } catch (error) {
+                    this.error = true;
+                    this.errorMessage = error.response ? error.response.data.message : error.message;
+                    console.log(error);
+                }
+
             }
+            this.enterpriseLoading = false;
+            this.fetchAllTasks();
 
-            console.log("Tâches en attente avec détails des utilisateurs assignés :", this.pendingTasks);
-        } catch (error) {
-            console.error('Erreur lors de la récupération du nombre de taches en retard :', error);
-        }
-    },
-    getStatusClass(status) {
-        switch (status) {
-            case 'EN_COURS':
-                return 'status-en-cours';
-            case 'EN_ATTENTE':
-                return 'status-en-attente';
-            case 'TERMINEE':
-                return 'status-terminee';
-            default:
-                return '';
-        }
-    },
-    beforeDestroy() {
-        EventBus.off('setFirstProject2', this.refreshAllData);
-    },
+        },
+        async getUserInfo() {
+            try {
+                const token = localStorage.getItem('token');
 
-}
+                const response = await axios.get(`${config.apiBaseUrl}/users`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const userInfo = response.data;
+                console.log(userInfo);
+
+            } catch (error) {
+                console.error('Erreur lors de la récupération des informations des l\'utilisateur :', error);
+            }
+        },
+
+        async fetchProjectMembers() {
+            console.log("Id projet selectionné backlogs");
+            console.log(this.projectId);
+            try {
+                console.log(this.projectId);
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`${config.apiBaseUrl}/team-members/project/${this.projectId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                this.projectMembers = response.data;
+                console.log("Bonsoir");
+                console.log("Voici la liste des membre dans taskspage ++++++++++++++++");
+                console.log("12345678901234678890", this.projectMembers);
+
+                const getRoleByUserId = (userId) => {
+                    const member = this.projectMembers.find(member => member.userId === userId);
+                    return member ? member.Role.nom : null;
+                };
+
+
+                const userId = localStorage.getItem('userId'); // Replace with the actual userId you want to check
+                this.userRoleNom = getRoleByUserId(userId);
+                console.log("Role Nom:", this.userRoleNom);
+
+            } catch (error) {
+                this.errorMessage = 'Erreur lors de la récupération des membres du projet : ' + (error.response ? error.response.data.message : error.message);
+            }
+        },
+
+        async fetchAllTasks() {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`${config.apiBaseUrl}/tasks/allTasks/${this.projectId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                this.taskslate = response.data;
+                console.log("Voici la liste des taches  en retard:")
+                console.log(this.taskslate);
+                // Récupérer les informations de l'utilisateur assigné pour chaque tâche
+                for (let task of this.taskslate) {
+                    const assignmentResponse = await axios.get(`${config.apiBaseUrl}/tasks-assignments/task/${task.id}`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    const assignedUserId = assignmentResponse.data.userId;
+                    console.log(`ID de l'utilisateur assigné pour la tâche en retard ${task.id} :`, assignedUserId);
+
+                    if (assignedUserId) {
+                        const userResponse = await axios.get(`${config.apiBaseUrl}/users/${assignedUserId}`, {
+                            headers: {
+                                'Authorization': `Bearer ${token}`
+                            }
+                        });
+                        task.assignedUserDetails = userResponse.data;
+                        console.log(`Détails de l'utilisateur assigné pour la tâche en retard --- ${task.id} :`, task.assignedUserDetails);
+                    }
+                }
+
+                console.log("Tâches en attente avec détails des utilisateurs assignés :", this.pendingTasks);
+            } catch (error) {
+                console.error('Erreur lors de la récupération du nombre de taches en retard :', error);
+            }
+        },
+        getStatusClass(status) {
+            switch (status) {
+                case 'EN_COURS':
+                    return 'status-en-cours';
+                case 'EN_ATTENTE':
+                    return 'status-en-attente';
+                case 'TERMINEE':
+                    return 'status-terminee';
+                default:
+                    return '';
+            }
+        },
+        beforeDestroy() {
+            EventBus.off('setFirstProject2', this.refreshAllData);
+        },
+
+    }
 };
 
 </script>
 
 <style scoped>
 .status-en-cours {
-    background-color: #86FD92;
-    color: #065E0F;
+    background-color: #B3E2FC;
+    color: #000000;
     padding: 2px 5px;
     border-radius: 5px;
 }
 
 .status-en-attente {
     background-color: #FFD1A6;
-    color: #7C480C;
+    color: #000000;
     padding: 2px 5px;
     border-radius: 5px;
 }
 
 .status-terminee {
-    background-color: #B3E2FC;
+    background-color: #86FD92;
     color: #000000;
     padding: 2px 5px;
     border-radius: 5px;
