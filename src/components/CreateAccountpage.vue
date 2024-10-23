@@ -218,13 +218,13 @@ export default {
             // Check if there are any validation errors
             if (Object.values(this.errors).every((error) => error === '')) {
                 this.loading = true;
-                console.log(this.email);
+                console.log(this.email.toLowerCase());
                 
                 try {
                     const response = await axios.post(`${config.apiBaseUrl}/users`, {
                         firstname: this.firstname,
                         lastname: this.lastname,
-                        email: this.email,
+                        email: this.email.toLowerCase(),
                         phonenumber: this.phonenumber,
                         password: this.password,
                     });

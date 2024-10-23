@@ -96,7 +96,7 @@ export default {
             try {
                 // Make a POST request to the /auth/login endpoint on the local server (http://localhost:3001)
                 const response = await axios.post(`${config.apiBaseUrl}/auth/login`, {
-                    email: this.email,
+                    email: this.email.toLowerCase(),
                     password: this.password
                 });
                 const userData = response.data;
@@ -136,11 +136,6 @@ export default {
 </script>
 
 <style scoped>
-/* @keyframes spin {
-to {
-transform: rotate(360deg);
-}
-} */
 
 @media (max-width: 800px) {
     .small_screens {

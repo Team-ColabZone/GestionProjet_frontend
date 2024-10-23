@@ -65,7 +65,8 @@
                                                 style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                                                 {{ firstProjectName }}</h3>
                                             <span
-                                                style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ firstProjectDescription }}</span>
+                                                style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{
+                                                firstProjectDescription }}</span>
                                         </div>
                                     </div>
                                     <div v-else class="flex items-center gap-1 py-1 px-2">
@@ -412,7 +413,8 @@
                 </div>
             </div>
 
-            <div class="fixed inset-0 bg-black/50 flex items-start justify-end z-50 pt-12 px-2 md:pr-5 overflow-y-scroll no-scrollbar" v-if="modalIdentity">
+            <div class="fixed inset-0 bg-black/50 flex items-start justify-end z-50 pt-12 px-2 md:pr-5 overflow-y-scroll no-scrollbar"
+                v-if="modalIdentity">
                 <div
                     class="bg-white flex flex-col p-6 gap-5 rounded-lg shadow-lg animate__animated animate__fadeInDown w-full max-w-lg">
                     <div class="flex justify-between font-medium">
@@ -789,8 +791,9 @@
                 </div>
             </div> -->
 
-            <div class="fixed w-full h-full bg-black/50 flex items-start justify-end z-50 pt-12 px-2 md:pr-5 overflow-y-scroll no-scrollbar"
-                >asd</div>
+            <div
+                class="fixed w-full h-full bg-black/50 flex items-start justify-end z-50 pt-12 px-2 md:pr-5 overflow-y-scroll no-scrollbar">
+                asd</div>
         </div>
     </div>
 
@@ -967,7 +970,7 @@ export default {
                 localStorage.removeItem('currentProject');
                 localStorage.removeItem('projectId');
                 this.mountedData();
-                this.modalIdentity= false;
+                this.modalIdentity = false;
             }
         },
         addEntreprise() {
@@ -1228,8 +1231,12 @@ export default {
                     await this.uploadLogo(response.data.id);
                 }
                 this.fetchEntreprises();
+                if (this.currentPage === 'entreprise') {
+                    EventBus.emit('setFirstProject5');
+                }
                 // Réinitialiser les champs du formulaire
                 this.clearEntrepriseFormFields();
+                this.enterpriseLoading = false;
                 console.log("Entreprise crée avec succes");
             } catch (error) {
                 this.error = true;
@@ -1354,7 +1361,7 @@ export default {
                 localStorage.setItem('projectId', project.id); // Ajouter cette ligne pour stocker l'ID du projet
             }
             if (this.currentPage === 'dashboard') {
-            EventBus.emit('setFirstProject1');
+                EventBus.emit('setFirstProject1');
             } else if (this.currentPage === 'backlogs') {
                 EventBus.emit('setFirstProject2');
             } else if (this.currentPage === 'tasks') {

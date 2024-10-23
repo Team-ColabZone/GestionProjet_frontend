@@ -197,7 +197,7 @@ import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs } from 'lucide-v
                             <label for="Attribuer" class="block text-gray-700 text-sm font-bold mb-2">Attribuer
                                 a</label>
                             <select v-model="userAssignId"
-                                class="block w-full px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-200 appearance-none">
+                                class="block w-full px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-200">
                                 <option value="">non-attribuer</option>
                                 <option v-for="member in projectMembers" :key="member.userId" :value="member.userId">
                                     {{ member.userMember.email }}</option>
@@ -211,18 +211,13 @@ import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs } from 'lucide-v
                                     tache
                                 </label>
                                 <select v-model="status" required
-                                    class="block w-full px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-200 appearance-none">
+                                    class="block w-full px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-200">
 
                                     <option value="EN_ATTENTE">En Attente</option>
                                     <option value="EN_COURS">En Cours</option>
                                 </select>
                             </div>
 
-                            <!-- <span class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                                <ChevronDown
-                                    :class="{ 'chevron-down': isDropdown1Open, 'chevron-up': !isDropdown1Open }"
-                                    class="w-5 h-5 text-gray-500" />
-                            </span> -->
                         </div>
                     </div>
 
@@ -247,16 +242,12 @@ import { SquarePlus, ListVideo, ListCheck, ClockArrowDown, Logs } from 'lucide-v
                                     Priorité de la tache
                                 </label>
                                 <select v-model="priority"
-                                    class="block w-full px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-200 appearance-none">
-                                    <option value="FAIBLE">Faible</option>
+                                    class="block w-full px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-200">
+                                    <option value="FAIBLE" selected >Faible</option>
                                     <option value="MOYENNE">Moyenne</option>
                                     <option value="ELEVEE">Elevée</option>
                                 </select>
                             </div>
-                            <!-- <span class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                                <ChevronDown :class="{ 'chevron-down': isPriorityOpen, 'chevron-up': !isPriorityOpen }"
-                                    class="w-5 h-5 text-gray-500" />
-                            </span> -->
                         </div>
 
                     </div>
@@ -339,10 +330,10 @@ export default {
             description: '',
             start_date: '',
             end_date: '',
-            status: '',
+            status: 'EN_ATTENTE',
             budget: '',
             taskType: '',
-            priority: '',
+            priority: 'FAIBLE',
             taskId: '',
 
 
@@ -601,6 +592,11 @@ export default {
                     console.log("Voici l'id de la tache crée");
                     console.log(taskId);
                     console.log(this.userAssignId);
+                    const data = {
+                        taskId: taskId,
+                        userId: this.userAssignId
+                    };
+                    console.log("Voici l'id de la tache et l'id de ce lui a qui ont assign la tache crée",data);
 
                     await axios.post(`${config.apiBaseUrl}/tasks-assignments`, {
                         taskId: taskId,
@@ -634,7 +630,7 @@ export default {
 
             }
             this.enterpriseLoading = false;
-            this.fetchAllTasks();
+            // this.fetchAllTasks();
 
         },
         async getUserInfo() {

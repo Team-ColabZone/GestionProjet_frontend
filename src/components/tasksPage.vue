@@ -31,6 +31,31 @@ import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
                     <Filter class="mr-2 w-6 h-6" />
                     <p>Voir les filtres</p>
                 </button>
+                <div :class="{ block: task.showMenu, hidden: !task.showMenu }" v-if="task.showMenu"
+                    class="absolute right-0 mt-2 w-auto md:w-48 bg-white border border-gray-300 rounded-lg shadow-lg">
+                    <ul class="flex md:flex-col">
+                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                            <button @click="fetchTaskDetailsView()" class="flex gap-1">
+                                <View />
+                                <span class="hidden md:inline">Voir détails</span>
+                            </button>
+                        </li>
+                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                            v-if="assignedUserId === userId || userRoleNom === 'admin' || userRoleNom === 'chef_projet'">
+                            <button @click="fetchTaskDetails()" class="flex gap-1">
+                                <FilePenLine />
+                                <span class="hidden md:inline">Modifier</span>
+                            </button>
+                        </li>
+                        <li class="px-4 py-2 hover:bg-gray-100 hover:text-red-500 cursor-pointer"
+                            v-if="userRoleNom === 'admin'">
+                            <button @click="deleteTask()" class="flex gap-1">
+                                <Trash2 />
+                                <span class="hidden md:inline">Supprimer</span>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
 
@@ -353,13 +378,12 @@ import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
                 <div class="w-full flex flex-col md:flex-row gap-5">
                     <div class="w-full">
                         <label for="Attribuer" class="block text-gray-700 text-sm font-bold mb-2">Attribuer a</label>
-                        <select v-model="userAssignId"
-                            class="block w-full px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-200 appearance-none">{{
-                                userAssignEmail }}
+                        <!-- <select v-model="userAssignId"
+                            class="block w-full px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-200 appearance-none">
                             <option value="">non-attribuer</option>
                             <option v-for="member in projectMembers" :key="member.userId" :value="member.userId">
                                 {{ member.userMember.email }}</option>
-                        </select>
+                        </select> -->{{ userAssignEmail }}
                     </div>
 
                     <div class="w-full relative">
@@ -541,7 +565,7 @@ import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
         </div>
     </modal>
 
-    <!--Modal pour afficher le details de la tache-->
+    <!--Modal pour voir les details de la tache et accepter-->
     <modal class="fixed inset-0 backdrop-blur-sm flex justify-end z-50" v-if="modalAcceptTask">
         <div
             class="flex flex-col bg-white p-6 gap-5 rounded-lg shadow-lg animate__animated animate__fadeInDown w-full max-w-4xl h-full">
@@ -564,7 +588,7 @@ import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
                         <p class="block text-gray-700 text-sm font-bold mb-2">Type de tache</p>
                         <p class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-300">{{
                             taskType
-                            }}</p>
+                        }}</p>
                     </div>
 
                     <div class="w-full relative">
@@ -588,8 +612,7 @@ import { ListTodo, Search, Filter, Ellipsis } from 'lucide-vue-next';
 
                             <div class="flex w-full gap-2">
                                 <p class="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-gray-200">
-                                    {{
-                                        end_date }}</p>
+                                    {{ end_date }}</p>
                             </div>
                         </div>
                     </div>
@@ -1283,10 +1306,6 @@ export default defineComponent({
                         console.error('Erreur lors de lassignatuion de la tâche :', error);
                     }
                 }
-
-
-
-
                 this.taskEdit = response.data;
                 console.log(this.taskEdit)
                 console.log("Tache modifiée avec succès");
@@ -1360,8 +1379,8 @@ export default defineComponent({
                     // creatBy:  this.userId,
                 };
                 console.log("kljkljkl", res);
-                
-                const response = await axios.post(`${config.apiBaseUrl}/tasks-assignments`, res , {
+
+                const response = await axios.post(`${config.apiBaseUrl}/tasks-assignments`, res, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -1372,6 +1391,9 @@ export default defineComponent({
                 console.log("tache crée et affectée avec success ")
                 this.userAssignId = '';
                 this.enterpriseLoading = false;
+                this.refreshAllData();
+                alert("Vous venez d'accepte cette tache")
+                this.modalAcceptTask = false;
             } catch (error) {
                 console.error('Erreur lors de lassignatuion de la tâche :', error);
             }

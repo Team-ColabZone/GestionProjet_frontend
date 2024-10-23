@@ -112,6 +112,7 @@ export default {
     },
     created() {
         EventBus.on('setFirstProject5', this.refreshAllData);
+        EventBus.on('fetchEnterprise', this.refreshAllData);
     },
     mounted() {
         setTimeout(() => {
