@@ -1,0 +1,187 @@
+<template>
+    <div class="flex lg:flex-row h-screen">
+        <!-- Auth Slide -->
+        <div class="small_screens lg:w-2/3 w-full p-2 h-full lg:h-full bg-white">
+            <authSlides />
+        </div>
+
+        <!-- Form Element -->
+        <div class="lg:w-1/3 w-full h-full lg:h-full bg-white flex flex-col justify-between p-6">
+            <div class="w-full flex justify-end text-right">
+                <img class="w-24 h-24 mx-auto lg:mx-0 lg:mr-4" src="../assets/images/logoflysoft.png"
+                    alt="logo Entreprise" />
+            </div>
+
+            <!-- Login Form -->
+            <form @submit.prevent="login" class="flex flex-col gap-6">
+                <h2 class="text-3xl font-bold">Connexion</h2>
+
+                <div class="flex flex-col gap-6">
+                    <div class="flex flex-col gap-2">
+                        <label for="email" class="text-gray-700">Identifiant de connexion</label>
+                        <input type="email" id="email" v-model="email" placeholder="Veuillez entrer votre E-mail"
+                            required class="p-4 border rounded-lg">
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <label for="password" class="text-gray-700">Mot de passe</label>
+                        <div class="relative flex items-center">
+                            <input type="password" id="password" v-model="password"
+                                placeholder="Veuillez entrer un mot de passe" required
+                                class="w-full p-4 border rounded-lg">
+                            <eye class="absolute right-4 " v-if="showPassword" @click="showPassword = !showPassword">
+                            </eye>
+                            <EyeOff v-else @click="showPassword = !showPassword" class="absolute right-4 " />
+                        </div>
+                        <router-link to="/Forgotpassword" class="text-blue-600 text-right text-sm">Mot de passe
+                            oublié?</router-link>
+                    </div>
+                </div>
+
+                <button @click="showLoader" type="submit" class="bg-black text-white py-3 rounded-lg hover:bg-gray-800">
+                    <span v-if="!loading">
+                        Se connecter
+                    </span>
+                    <div v-else class="flex justify-center">
+                        <span
+                            class="inline-block w-6 h-6 border-4 border-gray-400 border-t-black border-b-black rounded-full animate-spin"></span>
+                    </div>
+                </button>
+            </form>
+
+            <div class="text-center mt-6">
+                <span class="text-gray-700">Pas de compte ? <router-link to="/CreateAccount"
+                        class="text-blue-600">Inscription</router-link></span><br>
+                <span class="text-gray-700">En continuant vous agréer la <router-link to="/Privacy"
+                        class="text-blue-600">Politique de Confidentialité</router-link> et les <router-link
+                        to="/Privacy" class="text-blue-600">Conditions d'utilisations</router-link></span>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+import authSlides from "@/components/includ/authSlides.vue";
+import config from '../config';
+import axios from 'axios';
+
+export default {
+    components: {
+        authSlides
+    },
+    data() {
+        return {
+            email: '',
+            password: '',
+            errorMessage: '',
+            hover: false,
+            loading: false,
+            showPassword: false,
+        };
+    },
+
+    watch: {
+        showPassword(val) {
+            const passwordField = document.getElementById('password');
+            if (val) {
+                passwordField.type = 'text';
+            } else {
+                passwordField.type = 'password';
+            }
+        }
+    },
+    methods: {
+       async login() {
+    this.loading = true;
+    try {
+        const response = await axios.post(`${config.apiBaseUrl}/auth/login`, {
+            email: this.email.toLowerCase(),
+            password: this.password
+        });
+
+        const token = response.data?.access_token;
+        if (!token) {
+            throw new Error("Aucun token reçu du serveur.");
+        }
+
+        localStorage.setItem('token', token);
+        localStorage.setItem('userEmail', this.email);
+
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const userId = payload.sub;
+
+        if (!userId) {
+            throw new Error("userId introuvable dans le token.");
+        }
+
+        localStorage.setItem('userId', userId);
+        console.log("Connexion réussie. userId:", userId);
+
+        this.$router.push('/Home');
+        this.getUserInfo();
+
+    } catch (error) {
+        console.error("Erreur de connexion :", error);
+        this.errorMessage = 'Échec de la connexion : ' + (error.response?.data?.message || error.message);
+        alert(this.errorMessage);
+    } finally {
+        this.loading = false;
+    }
+}
+,
+        async getUserInfo() {
+            try {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                      console.error('Token manquant : utilisateur non authentifié');
+                      this.error = true;
+                      this.errorMessage = 'Vous devez être connecté pour créer un projet.';
+                          return;
+                    }
+
+                const response = await axios.get(`${config.apiBaseUrl}/users`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const userInfo = response.data;
+                console.log(userInfo);
+
+            } catch (error) {
+                console.error('Erreur lors de la récupération des informations des l\'utilisateur :', error);
+            }
+        }
+    }
+};
+</script>
+
+<style scoped>
+
+@media (max-width: 500px) {
+    .small_screens {
+        display: none;
+    }
+}
+
+@media (max-width: 1024px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .formElement {
+        padding: 0 5%;
+    }
+
+    .logo {
+        margin-bottom: 20px;
+    }
+
+    .authSlide {
+        height: 40%;
+    }
+
+    form {
+        height: 60%;
+    }
+}
+</style>
