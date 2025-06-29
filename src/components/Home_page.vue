@@ -66,7 +66,7 @@
                                                 {{ firstProjectName }}</h3>
                                             <span
                                                 style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{
-                                                firstProjectDescription }}
+                                                    firstProjectDescription }}
                                             </span>
                                         </div>
                                     </div>
@@ -131,16 +131,16 @@
                     </li>
 
 
-               
-    <!-- Formulaire d'invitation affiché quand showInvitationForm est vrai -->
-    <div v-if="showInvitationForm" class="mt-4 p-4 border rounded bg-gray-100">
-      <p class="mb-2 font-bold">Inviter un membre au projet :</p>
-      <input v-model="invitedEmail" type="email" placeholder="Email de l'invité"
-        class="border p-2 w-full mb-2 rounded" />
-      <button @click="sendInvitation" class="bg-blue-500 text-white px-4 py-2 rounded">
-        Envoyer l'invitation
-      </button>
-    </div>
+
+                    <!-- Formulaire d'invitation affiché quand showInvitationForm est vrai -->
+                    <div v-if="showInvitationForm" class="mt-4 p-4 border rounded bg-gray-100">
+                        <p class="mb-2 font-bold">Inviter un membre au projet :</p>
+                        <input v-model="invitedEmail" type="email" placeholder="Email de l'invité"
+                            class="border p-2 w-full mb-2 rounded" />
+                        <button @click="sendInvitation" class="bg-blue-500 text-white px-4 py-2 rounded">
+                            Envoyer l'invitation
+                        </button>
+                    </div>
 
 
 
@@ -215,6 +215,59 @@
                             }" />
                         </button>
                     </li>
+
+
+
+<!-- ✅ Bouton pour ADMIN ou CHEF_PROJET -->
+<li v-if="user.id === projectCreatorId" class="w-full">
+  <button
+    class="flex justify-between items-center w-full rounded-lg"
+    :class="{ 'bg-gray-100 py-1 px-2 rounded-lg': currentPage === 'facturation' }"
+    @click="showPage('facturation')"
+  >
+    <div class="flex w-4/5 md:w-3/5 items-center gap-1">
+      <Receipt class="h-5" />
+      <h3 class="text-black">Facturation</h3>
+    </div>
+    <ArrowRight
+      class="w-1/5 h-4"
+      :class="{
+        'text-black': currentPage === 'facturation',
+        'text-gray-500': currentPage !== 'facturation',
+      }"
+    />
+  </button>
+</li>
+
+
+<!-- ✅ Bouton pour DEV ou MEMBRE -->
+<li v-else-if="teamRole === 'dev' || teamRole === 'membre'" class="w-full">
+  <button
+    class="flex justify-between items-center w-full rounded-lg"
+    :class="{ 'bg-gray-100 py-1 px-2 rounded-lg': currentPage === 'mesFactures' }"
+    @click="showPage('mesFactures')"
+  >
+    <div class="flex w-4/5 md:w-3/5 items-center gap-1">
+      <FileText class="h-5" />
+      <h3 class="text-black">Mes Factures</h3>
+    </div>
+    <ArrowRight
+      class="w-1/5 h-4"
+      :class="{
+        'text-black': currentPage === 'mesFactures',
+        'text-gray-500': currentPage !== 'mesFactures',
+      }"
+    />
+  </button>
+</li>
+
+ 
+       
+
+
+
+
+                    
                 </ul>
             </nav>
 
@@ -235,6 +288,12 @@
                 <div class="page" v-if="currentPage === 'entreprise'">
                     <entreprisePage />
                 </div>
+
+                <!-- Contenu principal -->
+                <main class="w-5/6 bg-white p-6 min-h-screen">
+                    <FacturationPage v-if="currentPage === 'facturation'" />
+                    <MesFactures v-else-if="currentPage === 'mesFactures'" />
+                </main>
             </div>
         </main>
 
@@ -812,18 +871,47 @@
         </div>
     </div>
 
+    <pre class="text-sm text-red-600 bg-gray-100 p-2 rounded">
+  Utilisateur : {{ user }}
+</pre>
+
+
 </template>
 
 <script>
+import { ref } from 'vue'
+// import ReceiptIcon from 'vue-material-design-icons/Receipt.vue'
+// import ArrowRight from 'vue-material-design-icons/ChevronRight.vue'
 import dashboardPage from './dashboardPage.vue';
 import backlogsPage from './backlogsPage.vue';
 import tasksPage from './tasksPage.vue';
 import teamMemberPage from './teamMemberPage.vue';
 import entreprisePage from "./EntreprisePage.vue";
+import FacturationPage from './FacturationPage.vue'
+import MesFactures from './MesFactures.vue'
 import config from "../config";
 import axios from 'axios';
 import { EventBus } from "../eventBus";
+import decodeJWT from '../utils/decodeJWT' // adapte le chemin si besoin
+
 // import { format } from 'date-fns';
+
+// 👉 INSERTION ICI
+const currentPage = ref('') // valeur par défaut
+const user = ref(null)
+// eslint-disable-next-line no-unused-vars
+function showPage(page) {
+    currentPage.value = page
+}
+
+// function decodeJWT(token) {
+//   if (!token) return null;
+//   try {
+//     return JSON.parse(atob(token.split('.')[1]));
+//   } catch (e) {
+//     return null;
+//   }
+// }
 
 
 export default {
@@ -833,6 +921,8 @@ export default {
         tasksPage,
         teamMemberPage,
         entreprisePage,
+        FacturationPage,
+        MesFactures,
     },
     data() {
         return {
@@ -846,7 +936,7 @@ export default {
             enterpriseLoading: false,
             projectLoading: false,
             logoutLoader: false,
-            currentPage: 'backlogs',
+            currentPage: '',
             selectedButton: 'button4',
             // teamMemberCount: 0,
             taskCount: 0,
@@ -883,7 +973,7 @@ export default {
             firstProjectDescription: '',
             entreprises: [], // Liste des entreprises
             selectedProjectId: '', // ID du projet sélectionné
-            projectId: '',
+            projectId: 'null',
             entrepriseId: '',
             // filteredProjects: [],
             displayedProjects: [],
@@ -911,11 +1001,29 @@ export default {
             selectedTab: 'unread',
             displayNotifications: false,
             displayUnreadNotifications: false,
+            user: {
+                role: '',
+                email: '',
+                id: '',
+            },
+            teamRole: null,
+            projectCreatorId: null,
         };
     },
 
     mounted() {
-        this.mountedData();
+        this.initUserFromToken()
+        this.mountedData()
+        this.fetchTeamRole();
+        this.fetchProjectCreator();
+        if (['admin', 'chef_projet'].includes(this.teamRole)) {
+        this.currentPage = 'facturation';
+        } else if (['dev', 'membre'].includes(this.teamRole)) {
+        this.currentPage = 'mesFactures';
+        } else {
+        this.currentPage = 'backlogs'; // ou page par défaut vide
+    }
+       
     },
 
     methods: {
@@ -936,6 +1044,7 @@ export default {
                 // this.fetchProjectsByEntreprise();
                 this.fetchNotificationCount();
                 this.fetchAllNotifications();
+                this.initUserFromToken();
             } else {
                 this.errorMessage = 'Utilisateur non connecté';
                 this.$router.push('/auth'); // Rediriger vers la page de connexion
@@ -1042,48 +1151,178 @@ export default {
 
         },
 
-        async fetchUserData() {
-            try {
-                const token = localStorage.getItem('token');
-                const response = await axios.get(`${config.apiBaseUrl}/users/${this.userId}`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                console.log("this the user Data", response.data);
-                this.profile = response.data;
-                this.firstName = this.profile.firstname;
-                this.lastName = this.profile.lastname;
-                this.email = this.profile.email;
-                this.phoneNumber = this.profile.phonenumber;
-                this.profileImageUrl = this.profile.avatar;
-            } catch (error) {
-                this.errorMessage = 'Erreur lors de la récupération des données utilisateur : ' + error.response.data.message;
-            } finally {
-                this.loading = false;
-            }
-        },
+        computed: {
+  isAdminOrChef() {
+    return this.user && ['admin', 'chef_projet'].includes(this.user.role);
+  },
+  isMembreOrDev() {
+    return this.user && ['member', 'Dev'].includes(this.user.role);
+  }
+},
 
-        formatDateToSlash(dateStr) {
-                if (!dateStr) return '';
-                const [year, month, day] = dateStr.split('-');
-                return `${day}/${month}/${year}`;
+async fetchProjectCreator() {
+  const projectId = localStorage.getItem('projectId');
+  const token = localStorage.getItem('token');
+  if (!projectId || !token) return;
+
+  try {
+    const { data } = await axios.get(`http://localhost:3010/projects/${projectId}/creator`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }
+    });
+
+    this.projectCreatorId = data.creatorId;
+    console.log('👑 Créateur du projet :', this.projectCreatorId);
+  } catch (error) {
+    console.error('❌ Erreur récupération créateur projet', error);
+  }
+},
+
+
+
+async fetchTeamRole() {
+  try {
+    const token = localStorage.getItem('token');
+    const tokenData = decodeJWT(token);
+    const userId = tokenData?.sub;
+    const projectId = localStorage.getItem('projectId');
+
+    console.log('🧪 USER ID :', userId);
+    console.log('🧪 PROJECT ID :', projectId);
+
+
+    if (!userId || !projectId) {
+      console.warn("⚠️ userId ou projectId manquant");
+      this.teamRole = null;
+      return;
+    }
+
+    const { data } = await axios.get(`http://localhost:3010/team-members/role/${userId}/${projectId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    const roleName = data?.Role?.nom?.toLowerCase();
+    console.log("🧪 Donnée brute reçue :", data);
+
+
+    if (roleName) {
+        console.log("🔬 data.Role : ", data.Role);
+        console.log("🔬 data complet : ", data);
+
+      this.teamRole = roleName;
+      console.log("✅ Rôle détecté :", this.teamRole);
+    } else {
+      this.teamRole = null;
+      console.warn("⚠️ Aucun rôle trouvé");
+    }
+
+  } catch (error) {
+    console.error("❌ Erreur lors de la récupération du rôle :", error);
+    this.teamRole = null;
+  }
+}
+
+,
+
+        // Facturation
+        initUserFromToken() {
+    const token = localStorage.getItem('token');
+    if (token) {
+        try {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            
+            this.user = {
+                id: payload.sub,
+                email: payload.email,
+                role: payload.role,    
+                roleId: payload.roleId,  // 👉 ajoute cette ligne si le token contient aussi l’ID
+            };
+            this.user.role = this.user.role.toLowerCase()
+
+            // Enregistre le roleId dans le localStorage pour comparaison future
+            localStorage.setItem('currentUserRoleId', this.user.roleId);
+
+            // Définir la page selon le rôle
+            if (['admin', 'chef_projet'].includes(this.user.role.toLowerCase())) {
+                this.currentPage = 'facturation';
+            } else if (['member', 'dev'].includes(this.user.role.toLowerCase())) {
+                this.currentPage = 'mesFactures';
+            }
+
+            console.log('✅ Utilisateur connecté :', this.user);
+
+        } catch (e) {
+            console.error('❌ Erreur de décodage du token', e);
+        }
+    }
+},
+
+
+        shouldShowMesFactures() {
+                const allowedRoleIds = [localStorage.getItem('selectedRoleId')];
+                return allowedRoleIds.includes(this.user.roleId); // ou this.user.role?.id selon ton objet user
             },
 
-        async createNewProject() {
-              console.log("here is the start date", this.start_date),
-              console.log("here is the end date", this.end_date),
 
-            this.projectLoading = true;
+
+
+       async fetchUserData() {
+  try {
+    const token = localStorage.getItem('token');
+    const response = await axios.get(`${config.apiBaseUrl}/users/${this.userId}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    const userData = response.data;
+
+    if (!userData.role || !userData.role.nom) {
+      console.warn("Le rôle de l'utilisateur est manquant ou incomplet :", userData);
+    }
+
+    // 💡 Utilisation directe de user avec le rôle complet
+    user.value = userData;
+    console.log('👤 Données utilisateur :', user.value);
+
+    this.profile = userData;
+    this.firstName = userData.firstname;
+    this.lastName = userData.lastname;
+    this.email = userData.email;
+    this.phoneNumber = userData.phonenumber;
+    this.profileImageUrl = userData.avatar;
+
+  } catch (error) {
+    this.errorMessage = 'Erreur lors de la récupération des données utilisateur : ' + error.response?.data?.message || error.message;
+  } finally {
+    this.loading = false;
+  }
+},
+
+
+        formatDateToSlash(dateStr) {
+            if (!dateStr) return '';
+            const [year, month, day] = dateStr.split('-');
+            return `${day}/${month}/${year}`;
+        },
+
+        async createNewProject() {
+            console.log("here is the start date", this.start_date),
+                console.log("here is the end date", this.end_date),
+
+                this.projectLoading = true;
             if (localStorage.getItem('selectedEntrepriseId')) {
-            try {
+                try {
                     const token = localStorage.getItem('token');
                     const entrepriseId = localStorage.getItem('selectedEntrepriseId')
                     console.log("Payload envoyé :", {
-                            start_date: this.start_date,
-                            end_date: this.end_date
-                        });
-              
+                        start_date: this.start_date,
+                        end_date: this.end_date
+                    });
+
 
                     const response = await axios.post(`${config.apiBaseUrl}/projects`, {
                         projectname: this.projectname,
@@ -1101,7 +1340,7 @@ export default {
                             'Authorization': `Bearer ${token}`
                         }
                     });
-                     
+
 
                     this.success = true;
                     this.modalmembers = true;

@@ -172,7 +172,7 @@ import { Users, List, Plus, Search, ChevronUp, Eye } from 'lucide-vue-next';
                             Role
                         </label>
 
-                        <select v-model="roleId"
+                        <select v-model="selectedRoleId" @change="storeSelectedRoleId"
                             class="block w-full px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-200 appearance-none">
                             <option v-for="role in roles" :key="role.id" :value="role.id">{{ role.nom }}</option>
                         </select>
@@ -222,6 +222,7 @@ export default {
             memberImg: '',
             filteredEmails: [],
             roles: [],
+            selectedRoleId: null,
             userData: null,
             isteamMemberListVisible: true,
             projectMembers: [],//tableau des membres du projet
@@ -282,6 +283,12 @@ export default {
                 e.toLowerCase().includes(this.email.toLowerCase())
             );
         },
+
+        // Fonction pour stocker l'ID du rôle sélectionné dans le localStorage  
+        storeSelectedRoleId() {
+             localStorage.setItem('selectedRoleId', this.selectedRoleId);
+             console.log("✅ Role ID sauvegardé :", this.selectedRoleId);
+          },
 
         async selectEmail(email) {
             this.email = email;
@@ -367,7 +374,7 @@ export default {
                     const response = await axios.post(`${config.apiBaseUrl}/team-members`, {
                         entrepriseId: `${entrepriseId}`,
                         projectId: this.projectId,
-                        roleId: this.roleId,
+                        roleId: this.selectedRoleId,
                         userId: idCollaborateur,
                         usercreatedId: this.usercreatedId,
                     }, {
